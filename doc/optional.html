@@ -240,7 +240,7 @@ them. The problem resides in the shallow-copy of pointer semantics: if you need 
   However, it is particularly important that optional<> objects are not mistaken by pointers,
   they are not. <u><b>optional&lt;&gt; does not model a pointer</b></u>.
   For instance, optional&lt;&gt; has not shallow-copy so does not alias: two different optionals
-  never refer to the <i>same</i> value (but my have <i>equivalent</i> values).<br>
+  never refer to the <i>same</i> value (but may have <i>equivalent</i> values).<br>
   The difference between an optional&lt;T&gt; and a pointer must be kept in mind, particularly
   because the semantics of relational operators are different: since optional&lt;T&gt;
   is a value-wrapper, relational operators are deep: they compare optional values;
@@ -818,7 +818,7 @@ Using optional&lt;bool&gt; can lead to subtle errors due to the implicit bool co
 void foo ( bool v ) ;
 void bar()
 {
-  optional&lt;bool&gt; v = try();
+  optional&lt;bool&gt; v = Try();
 
   // The following intended to pass the <b>value</b> of 'v' to foo():
   foo(v);
