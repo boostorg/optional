@@ -26,6 +26,7 @@ namespace boost {
 
 template <typename T>
 class optional
+    : public moveable< optional<T> >
 {
     typedef aligned_storage<
            sizeof(T)
@@ -36,6 +37,11 @@ class optional
     storage_t storage_;
 
 public: // structors
+    ~optional()
+    {
+        clear();
+    }
+
     optional()
         : empty_(true)
     {
@@ -48,125 +54,108 @@ public: // structors
             new(storage_.address()) T(operand.get());
     }
 
+    optional(move_source<optional> source)
+        : empty_(source.get().empty_)
+    {
+        if (!empty_)
+        {
+            optional& operand = source.get();
+            new(storage.address()) T( move(operand.get()) );
+        }
+    }
+
     optional(const T& operand)
         : empty_(false)
     {
         new(storage_.address()) T(operand);
     }
 
-    ~optional()
+    optional(move_source<T> source)
+        : empty_(false)
     {
-        clear();
-    }
-
-private:
-    void assign_impl(
-          const optional& operand
-        , mpl::true_c// is_moveable
-        )
-    {
-        // If operand is not empty...
-        if (!operand.empty_)
-        {
-            // ...then attempt to copy operand's content...
-            T temp(operand);
-
-            // ...and commit copy to *this using nothrow operations:
-            clear();
-            move(storage_.address(), temp);
-        }
-        else
-        {
-            // ...otherwise, just clear *this:
-            clear();
-        }
-    }
-
-    void assign_impl(
-          const optional& operand
-        , mpl::false_c// is_moveable
-		)
-    {
-        // Clear *this...
-        clear();
-
-        // ...and if operand is not empty...
-        if (!operand.empty_)
-        {
-            // ...then attempt to copy operand's content to *this's storage...
-            new(storage_.address()) T(operand.get());
-
-            // ...and signal success:
-            empty_ = false;
-        }
+        T& operand = source.get();
+        new(storage_.address()) T( move(operand) );
     }
 
 public: // modifiers
-    optional& operator=(const optional& operand)
+    optional& operator=(const optional& rhs)
     {
-        clear();
-
-        if (!operand.empty_)
+        // If rhs is empty...
+        if (rhs.empty_)
         {
-            new(storage_.address()) T(operand.get());
-            empty_ = false;
-        }
-
-        return *this;
-    }
-
-    optional& operator=(const T& operand)
-    {
-        clear();
-
-        new(storage_.address()) T(operand);
-        empty_ = false;
-
-        return *this;
-    }
-
-    optional& swap(optional& operand)
-    {
-        // Create a temporary, empty storage...
-        optional temp;
-
-        // ...and if operand is not empty...
-        if (!operand.empty_)
-        {
-            // ...then move/copy operand's content into temp's (empty) storage...
-            move_or_copy(temp.storage_.address(), operand.get());
-
-            // ...flag temp as no longer empty...
-            temp.empty_ = false;
-
-            // ...and clear operand:
-            operand.clear();
-        }
-
-        // Now if *this is not empty...
-        if (!empty_)
-        {
-            // ...then move/copy *this's content into operand's (now-empty) storage...
-            move_or_copy(operand.storage_.address(), get());
-
-            // ...flag operand as no longer empty...
-            operand.empty_ = false;
-
-            // ...and clear *this:
+            // ...then simply clear *this and leave:
             clear();
+            return *this;
         }
 
-        // Finally if temp is not empty...
-        if (!temp.empty_)
-        {
-            // ...then move/copy temp's content into *this's (now-empty) storage:
-            move_or_copy(storage_.address(), temp.get());
+        // Otherwise, assign rhs's content to *this:
+        return (*this = rhs.get());
+    }
 
-            // ...and flag *this as no longer empty:
+    optional& operator=(move_source<optional> source)
+    {
+        // If rhs is empty...
+        if (rhs.empty_)
+        {
+            // ...then simply clear *this and leave:
+            clear();
+            return *this;
+        }
+
+        optional& rhs = source.get();
+
+        // Otherwise, move rhs's content to *this:
+        return (*this = move(rhs.get()));
+    }
+
+    optional& operator=(const T& rhs)
+    {
+        // If *this is empty...
+        if (empty_)
+        {
+            // ...then copy rhs to *this's storage:
+            new(storage_.address()) T(rhs);
             empty_ = false;
+        }
+        else
+        {
+            // ...otherwise, assign rhs to *this's content:
+            get() = rhs;
         }
 
         return *this;
+    }
+
+    optional& operator=(move_source<T> source)
+    {
+        T& rhs = source.get();
+
+        // If *this is empty...
+        if (empty_)
+        {
+            // ...then move-construct rhs to *this's storage:
+            new(storage_.address()) T( move(rhs) );
+            empty_ = false;
+        }
+        else
+        {
+            // ...otherwise, move-assign rhs to *this's content:
+            get() = move(rhs);
+        }
+
+        return *this;
+    }
+
+    void swap(optional& operand)
+    {
+        // Move *this into temporary storage...
+        optional temp( move(get()) );
+
+        // ...move operand into *this...
+        *this = move(operand);
+
+        // ...and move temporary into operand:
+        operand = move(temp);
     }
 
     void clear()
@@ -186,157 +175,15 @@ public: // queries
 
     T& get()
     {
-        return *reinterpret_cast<T*>(storage_.address());
+        return *static_cast<T*>(storage_.address());
     }
 
     const T& get() const
     {
-        return *reinterpret_cast<const T*>(storage_.address());
-    }
-};
-
-template <typename T>
-struct move_traits< optional<T> >
-{
-    static void move(void* dest, optional<T>& src)
-    {
-        BOOST_STATIC_ASSERT(is_moveable<T>::value);
-
-        optional<T>* p = new(dest) optional<T>;
-
-        if (!src.empty())
-        {
-            move(p->storage_.address(), src.get());
-            p->empty_ = false;
-        }
+        return *static_cast<const T*>(storage_.address());
     }
 };
 
 } // namespace boost
-
-/*
-
-//////////////////////////////////////////////////////////////////////////
-// Implementation below leverages boost::variant to stay simple. Use of  
-// boost::variant, however, unnecessarily increases compile times, so the
-// implementation above is used instead.
-//
-
-#include "boost/config.hpp"
-#include "boost/variant.hpp"
-#include "boost/extract.hpp"
-#include "boost/move_fwd.hpp"
-
-#include "boost/mpl/bool_c.hpp"
-#include "boost/type_traits/is_POD.hpp"
-#include "boost/type_traits/is_empty.hpp"
-
-namespace boost {
-
-namespace detail {
-namespace optional {
-
-struct empty_tag { };
-
-} // namespace optional
-} // namespace detail
-
-template <>
-struct is_POD< detail::optional::empty_tag >
-{
-    typedef mpl::bool_c<true> type;
-	BOOST_STATIC_CONSTANT(bool, value = type::value);
-};
-
-template <>
-struct is_empty< detail::optional::empty_tag >
-{
-    typedef mpl::bool_c<true> type;
-	BOOST_STATIC_CONSTANT(bool, value = type::value);
-};
-
-template <typename T>
-class optional
-{
-    typedef variant<
-          detail::optional::empty_tag
-        , T
-        > value_type;
-
-    value_type value_;
-
-public: // structors
-    optional()
-        : value_()
-    {
-    }
-
-    optional(const optional& operand)
-        : value_(operand.value_)
-    {
-    }
-
-    explicit optional(const T& operand)
-        : value_(operand)
-    {
-    }
-
-    ~optional()
-    {
-    }
-
-public: // modifiers
-    optional& operator=(const optional& operand)
-    {
-        value_ = operand.value_;
-    }
-
-    optional& operator=(const T& operand)
-    {
-        value_ = operand;
-    }
-
-    optional& swap(optional& operand)
-    {
-        value_.swap(operand.value_);
-        return *this;
-    }
-
-    void clear()
-    {
-        value_ = detail::optional::empty_tag();
-    }
-
-public: // queries
-    bool empty() const
-    {
-        return value_.which() == 0;
-    }
-
-    T& get()
-    {
-        return extract<T>(value_);
-    }
-
-    const T& get() const
-    {
-        return extract<T>(value_);
-    }
-};
-
-template <typename T>
-struct move_traits< optional<T> >
-{
-    static void move(void* dest, optional<T>& src)
-    {
-        BOOST_STATIC_ASSERT(is_moveable<T>::value);
-
-        optional<T>* p = new(dest) optional<T>;
-        p->swap(src);
-    }
-};
-
-} // namespace boost
-*/
 
 #endif // BOOST_OPTIONAL_HPP
