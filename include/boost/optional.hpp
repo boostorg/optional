@@ -21,6 +21,7 @@
 #include<algorithm>
 
 #include "boost/config.hpp"
+#include "boost/detail/workaround.hpp"
 #include "boost/assert.hpp"
 #include "boost/type_traits/alignment_of.hpp"
 #include "boost/type_traits/type_with_alignment.hpp"
