@@ -1,189 +1,316 @@
-//-----------------------------------------------------------------------------
-// boost optional.hpp header file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
+// (C) 2003, Fernando Luis Cacciola Carballal.
 //
-// Copyright (c) 2002
-// Eric Friedman
+// This material is provided "as is", with absolutely no warranty expressed
+// or implied. Any use is at your own risk.
 //
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// Permission to use or copy this software for any purpose is hereby granted
+// without fee, provided the above notices are retained on all copies.
+// Permission to modify the code and to distribute modified code is granted,
+// provided the above notices are retained, and a notice that the code was
+// modified is included with the above copyright notice.
+//
+// See http://www.boost.org/lib/optional for documentation.
+//
+// You are welcome to contact the author at:
+//  fernando_cacciola@hotmail.com
+//
+#ifndef BOOST_OPTIONAL_FLC_19NOV2002_HPP
+#define BOOST_OPTIONAL_FLC_19NOV2002_HPP
 
-#ifndef BOOST_OPTIONAL_HPP
-#define BOOST_OPTIONAL_HPP
+#include<new>
+#include<algorithm>
 
-#include <new> // for placement-new
+#include "boost/config.hpp"
+#include "boost/assert.hpp"
+#include "boost/type_traits/alignment_of.hpp"
+#include "boost/type_traits/type_with_alignment.hpp"
 
-#include "boost/aligned_storage.hpp"
-#include "boost/move.hpp"
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
+// VC6.0 has the following bug:
+//   When a templated assignment operator exist, an implicit conversion
+//   constructing an optional<T> is used when assigment of the form:
+//     optional<T> opt ; opt = T(...);
+//   is compiled.
+//   However, optional's ctor is _explicit_ and the assignemt shouldn't compile.
+//   Therefore, for VC6.0 templated assignment is disabled.
+//
+#define BOOST_OPTIONAL_NO_CONVERTING_ASSIGNMENT
+#endif
 
-namespace boost {
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1300)
+// VC7.0 has the following bug:
+//   When both a non-template and a template copy-ctor exist
+//   and the templated version is made 'explicit', the explicit is also
+//   given to the non-templated version, making the class non-implicitely-copyable.
+//
+#define BOOST_OPTIONAL_NO_CONVERTING_COPY_CTOR
+#endif
 
-template <typename T>
-class optional
-    : public moveable< optional<T> >
+namespace boost
 {
-    typedef aligned_storage<
-           sizeof(T)
-         , alignment_of<T>::value
-         > storage_t;
-
-    bool empty_;
-    storage_t storage_;
-
-public: // structors
-    ~optional()
+  namespace optional_detail
+  {
+    template <class T>
+    class aligned_storage
     {
-        clear();
+         // Borland ICEs if unnamed unions are used for this!
+         union dummy_u
+         {
+             char data[ sizeof(T) ];
+             type_with_alignment< ::boost::alignment_of<T>::value > aligner_;
+         } dummy_ ;
+
+      public:
+
+        void const* address() const { return &dummy_.data[0]; }
+        void      * address()       { return &dummy_.data[0]; }
+    } ;
+  }
+
+template<class T>
+class optional
+{
+    typedef optional<T> this_type ;
+
+    typedef optional_detail::aligned_storage<T> storage_type ;
+
+    typedef void (this_type::*unspecified_bool_type)();
+    
+  public :
+
+    typedef T value_type ;
+
+    // Creates an optional<T> uninitialized.
+    // No-throw
+    optional ()
+      :
+      m_initialized(false) {}
+
+    // Creates an optional<T> initialized with 'val'.
+    // Can throw if T::T(T const&) does
+    explicit optional ( T const& val )
+      :
+      m_initialized(false)
+    {
+      construct(val);
     }
 
-    optional()
-        : empty_(true)
+#ifndef BOOST_OPTIONAL_NO_CONVERTING_COPY_CTOR
+    // NOTE: MSVC needs templated versions first
+
+    // Creates a deep copy of another convertible optional<U>
+    // Requires a valid conversion from U to T.
+    // Can throw if T::T(U const&) does
+    template<class U>
+    explicit optional ( optional<U> const& rhs )
+      :
+      m_initialized(false)
     {
+      if ( rhs )
+        construct(*rhs);
+    }
+#endif
+
+    // Creates a deep copy of another optional<T>
+    // Can throw if T::T(T const&) does
+    optional ( optional const& rhs )
+      :
+      m_initialized(false)
+    {
+      if ( rhs )
+        construct(*rhs);
     }
 
-    optional(const optional& operand)
-        : empty_(operand.empty_)
-    {
-        if (!empty_)
-            new(storage_.address()) T(operand.get());
-    }
+    // No-throw (assuming T::~T() doesn't)
+    ~optional() { destroy() ; }
 
-    optional(move_source<optional> source)
-        : empty_(source.get().empty_)
-    {
-        if (!empty_)
+#ifndef BOOST_OPTIONAL_NO_CONVERTING_ASSIGNMENT
+    // Assigns from another convertible optional<U> (converts && deep-copies the rhs value)
+    // Requires a valid conversion from U to T.
+    // Basic Guarantee: If T::T( U const& ) throws, this is left UNINITIALIZED
+    template<class U>
+    optional& operator= ( optional<U> const& rhs )
+      {
+        destroy(); // no-throw
+
+        if ( rhs )
         {
-            optional& operand = source.get();
-            new(storage.address()) T( move(operand.get()) );
+          // An exception can be thrown here.
+          // It it happens, THIS will be left uninitialized.
+          construct(*rhs);
         }
-    }
+        return *this ;
+      }
+#endif
 
-    optional(const T& operand)
-        : empty_(false)
-    {
-        new(storage_.address()) T(operand);
-    }
+    // Assigns from another optional<T> (deep-copies the rhs value)
+    // Basic Guarantee: If T::T( T const& ) throws, this is left UNINITIALIZED
+    optional& operator= ( optional const& rhs )
+      {
+        destroy(); // no-throw
 
-    optional(move_source<T> source)
-        : empty_(false)
-    {
-        T& operand = source.get();
-        new(storage_.address()) T( move(operand) );
-    }
-
-public: // modifiers
-    optional& operator=(const optional& rhs)
-    {
-        // If rhs is empty...
-        if (rhs.empty_)
+        if ( rhs )
         {
-            // ...then simply clear *this and leave:
-            clear();
-            return *this;
+          // An exception can be thrown here.
+          // It it happens, THIS will be left uninitialized.
+          construct(*rhs);
         }
+        return *this ;
+      }
 
-        // Otherwise, assign rhs's content to *this:
-        return (*this = rhs.get());
-    }
+    // Destroys the current value, if any, leaving this UNINITIALIZED
+    // No-throw (assuming T::~T() doesn't)
+    void reset()
+      {
+        destroy();
+      }
 
-    optional& operator=(move_source<optional> source)
-    {
-        // If rhs is empty...
-        if (rhs.empty_)
-        {
-            // ...then simply clear *this and leave:
-            clear();
-            return *this;
-        }
+    // Replaces the current value -if any- with 'val'
+    // Basic Guarantee: If T::T( T const& ) throws this is left UNINITIALIZED.
+    void reset ( T const& val )
+      {
+        destroy();
+        construct(val);
+      }
 
-        optional& rhs = source.get();
+    // Returns a pointer to the value if this is initialized, otherwise,
+    // returns NULL.
+    // No-throw
+    T const* get() const { return m_initialized ? static_cast<T const*>(m_storage.address()) : 0 ; }
+    T*       get()       { return m_initialized ? static_cast<T*>      (m_storage.address()) : 0 ; }
 
-        // Otherwise, move rhs's content to *this:
-        return (*this = move(rhs.get()));
-    }
+    // Returns a pointer to the value if this is initialized, otherwise,
+    // the behaviour is UNDEFINED
+    // No-throw
+    T const* operator->() const { BOOST_ASSERT(m_initialized) ; return get() ; }
+    T*       operator->()       { BOOST_ASSERT(m_initialized) ; return get() ; }
 
-    optional& operator=(const T& rhs)
-    {
-        // If *this is empty...
-        if (empty_)
-        {
-            // ...then copy rhs to *this's storage:
-            new(storage_.address()) T(rhs);
-            empty_ = false;
-        }
-        else
-        {
-            // ...otherwise, assign rhs to *this's content:
-            get() = rhs;
-        }
+    // Returns a reference to the value if this is initialized, otherwise,
+    // the behaviour is UNDEFINED
+    // No-throw
+    T const& operator *() const { BOOST_ASSERT(m_initialized) ; return *get() ; }
+    T&       operator *()       { BOOST_ASSERT(m_initialized) ; return *get() ; }
 
-        return *this;
-    }
+    // implicit conversion to "bool"
+    // No-throw
+    operator unspecified_bool_type() const { return m_initialized ? &this_type::destroy : 0 ; }
 
-    optional& operator=(move_source<T> source)
-    {
-        T& rhs = source.get();
+       // This is provided for those compilers which don't like the conversion to bool
+       // on some contexts.
+       bool operator!() const { return !m_initialized ; }
 
-        // If *this is empty...
-        if (empty_)
-        {
-            // ...then move-construct rhs to *this's storage:
-            new(storage_.address()) T( move(rhs) );
-            empty_ = false;
-        }
-        else
-        {
-            // ...otherwise, move-assign rhs to *this's content:
-            get() = move(rhs);
-        }
+  private :
 
-        return *this;
-    }
+    void construct ( T const& val )
+     {
+       new (m_storage.address()) T(val) ;
+       m_initialized = true ;
+     }
 
-    void swap(optional& operand)
-    {
-        // Move *this into temporary storage...
-        optional temp( move(get()) );
+    void destroy()
+     {
+       if ( m_initialized )
+       {
+         get()->~T() ;
+         m_initialized = false ;
+       }
+     }
 
-        // ...move operand into *this...
-        *this = move(operand);
+    bool m_initialized ;
+    storage_type m_storage ;
+} ;
 
-        // ...and move temporary into operand:
-        operand = move(temp);
-    }
+// Returns a pointer to the value if this is initialized, otherwise, returns NULL.
+// No-throw
+template<class T>
+inline
+T const* get_pointer ( optional<T> const& opt )
+{
+  return opt.get() ;
+}
 
-    void clear()
-    {
-        if (!empty_)
-        {
-            get().~T();
-            empty_ = true;
-        }
-    }
+template<class T>
+inline
+T* get_pointer ( optional<T>& opt )
+{
+  return opt.get() ;
+}
 
-public: // queries
-    bool empty() const
-    {
-        return empty_;
-    }
+// template<class OP> bool equal_pointees(OP const& x, OP const& y);
+//
+// Being OP a model of OptionalPointee (either a pointer or an optional):
+//
+// If both x and y have valid pointees, returns the result of (*x == *y)
+// If only one has a valid pointee, returns false.
+// If none have valid pointees, returns true.
+// No-throw
+template<class OptionalPointee>
+inline
+bool equal_pointees ( OptionalPointee const& x, OptionalPointee const& y )
+{
+  return (!x) != (!y) ? false : ( !x ? true : (*x) == (*y) ) ;
+}
 
-    T& get()
-    {
-        return *static_cast<T*>(storage_.address());
-    }
+// optional's operator == and != have deep-semantics (compare values).
+// WARNING: This is UNLIKE pointers. Use equal_pointees() in generic code instead.
+template<class T>
+inline
+bool operator == ( optional<T> const& x, optional<T> const& y )
+{ return equal_pointees(x,y); }
 
-    const T& get() const
-    {
-        return *static_cast<const T*>(storage_.address());
-    }
-};
+template<class T>
+inline
+bool operator != ( optional<T> const& x, optional<T> const& y )
+{ return !( x == y ) ; }
+
+
+//
+// The following swap implementation follows the GCC workaround as found in
+//  "boost/detail/compressed_pair.hpp"
+//
+namespace optional_detail {
+
+#ifdef __GNUC__
+   // workaround for GCC (JM):
+   using std::swap;
+#endif
+
+// optional's swap:
+// If both are initialized, calls swap(T&, T&), with whatever exception guarantess are given there.
+// If only one is initialized, calls I.reset() and U.reset(*I), with the Basic Guarantee
+// If both are uninitialized, do nothing (no-throw)
+template<class T>
+inline
+void optional_swap ( optional<T>& x, optional<T>& y )
+{
+  if ( !x && !!y )
+  {
+    x.reset(*y); // Basic guarantee.
+    y.reset();
+  }
+  else if ( !!x && !y )
+  {
+    y.reset(*x); // Basic guarantee.
+    x.reset();
+  }
+  else if ( !!x && !!y )
+  {
+#ifndef __GNUC__
+    using std::swap ;
+#endif
+    swap(*x,*y);
+  }
+}
+
+} // namespace optional_detail
+
+template<class T> inline void swap ( optional<T>& x, optional<T>& y )
+{
+  optional_detail::optional_swap(x,y);
+}
+
 
 } // namespace boost
 
-#endif // BOOST_OPTIONAL_HPP
+#endif
+
