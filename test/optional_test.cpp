@@ -16,6 +16,10 @@
 #include<stdexcept>
 #include<string>
 
+#ifdef BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
+# include <boost/get_pointer.hpp>
+#endif
+
 #define BOOST_ENABLE_ASSERT_HANDLER
 
 #include "boost/optional.hpp"
