@@ -271,9 +271,11 @@ bool operator != ( optional<T> const& x, optional<T> const& y )
 //
 namespace optional_detail {
 
-#ifdef __GNUC__
+// GCC <= 3.2 gets the using declaration at namespace scope (FLC)
+#if BOOST_WORKAROUND(__GNUC__, <= 3) && __GNUC_MINOR__ <= 2
    // workaround for GCC (JM):
    using std::swap;
+#define BOOST_OPTIONAL_STD_SWAP_INTRODUCED_AT_NS_SCOPE
 #endif
 
 // optional's swap:
@@ -296,12 +298,16 @@ void optional_swap ( optional<T>& x, optional<T>& y )
   }
   else if ( !!x && !!y )
   {
-#ifndef __GNUC__
+// GCC > 3.2 and all other compilers have the using declaration at function scope (FLC)
+#ifndef BOOST_OPTIONAL_STD_SWAP_INTRODUCED_AT_NS_SCOPE
+    // allow for Koenig lookup
     using std::swap ;
 #endif
     swap(*x,*y);
   }
 }
+
+#undef BOOST_OPTIONAL_STD_SWAP_INTRODUCED_AT_NS_SCOPE
 
 } // namespace optional_detail
 
