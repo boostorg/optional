@@ -118,7 +118,9 @@ public: // modifiers
     optional& operator=(const T& operand)
     {
         clear();
-        new(storage_.address()) T(operand.get());
+
+        new(storage_.address()) T(operand);
+        empty_ = false;
 
         return *this;
     }
