@@ -763,6 +763,11 @@ template<class T> inline void swap ( optional<T>& x, optional<T>& y )
   optional_detail::optional_swap(x,y);
 }
 
+template<class T> inline optional<T> make_optional ( T const& v )
+{
+  return optional<T>(v);
+}
+
 } // namespace boost
 
 #endif
