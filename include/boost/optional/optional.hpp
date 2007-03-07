@@ -76,6 +76,19 @@
 #define BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION
 #endif
 
+// Daniel Wallin discovered that bind/apply.hpp badly interacts with the apply<>
+// member template of a factory as used in the optional<> implementation.
+// He proposed this simple fix which is to move the call to apply<> outside
+// namespace boost.
+namespace boost_optional_detail
+{
+  template <class T, class Factory>
+  void construct(Factory const& factory, void* address)
+  {
+    factory.BOOST_NESTED_TEMPLATE apply<T>(address);
+  }
+}
+
 
 namespace boost {
 
@@ -309,7 +322,7 @@ class optional_base : public optional_tag
     void construct ( Expr const& factory, in_place_factory_base const* )
      {
        BOOST_STATIC_ASSERT ( ::boost::mpl::not_<is_reference_predicate>::value ) ;
-       factory.BOOST_NESTED_TEMPLATE apply<value_type>(m_storage.address()) ;
+       boost_optional_detail::construct<value_type>(factory, m_storage.address());
        m_initialized = true ;
      }
 
