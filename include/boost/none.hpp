@@ -12,12 +12,25 @@
 #ifndef BOOST_NONE_17SEP2003_HPP
 #define BOOST_NONE_17SEP2003_HPP
 
+#include <boost/detail/workaround.hpp>
+
 namespace boost {
+
+#if BOOST_WORKAROUND(_BORLANDC_, <= 0x564)
+
+namespace detail { struct none_helper{}; }
+
+typedef int detail::none_helper::*none_t ;
+
+none_t const none = ((none_t)0) ;
+
+#else
 
 enum none_t {none = 0};
 
-} // namespace boost
+#endif
 
+} // namespace boost
 
 #endif
 
