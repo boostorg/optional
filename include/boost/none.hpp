@@ -16,7 +16,7 @@
 
 namespace boost {
 
-#if BOOST_WORKAROUND(_BORLANDC_, <= 0x564)
+#if BOOST_WORKAROUND(__BORLANDC__, <= 0x564)
 
 namespace detail { struct none_helper{}; }
 
