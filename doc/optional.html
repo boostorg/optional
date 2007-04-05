@@ -24,7 +24,7 @@ HREF="../../../boost/optional/optional.hpp">boost/optional/optional.hpp</A>&gt; 
   <DT><A HREF="#examples">Examples</A></DT>
   <DT><A HREF="#ref">Optional references</A></DT>
   <DT><A HREF="#refassign">Rebinding semantics for assignment of optional references</A></DT>
-  <DT><A HREF="#none">none_t</A></DT>
+  <DT><A HREF="#none">none_t and none</A></DT>
   <DT><A HREF="#inplace">In-Place Factories</A></DT>
   <DT><A HREF="#bool">A note about optional&lt;bool&gt;</A></DT>
   <DT><A HREF="#exsafety">Exception Safety Guarantees</A></DT>
@@ -384,6 +384,30 @@ template&lt;class T&gt; inline bool operator >  ( optional&lt;T&gt; const& x, op
 template&lt;class T&gt; inline bool operator <= ( optional&lt;T&gt; const& x, optional&lt;T&gt; const& y ) ;
 
 template&lt;class T&gt; inline bool operator >= ( optional&lt;T&gt; const& x, optional&lt;T&gt; const& y ) ;
+
+template&lt;class T&gt; inline bool operator == ( optional&lt;T&gt; const& x, T const& n ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator != ( optional&lt;T&gt; const& x, T const& n ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator <  ( optional&lt;T&gt; const& x, T const& n ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator >  ( optional&lt;T&gt; const& x, T const& n ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator <= ( optional&lt;T&gt; const& x, T const& n ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator >= ( optional&lt;T&gt; const& x, T const& n ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator == ( T const& n, optional&lt;T&gt; const& y ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator != ( T const& n, optional&lt;T&gt; const& y ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator <  ( T const& n, optional&lt;T&gt; const& y ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator >  ( T const& n, optional&lt;T&gt; const& y ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator <= ( T const& n, optional&lt;T&gt; const& y ) ; <u><i>[new in 1.34]</u></i>
+
+template&lt;class T&gt; inline bool operator >= ( T const& n, optional&lt;T&gt; const& y ) ; <u><i>[new in 1.34]</u></i>
 
 template&lt;class T&gt; inline bool operator == ( optional&lt;T&gt; const& x, none_t n ) ; <u><i>[new in 1.34]</u></i>
 
@@ -912,32 +936,6 @@ assert ( *opt == w ) ;
 
 <HR>
 
-<pre>T const&amp; optional&lt;T <i>(not a ref)</i>&gt;::get_value_or( T const&amp; default) const ;
-T&amp;       optional&lt;T <i>(not a ref)</i>&gt;::get_value_or( T&amp;       default ) ;
-
-inline T const&amp; get_optional_value_or ( optional&lt;T<i> (not a ref)</i>&gt; const&amp; o, T const&amp; default ) ;
-inline T&amp;       get_optional_value_or ( optional&lt;T <i>(not a ref)</i>&gt;&amp;       o, T&amp;       default ) ;
-</pre>
-<blockquote>
-<p><b>Returns:</b> A reference to the contained value, if any, or <code>default</code></p>
-<p><b>Throws:</b> Nothing.</p>
-<p><b>Example:</b></p>
-<blockquote>
-    <pre>T v, z ;
-optional&lt;T&gt; def;
-T const&amp; y = def.get_value_or(z);
-assert ( y == z ) ;
-
-optional&lt;T&gt; opt ( v );
-T const&amp; u = get_optional_value_or(opt,z);
-assert ( u == v ) ;
-assert ( u != z ) ;
-</pre>
-  </blockquote>
-    <pre></pre>
-</blockquote>
-<HR>
-
 
 <pre>T const&amp; optional&lt;T&amp;&gt;::operator*() const ;
 T      &amp; optional&lt;T<i>&amp;</i>&gt;::operator*();</pre>
@@ -963,6 +961,33 @@ assert ( vref2 == v ) ;
 ++ v ;
 assert ( *opt == v ) ;</pre>
   </blockquote>
+</blockquote>
+
+<HR>
+
+<pre>T const&amp; optional&lt;T&gt;::get_value_or( T const&amp; default) const ;
+T&amp;       optional&lt;T&gt;::get_value_or( T&amp;       default ) ;
+
+inline T const&amp; get_optional_value_or ( optional&lt;T&gt; const&amp; o, T const&amp; default ) ;
+inline T&amp;       get_optional_value_or ( optional&lt;T&gt;&amp;       o, T&amp;       default ) ;
+</pre>
+<blockquote>
+<p><b>Returns:</b> A reference to the contained value (which can be itself a reference), if any, or <code>default</code></p>
+<p><b>Throws:</b> Nothing.</p>
+<p><b>Example:</b></p>
+<blockquote>
+    <pre>T v, z ;
+optional&lt;T&gt; def;
+T const&amp; y = def.get_value_or(z);
+assert ( y == z ) ;
+
+optional&lt;T&gt; opt ( v );
+T const&amp; u = get_optional_value_or(opt,z);
+assert ( u == v ) ;
+assert ( u != z ) ;
+</pre>
+  </blockquote>
+    <pre></pre>
 </blockquote>
 
 <HR>
@@ -1235,18 +1260,37 @@ assert ( optX != optZ ) ;
 
 <HR>
 <pre>
-bool operator == ( optional&lt;T&gt; const&amp x, none_t n );
-bool operator != ( optional&lt;T&gt; const&amp x, none_t n );
-bool operator &lt;  ( optional&lt;T&gt; const&amp x, none_t n );
-bool operator &gt;  ( optional&lt;T&gt; const&amp x, none_t n );
-bool operator &lt;= ( optional&lt;T&gt; const&amp x, none_t n );
-bool operator &gt;= ( optional&lt;T&gt; const&amp x, none_t n );
-bool operator == ( none_t n, optional&lt;T&gt; const&amp y );
-bool operator != ( none_t n, optional&lt;T&gt; const&amp y );
-bool operator &lt;  ( none_t n, optional&lt;T&gt; const&amp y );
-bool operator &gt;  ( none_t n, optional&lt;T&gt; const&amp y );
-bool operator &lt;= ( none_t n, optional&lt;T&gt; const&amp y );
-bool operator &gt;= ( none_t n, optional&lt;T&gt; const&amp y );
+bool operator == ( optional&lt;T&gt; const&amp; x, T const&amp; n );
+bool operator != ( optional&lt;T&gt; const&amp; x, T const&amp; n );
+bool operator &lt;  ( optional&lt;T&gt; const&amp; x, T const&amp; n );
+bool operator &gt;  ( optional&lt;T&gt; const&amp; x, T const&amp; n );
+bool operator &lt;= ( optional&lt;T&gt; const&amp; x, T const&amp; n );
+bool operator &gt;= ( optional&lt;T&gt; const&amp; x, T const&amp; n );
+bool operator == ( T const&amp; n, optional&lt;T&gt; const&amp; y );
+bool operator != ( T const&amp; n, optional&lt;T&gt; const&amp; y );
+bool operator &lt;  ( T const&amp; n, optional&lt;T&gt; const&amp; y );
+bool operator &gt;  ( T const&amp; n, optional&lt;T&gt; const&amp; y );
+bool operator &lt;= ( T const&amp; n, optional&lt;T&gt; const&amp; y );
+bool operator &gt;= ( T const&amp; n, optional&lt;T&gt; const&amp; y );
+</pre>
+<blockquote>
+  <p><b>Returns:</b> The result obtained by replacing the argument 'n' by optional&lt;T&gt;(n).</p>
+</blockquote>
+
+<HR>
+<pre>
+bool operator == ( optional&lt;T&gt; const&amp; x, none_t n );
+bool operator != ( optional&lt;T&gt; const&amp; x, none_t n );
+bool operator &lt;  ( optional&lt;T&gt; const&amp; x, none_t n );
+bool operator &gt;  ( optional&lt;T&gt; const&amp; x, none_t n );
+bool operator &lt;= ( optional&lt;T&gt; const&amp; x, none_t n );
+bool operator &gt;= ( optional&lt;T&gt; const&amp; x, none_t n );
+bool operator == ( none_t n, optional&lt;T&gt; const&amp; y );
+bool operator != ( none_t n, optional&lt;T&gt; const&amp; y );
+bool operator &lt;  ( none_t n, optional&lt;T&gt; const&amp; y );
+bool operator &gt;  ( none_t n, optional&lt;T&gt; const&amp; y );
+bool operator &lt;= ( none_t n, optional&lt;T&gt; const&amp; y );
+bool operator &gt;= ( none_t n, optional&lt;T&gt; const&amp; y );
 </pre>
 <blockquote>
   <p><b>Returns:</b> The result obtained by replacing the argument 'n' by optional&lt;T&gt;().</p>
@@ -1388,7 +1432,7 @@ some operations are not available in this case:</p>
   <li>InPlace assignment</li>
 </ul>
 <p>Also, even though optional&lt;T&amp;&gt; treats it wrapped pseudo-object much as a real
-value, a true real reference is stored so aliasing will ocurr: </p>
+value, a true real reference is stored, thus aliasing can ocurr: </p>
 
 <ul>
   <li>Copies of optional&lt;T&amp;&gt; copies the reference, but all copied references
@@ -1396,7 +1440,7 @@ value, a true real reference is stored so aliasing will ocurr: </p>
   <li>Value-access provides access to the referenced object rather
   than the reference itself.</li>
   <li>Pointer-access provides a pointer to the referenced object rather
-  than the reference itself.</li>
+  than a pointer to the reference itself.</li>
 </ul>
 
 <HR>
@@ -1407,7 +1451,7 @@ Clearly, there is no other choice.</p>
 <pre>int x = 1 ;
 int&amp; rx = x ;
 optional&lt;int&amp;&gt; ora ;
-optional&lt;int&amp;&gt; orb(x) ;
+optional&lt;int&amp;&gt; orb(rx) ;
 ora = orb ; // now 'ora'&nbsp;is bound to 'x' through 'rx'
 *ora = 2 ; // Changes value of 'x' through 'ora'
 assert(x==2); 
@@ -1418,7 +1462,7 @@ referenced object; it's value changes but the reference is never rebound.</p>
 int&amp; ra = a ;
 int b = 2 ;
 int&amp; rb = b ;
-ra = rb ; // Changes the value of 'a' to 'b'
+ra = rb ; // Changes the VALUE of 'a' to that of 'b'
 assert(a==b);
 b = 3 ;
 assert(ra!=b); // 'ra' is not rebound to 'b'
@@ -1444,45 +1488,68 @@ C++ references.<br>
 It is true that optional&lt;U&gt; strives to behave as much as possible as U does 
 whenever it is initialized; but in the case when U is T&amp;, doing so would result 
 in inconsistent behavior w.r.t to the lvalue initialization state.</p>
-<p>Imagine optional&lt;T&amp;&gt; forwarding assignment to the referenced object (thus 
-changing the referenced object value but not rebinding), and consider the 
-following code :</p>
-<pre>&nbsp; optional&lt;int&amp;&gt; a = get();
-&nbsp; int x = 1 ;
-&nbsp; int&amp; rx = x ;
-&nbsp; optional&lt;int&amp;&gt; b(rx);
-&nbsp; a = b ;
+<p>Consider the following code :</p>
+<pre>
+int x = 1 ;
+int& rx = x ;
+void foo ( optional&lt;int&amp;&gt; & outer )
+{
+  optional&lt;int&amp;&gt; b(rx);
+  outer = b ;
+}
 </pre>
-<p>What does the assignment do?<br>
-If 'a' is <i>uninitialized</i>, the answer is clear: it binds to 'x' (we now have 
-another reference to 'x').<br>
-But what if 'a' is already <i>initialized? </i>it would change the value of the 
-referenced object (whatever that is); which is inconsistent with the other 
-possible case.</p>
-<p>If optional&lt;T&amp;&gt; would assign just like T&amp; does, you would never be able to 
-use Optional's assignment without explicitly handling the previous 
-initialization state unless your code is capable of functioning whether after 
-the assignment, 'a' 
-aliases the same object as 'b' or not.</p>
-<p>That is, you would have to discriminate in order to be consistency.<br>
-<br>
-If in your code rebinding to another object is not an option, then is very 
-likely that binding for the fist time isn't either. In such case, assignment to 
-an <i>uninitialized</i> optional&lt;T&amp;&gt; shall be prohibited. It is quite 
-possible that in such scenario the precondition that the lvalue must be already 
-initialized exist. If it doesn't, then binding for the first time is OK while 
-rebinding is not which is IMO 
-very unlikely.<br>
-In such scenario, you can assign the value itself directly, as in:</p>
-<pre>assert(!!opt);
-*opt=value;  </pre>
+<p>What should the assignment to 'outer' do?<br>
+If 'outer' is <i>uninitialized</i>, the answer is clear: it should bind to 'x' (so we now have 
+a second reference to 'x').<br>
+But what if 'outer' is already <i>initialized?</i><br>
+The assignment could change the value of the 
+referenced object (whatever that is), but doing that would be inconsistent with the uninitialized case
+and then you wouldn't be able to reason at compile time about all the references to x since
+the appearance of a new reference to it would depend on wheter the lvalue ('outer')
+is initialized or not.</p>
+<p>Arguably, if rebinding the reference to another object is wrong for your code, then is 
+likely that binding it for the fist time via assignment instead of intialization is also wrong.
+In that case, you can always just assign the value to the referenced object directly via
+the access operator <code>*opt=value</code>.</p>
+<p>If rebinding is wrong but first-time binding 
+isn't (via assignment), you can always work around the rebinding semantics using a discriminator:</p>
+<pre>
+if ( !opt )
+      opt = value ; // first-time binding
+else *opt = value ; // assign to referee without rebinding 
+</pre>
 
 <HR>
 
-<H2><A NAME="none">none_t</A></H2>
-<p>
+<H2><A NAME="none">none_t and none</A></H2>
+<p>optional&lt;T&gt; supports uninitialized states with a convenient syntax via a constant of 
+the <i>implementation-defined</i> type <code>boost::none_t</code>, identified as <code>boost::none</code>.</p>
+<p>Starting with Boost version 1.34.0, both <code>boost::none_t</code> and <code>boost::none</code> are
+included in <code>boost/none.hpp</code>, which is automatically included by <code>boost/optional/optional.hpp</code>
 </p>
+<p>This contant is similar in purpose to NULL, except that is not a <i>null pointer value</i>. You can use it to initialize  
+an optional&lt;T&gt; instance, which has the same effect of a default constructor, and you can assign it which has the 
+effect of reseting the optional&lt;T&gt; instance. You can also use it in relational operators to make the predicate expression
+more clear.</p>
+<p>Here are some typical examples:</p>
+<pre>
+#include "boost/optional/optional.hpp" // boost/none.hpp is included automatically
 
+boost::optional&lt;int&gt; foo ( int a )
+{
+  return some_condition(a) ? boost::make_optional(a) : boost::none ;  
+  
+  // NOTE: in real code you can just use this: make_optional(some_condition(a), a ) 
+}
+
+boost::optional&lt;int&gt; opt = boost::none ;
+
+if ( opt == boost::none )
+  opt = foo(123);
+
+opt = boost::none ;
+
+</pre>
 
 <HR>
 
@@ -1725,7 +1792,7 @@ T <u>is not</u> required to be <a href="http://www.sgi.com/tech/stl/DefaultConst
 </blockquote>
 <HR>
 
-<P>Revised March 1, 2007</P>
+<P>Revised March 27, 2007</P>
 <p>© Copyright Fernando Luis Cacciola Carballal, 2003-2007</p>
 <p> Use, modification, and distribution are subject to the Boost Software
 License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a>)</p>
