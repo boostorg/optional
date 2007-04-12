@@ -1,4 +1,6 @@
 // Copyright (C) 2003, Fernando Luis Cacciola Carballal.
+// Copyright (C) 2007, Anthony Williams
+// Copyright (C) 2007, Steven Watanabe, Richard Smith
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -7,30 +9,35 @@
 // See http://www.boost.org/lib/optional/ for documentation.
 //
 // You are welcome to contact the author at:
-//  fernando_cacciola@hotmail.com
+// fernando.cacciola@gmail.com
 //
 #ifndef BOOST_NONE_17SEP2003_HPP
 #define BOOST_NONE_17SEP2003_HPP
 
-#include <boost/detail/workaround.hpp>
+namespace boost
+{
+  namespace detail
+  {
+    class none_helper;
+  }
 
-namespace boost {
+  inline void none(detail::none_helper);
 
-#if BOOST_WORKAROUND(__BORLANDC__, <= 0x564)
+  namespace detail
+  {
+    class none_helper
+    {
+    private:
+      
+      none_helper( none_helper const& ) {}
+      
+      friend void boost::none(none_helper);
+    };
+  }
 
-namespace detail { struct none_helper{}; }
+  typedef void (*none_t)(detail::none_helper);
 
-typedef int detail::none_helper::*none_t ;
-
-none_t const none = ((none_t)0) ;
-
-#else
-
-enum none_t {none = 0};
+  inline void none(detail::none_helper) {}
+}
 
 #endif
-
-} // namespace boost
-
-#endif
-
