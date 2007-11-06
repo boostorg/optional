@@ -299,6 +299,23 @@ void test_none( T const* )
   BOOST_CHECK ( !non_def ) ;
 }
 
+template<class T>
+void test_arrow( T const* )
+{
+  TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
+
+  T a(1234);
+
+  optional<T&>        oa(a) ;
+  optional<T&> const coa(a) ;
+  
+  BOOST_CHECK ( coa->V() == 1234 ) ;
+  
+  oa->V() = 4321 ;
+  
+  BOOST_CHECK ( a.V() = 4321 ) ;
+}
+
 void test_with_builtin_types()
 {
   TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
@@ -315,8 +332,26 @@ void test_with_class_type()
   test_basics( ARG(X) );
   test_relops( ARG(X) ) ;
   test_none  ( ARG(X) ) ;
+  test_arrow ( ARG(X) ) ;
 
   BOOST_CHECK ( X::count == 0 ) ;
+}
+
+void test_binding()
+{
+  int i = 0 ;
+  optional<int&> ori1 = i ;
+  BOOST_CHECK(  &(*ori1) == &i ) ;
+	
+  optional<int&> ori2(i) ;
+  BOOST_CHECK(  &(*ori2) == &i ) ;
+	
+  int const ci = 0 ;
+  optional<int const&> orci1 = ci ;
+  BOOST_CHECK(  &(*orci1) == &ci ) ;
+	
+  optional<int const&> orci2 = ci ;
+  BOOST_CHECK(  &(*orci2) == &ci ) ;
 }
 
 int test_main( int, char* [] )
@@ -325,6 +360,7 @@ int test_main( int, char* [] )
   {
     test_with_class_type();
     test_with_builtin_types();
+		test_binding();
   }
   catch ( ... )
   {
