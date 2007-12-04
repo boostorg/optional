@@ -24,5 +24,8 @@ boostbook standalone
         <xsl:param>toc.max.depth=1
         <xsl:param>toc.section.depth=1
         <xsl:param>chunk.section.depth=1
+        <xsl:param>boost.root=../../../..
+        <xsl:param>boost.libraries=../../../libraries.htm
+        <xsl:param>html.stylesheet=../../../../doc/html/boostbook.css
     ;
 
