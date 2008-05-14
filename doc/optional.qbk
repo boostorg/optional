@@ -21,16 +21,16 @@ Distributed under the Boost Software License, Version 1.0.
 
 [/ Cited Boost resources ]
 
-[def __BOOST_VARIANT__ [@../../../variant/index.html Boost.Variant]]
-[def __BOOST_TRIBOOL__ [@../../../../doc/html/tribool.html boost::tribool]]
+[def __BOOST_VARIANT__ [@/libs/variant/index.html Boost.Variant]]
+[def __BOOST_TRIBOOL__ [@/doc/html/tribool.html boost::tribool]]
 
-[def __OPTIONAL_POINTEE__ [@../../../utility/OptionalPointee.html OptionalPointee]]
-[def __COPY_CONSTRUCTIBLE__ [@../../../utility/CopyConstructible.html Copy Constructible]]
-[def __FUNCTION_EQUAL_POINTEES__ [@../../../utility/OptionalPointee.html#equal `equal_pointees()`]]
-[def __FUNCTION_LESS_POINTEES__ [@../../../utility/OptionalPointee.html#less `less_pointees()`]]
+[def __OPTIONAL_POINTEE__ [@/libs/utility/OptionalPointee.html OptionalPointee]]
+[def __COPY_CONSTRUCTIBLE__ [@/libs/utility/CopyConstructible.html Copy Constructible]]
+[def __FUNCTION_EQUAL_POINTEES__ [@/libs/utility/OptionalPointee.html#equal `equal_pointees()`]]
+[def __FUNCTION_LESS_POINTEES__ [@/libs/utility/OptionalPointee.html#less `less_pointees()`]]
 
-[def __IN_PLACE_FACTORY_HPP__ [@../../../../boost/utility/in_place_factory.hpp in_place_factory.hpp]]
-[def __TYPED_IN_PLACE_FACTORY_HPP__ [@../../../../boost/utility/typed_in_place_factory.hpp typed_in_place_factory.hpp]]
+[def __IN_PLACE_FACTORY_HPP__ [@/boost/utility/in_place_factory.hpp in_place_factory.hpp]]
+[def __TYPED_IN_PLACE_FACTORY_HPP__ [@/boost/utility/typed_in_place_factory.hpp typed_in_place_factory.hpp]]
 
 [/ Other web resources ]
 
