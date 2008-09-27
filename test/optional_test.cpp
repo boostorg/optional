@@ -1,4 +1,4 @@
-// Copyright (C) 2003, Fernando Luis Cacciola Carballal.
+// Copyright (C) 2003, 2008 Fernando Luis Cacciola Carballal.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -9,6 +9,9 @@
 // You are welcome to contact the author at:
 //  fernando_cacciola@hotmail.com
 //
+// Revisions:
+// 12 May 2008 (added more swap tests)
+//
 #include<iostream>
 #include<stdexcept>
 #include<string>
@@ -16,6 +19,8 @@
 #define BOOST_ENABLE_ASSERT_HANDLER
 
 #include "boost/bind/apply.hpp" // Included just to test proper interaction with boost::apply<> as reported by Daniel Wallin
+#include "boost/mpl/bool.hpp"
+#include "boost/mpl/bool_fwd.hpp"  // For mpl::true_ and mpl::false_
 
 #include "boost/optional/optional.hpp"
 
@@ -704,16 +709,16 @@ void test_relops( T const* )
 {
   TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
 
-  T v0(18);
-  T v1(19);
-  T v2(19);
+  T v0(0);
+  T v1(1);
+  T v2(1);
 
   optional<T> def0 ;
   optional<T> def1 ;
   optional<T> opt0(v0);
   optional<T> opt1(v1);
   optional<T> opt2(v2);
-
+  
   // Check identity
   BOOST_CHECK ( def0 == def0 ) ;
   BOOST_CHECK ( opt0 == opt0 ) ;
@@ -751,6 +756,33 @@ void test_relops( T const* )
   BOOST_CHECK ( opt1 >  opt0 ) ;
   BOOST_CHECK ( opt1 <= opt2 ) ;
   BOOST_CHECK ( opt1 >= opt0 ) ;
+  
+  // Compare against a value directly
+  BOOST_CHECK ( opt0 == v0 ) ;
+  BOOST_CHECK ( opt0 != v1 ) ;
+  BOOST_CHECK ( opt1 == v2 ) ;
+  BOOST_CHECK ( opt0 <  v1 ) ;
+  BOOST_CHECK ( opt1 >  v0 ) ;
+  BOOST_CHECK ( opt1 <= v2 ) ;
+  BOOST_CHECK ( opt1 >= v0 ) ;
+  BOOST_CHECK ( v0 != opt1 ) ;
+  BOOST_CHECK ( v1 == opt2 ) ;
+  BOOST_CHECK ( v0 <  opt1 ) ;
+  BOOST_CHECK ( v1 >  opt0 ) ;
+  BOOST_CHECK ( v1 <= opt2 ) ;
+  BOOST_CHECK ( v1 >= opt0 ) ;
+  BOOST_CHECK (   def0 != v0  ) ;
+  BOOST_CHECK ( !(def0 == v0) ) ;
+  BOOST_CHECK (   def0 <  v0  ) ;
+  BOOST_CHECK ( !(def0 >  v0) ) ;
+  BOOST_CHECK (   def0 <= v0  ) ;
+  BOOST_CHECK ( !(def0 >= v0) ) ;
+  BOOST_CHECK (   v0 != def0  ) ;
+  BOOST_CHECK ( !(v0 == def0) ) ;
+  BOOST_CHECK ( !(v0 <  def0) ) ;
+  BOOST_CHECK (   v0 >  def0  ) ;
+  BOOST_CHECK ( !(v0 <= def0) ) ;
+  BOOST_CHECK (   v0 >= opt0  ) ;
 }
 
 template<class T>
@@ -767,11 +799,33 @@ void test_none( T const* )
   BOOST_CHECK ( def0    == none ) ;
   BOOST_CHECK ( non_def != none ) ;
   BOOST_CHECK ( !def1           ) ;
+  BOOST_CHECK ( !(non_def <  none) ) ; 
+  BOOST_CHECK (   non_def >  none  ) ;
+  BOOST_CHECK ( !(non_def <= none) ) ;
+  BOOST_CHECK (   non_def >= none  ) ;
 
   non_def = none ;
   BOOST_CHECK ( !non_def ) ;
 
   test_default_implicit_construction(T(1),none);
+}
+
+template<class T>
+void test_arrow( T const* )
+{
+  TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
+
+  T a(1234);
+
+  optional<T>        oa(a) ;
+  optional<T> const coa(a) ;
+  
+  BOOST_CHECK ( coa->V() == 1234 ) ;
+  
+  oa->V() = 4321 ;
+  
+  BOOST_CHECK (     a.V() = 1234 ) ;
+  BOOST_CHECK ( (*oa).V() = 4321 ) ;
 }
 
 void test_with_builtin_types()
@@ -804,6 +858,7 @@ void test_with_class_type()
   test_throwing_swap( ARG(X) );
   test_relops( ARG(X) ) ;
   test_none( ARG(X) ) ;
+  test_arrow( ARG(X) ) ;
   BOOST_CHECK ( X::count == 0 ) ;
 }
 
@@ -877,6 +932,337 @@ void test_conversions2()
   BOOST_CHECK(*get(&opt1) == static_cast<double>(f));
 }
 
+
+namespace optional_swap_test
+{
+  class default_ctor_exception : public std::exception {} ;
+  class copy_ctor_exception : public std::exception {} ;
+  class assignment_exception : public std::exception {} ;
+
+  //
+  // Base class for swap test classes.  Its assignment should not be called, when swapping
+  // optional<T> objects.  (The default std::swap would do so.)
+  //
+  class base_class_with_forbidden_assignment
+  {
+  public:
+    base_class_with_forbidden_assignment & operator=(const base_class_with_forbidden_assignment &)
+    {
+      BOOST_CHECK(!"The assignment should not be used while swapping!");
+      throw assignment_exception();
+    }
+
+    virtual ~base_class_with_forbidden_assignment() {}
+  };
+
+  //
+  // Class without default constructor
+  //
+  class class_without_default_ctor : public base_class_with_forbidden_assignment
+  {
+  public:
+    char data;
+    explicit class_without_default_ctor(char arg) : data(arg) {}
+  };
+
+  //
+  // Class whose default constructor should not be used by optional::swap!
+  //
+  class class_whose_default_ctor_should_not_be_used : public base_class_with_forbidden_assignment
+  {
+  public:
+    char data;
+    explicit class_whose_default_ctor_should_not_be_used(char arg) : data(arg) {}
+
+    class_whose_default_ctor_should_not_be_used()
+    {
+      BOOST_CHECK(!"This default constructor should not be used while swapping!");
+      throw default_ctor_exception();
+    }
+  };
+
+  //
+  // Class whose default constructor should be used by optional::swap.
+  // Its copy constructor should be avoided!
+  //
+  class class_whose_default_ctor_should_be_used : public base_class_with_forbidden_assignment
+  {
+  public:
+    char data;
+    explicit class_whose_default_ctor_should_be_used(char arg) : data(arg) { }
+
+    class_whose_default_ctor_should_be_used() : data('\0') { }
+
+    class_whose_default_ctor_should_be_used(const class_whose_default_ctor_should_be_used &)
+    {
+      BOOST_CHECK(!"This copy constructor should not be used while swapping!");
+      throw copy_ctor_exception();
+    }
+  };
+
+  //
+  // Class template whose default constructor should be used by optional::swap.
+  // Its copy constructor should be avoided!
+  //
+  template <class T>
+  class template_whose_default_ctor_should_be_used : public base_class_with_forbidden_assignment
+  {
+  public:
+    T data;
+    explicit template_whose_default_ctor_should_be_used(T arg) : data(arg) { }
+
+    template_whose_default_ctor_should_be_used() : data('\0') { }
+
+    template_whose_default_ctor_should_be_used(const template_whose_default_ctor_should_be_used &)
+    {
+      BOOST_CHECK(!"This copy constructor should not be used while swapping!");
+      throw copy_ctor_exception();
+    }
+  };
+
+  //
+  // Class whose explicit constructor should be used by optional::swap.
+  // Its other constructors should be avoided!
+  //
+  class class_whose_explicit_ctor_should_be_used : public base_class_with_forbidden_assignment
+  {
+  public:
+    char data;
+    explicit class_whose_explicit_ctor_should_be_used(char arg) : data(arg) { }
+
+    class_whose_explicit_ctor_should_be_used()
+    {
+      BOOST_CHECK(!"This default constructor should not be used while swapping!");
+      throw default_ctor_exception();
+    }
+
+    class_whose_explicit_ctor_should_be_used(const class_whose_explicit_ctor_should_be_used &)
+    {
+      BOOST_CHECK(!"This copy constructor should not be used while swapping!");
+      throw copy_ctor_exception();
+    }
+  };
+
+  void swap(class_whose_default_ctor_should_not_be_used & lhs, class_whose_default_ctor_should_not_be_used & rhs)
+  {
+    std::swap(lhs.data, rhs.data);
+  }
+
+  void swap(class_whose_default_ctor_should_be_used & lhs, class_whose_default_ctor_should_be_used & rhs)
+  {
+    std::swap(lhs.data, rhs.data);
+  }
+
+  void swap(class_without_default_ctor & lhs, class_without_default_ctor & rhs)
+  {
+    std::swap(lhs.data, rhs.data);
+  }
+
+  void swap(class_whose_explicit_ctor_should_be_used & lhs, class_whose_explicit_ctor_should_be_used & rhs)
+  {
+    std::swap(lhs.data, rhs.data);
+  }
+
+  template <class T>
+  void swap(template_whose_default_ctor_should_be_used<T> & lhs, template_whose_default_ctor_should_be_used<T> & rhs)
+  {
+    std::swap(lhs.data, rhs.data);
+  }
+
+  //
+  // optional<T>::swap should be customized when neither the copy constructor
+  // nor the default constructor of T are supposed to be used when swapping, e.g.,
+  // for the following type T = class_whose_explicit_ctor_should_be_used.
+  //
+  void swap(boost::optional<class_whose_explicit_ctor_should_be_used> & x, boost::optional<class_whose_explicit_ctor_should_be_used> & y)
+  {
+    bool hasX = x;
+    bool hasY = y;
+
+    if ( !hasX && !hasY )
+     return;
+
+    if( !hasX )
+       x = boost::in_place('\0');
+    else if ( !hasY )
+       y = boost::in_place('\0');
+    
+    optional_swap_test::swap(*x,*y);
+
+     if( !hasX )
+         y = boost::none ;
+     else if( !hasY )
+         x = boost::none ;
+  }
+
+
+} // End of namespace optional_swap_test.
+
+
+namespace boost {
+
+//
+// Compile time tweaking on whether or not swap should use the default constructor:
+//
+
+template <> struct optional_swap_should_use_default_constructor<
+  optional_swap_test::class_whose_default_ctor_should_be_used> : mpl::true_ {} ;
+
+template <> struct optional_swap_should_use_default_constructor<
+  optional_swap_test::class_whose_default_ctor_should_not_be_used> : mpl::false_ {} ;
+
+template <class T> struct optional_swap_should_use_default_constructor<
+  optional_swap_test::template_whose_default_ctor_should_be_used<T> > : mpl::true_ {} ;
+
+
+//
+// Specialization of boost::swap:
+//
+template <> 
+void swap(optional<optional_swap_test::class_whose_explicit_ctor_should_be_used> & x, optional<optional_swap_test::class_whose_explicit_ctor_should_be_used> & y)
+{
+  optional_swap_test::swap(x, y);
+}
+
+} // namespace boost
+
+
+namespace std {
+
+//
+// Specializations of std::swap:
+//
+
+template <> 
+void swap(optional_swap_test::class_whose_default_ctor_should_be_used & x, optional_swap_test::class_whose_default_ctor_should_be_used & y)
+{
+  optional_swap_test::swap(x, y);
+}
+
+template <> 
+void swap(optional_swap_test::class_whose_default_ctor_should_not_be_used & x, optional_swap_test::class_whose_default_ctor_should_not_be_used & y)
+{
+  optional_swap_test::swap(x, y);
+}
+
+template <> 
+void swap(optional_swap_test::class_without_default_ctor & x, optional_swap_test::class_without_default_ctor & y)
+{
+  optional_swap_test::swap(x, y);
+}
+
+template <> 
+void swap(optional_swap_test::class_whose_explicit_ctor_should_be_used & x, optional_swap_test::class_whose_explicit_ctor_should_be_used & y)
+{
+  optional_swap_test::swap(x, y);
+}
+
+} // namespace std
+
+
+//
+// Tests whether the swap function works properly for optional<T>.
+// Assumes that T has one data member, of type char.
+// Returns true iff the test is passed.
+//
+template <class T>
+bool test_swap_function( T const* )
+{
+  const boost::unit_test::counter_t counter_before_test = boost::minimal_test::errors_counter();
+  try
+  {
+    optional<T> obj1;
+    optional<T> obj2('a');
+
+    // Self-swap should not have any effect.
+    swap(obj1, obj1);
+    swap(obj2, obj2);
+    BOOST_CHECK(!obj1);
+    BOOST_CHECK(!!obj2 && obj2->data == 'a');
+
+    // Call non-member swap.
+    swap(obj1, obj2);
+
+    // Test if obj1 and obj2 are really swapped.
+    BOOST_CHECK(!!obj1 && obj1->data == 'a');
+    BOOST_CHECK(!obj2);
+
+    // Call non-member swap one more time.
+    swap(obj1, obj2);
+
+    // Test if obj1 and obj2 are swapped back.
+    BOOST_CHECK(!obj1);
+    BOOST_CHECK(!!obj2 && obj2->data == 'a');
+  }
+  catch(const std::exception &)
+  {
+    // The swap function should not throw, for our test cases.
+    return false ;
+  }
+  return boost::minimal_test::errors_counter() == counter_before_test ;
+}
+
+//
+// Tests whether the optional<T>::swap member function works properly.
+// Assumes that T has one data member, of type char. 
+// Returns true iff the test is passed.
+//
+template <class T>
+bool test_swap_member_function( T const* )
+{
+  const boost::unit_test::counter_t counter_before_test = boost::minimal_test::errors_counter();
+  try
+  {
+    optional<T> obj1;
+    optional<T> obj2('a');
+
+    // Self-swap should not have any effect.
+    obj1.swap(obj1);
+    obj2.swap(obj2);
+    BOOST_CHECK(!obj1);
+    BOOST_CHECK(!!obj2 && obj2->data == 'a');
+
+    // Call member swap.
+    obj1.swap(obj2);
+
+    // Test if obj1 and obj2 are really swapped.
+    BOOST_CHECK(!!obj1 && obj1->data == 'a');
+    BOOST_CHECK(!obj2);
+
+    // Call member swap one more time.
+    obj1.swap(obj2);
+
+    // Test if obj1 and obj2 are swapped back.
+    BOOST_CHECK(!obj1);
+    BOOST_CHECK(!!obj2 && obj2->data == 'a');
+  }
+  catch(const std::exception &)
+  {
+    // The optional<T>::swap member function should not throw, for our test cases.
+    return false ;
+  }
+  return boost::minimal_test::errors_counter() == counter_before_test ;
+}
+
+
+//
+// Tests compile time tweaking of swap, by means of
+// optional_swap_should_use_default_constructor.
+//
+void test_swap_tweaking()
+{
+  BOOST_CHECK( test_swap_function( ARG(optional_swap_test::class_without_default_ctor) ) );
+  BOOST_CHECK( test_swap_function( ARG(optional_swap_test::class_whose_default_ctor_should_be_used) ) );
+  BOOST_CHECK( test_swap_function( ARG(optional_swap_test::class_whose_default_ctor_should_not_be_used) ) );
+  BOOST_CHECK( test_swap_function( ARG(optional_swap_test::class_whose_explicit_ctor_should_be_used) ) );
+  BOOST_CHECK( test_swap_function( ARG(optional_swap_test::template_whose_default_ctor_should_be_used<char>) ) );
+  BOOST_CHECK( test_swap_member_function( ARG(optional_swap_test::class_without_default_ctor) ) );
+  BOOST_CHECK( test_swap_member_function( ARG(optional_swap_test::class_whose_default_ctor_should_be_used) ) );
+  BOOST_CHECK( test_swap_member_function( ARG(optional_swap_test::class_whose_default_ctor_should_not_be_used) ) );
+  BOOST_CHECK( test_swap_member_function( ARG(optional_swap_test::class_whose_explicit_ctor_should_be_used) ) );
+  BOOST_CHECK( test_swap_member_function( ARG(optional_swap_test::template_whose_default_ctor_should_be_used<char>) ) );
+}
+
 int test_main( int, char* [] )
 {
   try
@@ -886,6 +1272,7 @@ int test_main( int, char* [] )
     test_no_implicit_conversions();
     test_conversions1();
     test_conversions2();
+    test_swap_tweaking();
   }
   catch ( ... )
   {
