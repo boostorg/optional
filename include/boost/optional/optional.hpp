@@ -435,8 +435,10 @@ class optional_base : public optional_tag
 
     void destroy()
     {
-      if ( m_initialized )
+      if ( m_initialized ){
         destroy_impl(is_reference_predicate()) ;
+        m_initialized = false ;
+      }
     }
 
     unspecified_bool_type safe_bool() const { return m_initialized ? &this_type::is_initialized : 0 ; }
@@ -474,12 +476,12 @@ class optional_base : public optional_tag
     reference_type       dereference( internal_type*       p, is_reference_tag     )       { return p->get() ; }
 
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x581))
-    void destroy_impl ( is_not_reference_tag ) { get_ptr_impl()->internal_type::~internal_type() ; m_initialized = false ; }
+    void destroy_impl ( is_not_reference_tag ) { get_ptr_impl()->internal_type::~internal_type() ; }
 #else
-    void destroy_impl ( is_not_reference_tag ) { get_ptr_impl()->T::~T() ; m_initialized = false ; }
+    void destroy_impl ( is_not_reference_tag ) { get_ptr_impl()->T::~T() ; }
 #endif
 
-    void destroy_impl ( is_reference_tag     ) { m_initialized = false ; }
+    void destroy_impl ( is_reference_tag     ) { }
 
     // If T is of reference type, trying to get a pointer to the held value must result in a compile-time error.
     // Decent compilers should disallow conversions from reference_content<T>* to T*, but just in case,
