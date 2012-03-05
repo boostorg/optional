@@ -29,5 +29,6 @@ import testing ;
     [ compile-fail optional_test_ref_fail4.cpp ]
     [ compile-fail optional_test_inplace_fail.cpp ]
     [ compile-fail optional_test_inplace_fail2.cpp ]
+    [ compile  optional_test_trivial_assertions.cpp ]
   ;
 }

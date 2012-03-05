@@ -26,6 +26,7 @@
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/has_trivial_destructor.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/not.hpp>
@@ -168,6 +169,9 @@ struct types_when_is_ref
   typedef raw_type& argument_type ;
 } ;
 
+template<typename T>
+struct optional_dtor_optimized : has_trivial_destructor<T> {};
+
 struct optional_tag {} ;
 
 template<class T>
@@ -199,6 +203,7 @@ class optional_base : public optional_tag
 
   public:
     typedef BOOST_DEDUCED_TYPENAME mpl::if_<is_reference_predicate,types_when_ref,types_when_not_ref>::type types ;
+    typedef optional_dtor_optimized<T>                         dtor_optimized;
 
   protected:
     typedef bool (this_type::*unspecified_bool_type)() const;
@@ -265,7 +270,7 @@ class optional_base : public optional_tag
 
 
     // No-throw (assuming T::~T() doesn't)
-    ~optional_base() { destroy() ; }
+    //~optional_base() { destroy() ; }
 
     // Assigns from another optional<T> (deep-copies the rhs value)
     void assign ( optional_base const& rhs )
@@ -440,6 +445,12 @@ class optional_base : public optional_tag
         m_initialized = false ;
       }
     }
+    void destructor_impl()  // doesn't reset m_initialized
+    {
+      if(m_initialized)
+        destroy_impl(is_reference_predicate()) ;
+    }
+    template<typename Optional,bool dtor_optimized> friend class optional_dtor_mixin;
 
     unspecified_bool_type safe_bool() const { return m_initialized ? &this_type::is_initialized : 0 ; }
 
@@ -495,10 +506,20 @@ class optional_base : public optional_tag
     storage_type m_storage ;
 } ;
 
+template<typename Optional,bool dtor_optimized>
+struct optional_dtor_mixin{
+    ~optional_dtor_mixin(){ static_cast<Optional*>(this)->destructor_impl() ; }
+};
+
+template<typename Optional>
+struct optional_dtor_mixin<Optional, true > { };
+
 } // namespace optional_detail
 
 template<class T>
-class optional : public optional_detail::optional_base<T>
+class optional :
+    public  optional_detail::optional_base<T>, 
+    public  optional_detail::optional_dtor_mixin<optional<T>, optional_detail::optional_base<T>::dtor_optimized::value >
 {
     typedef optional_detail::optional_base<T> base ;
 
@@ -565,8 +586,8 @@ class optional : public optional_detail::optional_base<T>
     // Can throw if T::T(T const&) does
     optional ( optional const& rhs ) : base( static_cast<base const&>(rhs) ) {}
 
-   // No-throw (assuming T::~T() doesn't)
-    ~optional() {}
+    // No-throw (assuming T::~T() doesn't)
+    //~optional() {}
 
 #if !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
     // Assigns from an expression. See corresponding constructor.
