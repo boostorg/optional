@@ -453,7 +453,9 @@ class optional_base : public optional_tag
 
     void destroy()
     {
-      if ( m_initialized ){
+      if( dtor_optimized::value )
+        m_initialized = false ;
+      else if ( m_initialized ){
         destroy_impl(is_reference_predicate()) ;
         m_initialized = false ;
       }

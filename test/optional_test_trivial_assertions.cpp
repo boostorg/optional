@@ -36,14 +36,18 @@ BOOST_STATIC_ASSERT( of::copy_optimized::value );
 
 
 
-
 /*
-has_trivial_assign
-has_trivial_constructor
-has_trivial_copy
-has_trivial_copy_constructor
-has_trivial_default_constructor
-has_trivial_destructor
+ * The code generated below can be looked at with objdump to see if it is suboptimal
  */
+
+
+void assign_optional_int(oi& x,oi& y){
+	x=y;
+}
+
+void reset_optional_int(oi& x){
+	x=boost::none;
+}
+
 
 
