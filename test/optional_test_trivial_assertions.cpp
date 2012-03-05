@@ -6,6 +6,7 @@ using namespace boost;
 
 typedef optional<char>        oc;
 typedef optional<int>         oi;
+typedef optional<int&>        of;
 typedef optional<std::string> os;
 
 BOOST_STATIC_ASSERT( sizeof(oc) <= 2*sizeof(char) );
@@ -15,7 +16,25 @@ BOOST_STATIC_ASSERT( !has_trivial_default_constructor<oi>::value );  //never tru
 BOOST_STATIC_ASSERT( !has_trivial_default_constructor<os>::value );
 
 BOOST_STATIC_ASSERT(  has_trivial_destructor<oi>::value );  //should be true where has_trivial_destructor<T>
+BOOST_STATIC_ASSERT(  has_trivial_destructor<of>::value );
 BOOST_STATIC_ASSERT( !has_trivial_destructor<os>::value );
+
+BOOST_STATIC_ASSERT(  has_trivial_copy<oi>::value );  //should be true where has_trivial_copy<T>
+BOOST_STATIC_ASSERT(  has_trivial_copy<of>::value );
+BOOST_STATIC_ASSERT( !has_trivial_copy<os>::value );
+
+BOOST_STATIC_ASSERT(  has_trivial_assign<oi>::value );  //should be true where has_trivial_assign<T>
+BOOST_STATIC_ASSERT(  has_trivial_assign<of>::value );
+BOOST_STATIC_ASSERT( !has_trivial_assign<os>::value );
+
+BOOST_STATIC_ASSERT( oi::dtor_optimized::value );
+BOOST_STATIC_ASSERT( oi::copy_optimized::value );
+
+
+BOOST_STATIC_ASSERT( of::dtor_optimized::value );
+BOOST_STATIC_ASSERT( of::copy_optimized::value );
+
+
 
 
 /*

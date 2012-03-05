@@ -27,9 +27,13 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
+#include <boost/type_traits/has_trivial_assign.hpp>
+#include <boost/type_traits/has_trivial_copy.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/detail/reference_content.hpp>
 #include <boost/none.hpp>
 #include <boost/utility/swap.hpp>
@@ -172,6 +176,16 @@ struct types_when_is_ref
 template<typename T>
 struct optional_dtor_optimized : has_trivial_destructor<T> {};
 
+template<typename T>
+struct optional_copy_optimized :  mpl::or_<
+    is_reference<T>,  // refs aren't copyable at all, but optional<T&> should be copy_optimized
+    mpl::and_<
+        has_trivial_copy<T>,
+        has_trivial_assign<T>,
+        mpl::bool_< (sizeof(T) <= 128) > // TODO make 128 configurable
+    >
+> {};
+
 struct optional_tag {} ;
 
 template<class T>
@@ -204,6 +218,7 @@ class optional_base : public optional_tag
   public:
     typedef BOOST_DEDUCED_TYPENAME mpl::if_<is_reference_predicate,types_when_ref,types_when_not_ref>::type types ;
     typedef optional_dtor_optimized<T>                         dtor_optimized;
+    typedef optional_copy_optimized<T>                         copy_optimized;
 
   protected:
     typedef bool (this_type::*unspecified_bool_type)() const;
@@ -247,9 +262,7 @@ class optional_base : public optional_tag
 
     // Creates a deep copy of another optional<T>
     // Can throw if T::T(T const&) does
-    optional_base ( optional_base const& rhs )
-      :
-      m_initialized(false)
+    void optional_base_copy_ctor_impl ( optional_base const& rhs )
     {
       if ( rhs.is_initialized() )
         construct(rhs.get_impl());
@@ -506,6 +519,59 @@ class optional_base : public optional_tag
     storage_type m_storage ;
 } ;
 
+
+template<class T,bool copy_optimized>
+struct optional_copier : optional_base<T>
+{
+    // does copy and assignment optimization
+    typedef optional_detail::optional_base<T> base ;
+    typedef BOOST_DEDUCED_TYPENAME base::argument_type        argument_type ;
+
+    optional_copier () {}
+
+    optional_copier ( optional_copier const& rhs ) : base()
+      {
+        optional_base_copy_ctor_impl(rhs);
+      }
+
+    optional_copier& operator= ( optional_copier const& rhs )
+      {
+        this->assign( static_cast<base const&>(rhs) ) ;
+        return *this ;
+      }
+
+    template<class Expr>
+    explicit optional_copier ( Expr expr ) : base(expr) {}
+
+    template<class P1,class P2>
+    explicit optional_copier ( P1 p1 ,P2 p2 ) : base(p1,p2) {}
+
+    optional_copier ( bool cond, argument_type val ) : base(cond,val) {}
+};
+
+
+template<class T>
+struct optional_copier<T, true> : optional_base<T>
+{
+    // does copy and assignment optimization
+    typedef optional_detail::optional_base<T> base ;
+    typedef BOOST_DEDUCED_TYPENAME base::argument_type        argument_type ;
+
+    optional_copier () {}
+
+    //optional_copier ( optional_copier const& rhs ) // default impl does memcpy
+
+    //optional_copier& operator= ( optional_copier const& rhs )  // default impl does memcpy
+
+    template<class Expr>
+    explicit optional_copier ( Expr expr ) : base(expr) {}
+
+    template<class P1,class P2>
+    explicit optional_copier ( P1 p1 ,P2 p2 ) : base(p1,p2) {}
+
+    optional_copier ( bool cond, argument_type val ) : base(cond,val) {}
+};
+
 template<typename Optional,bool dtor_optimized>
 struct optional_dtor_mixin{
     ~optional_dtor_mixin(){ static_cast<Optional*>(this)->destructor_impl() ; }
@@ -518,10 +584,10 @@ struct optional_dtor_mixin<Optional, true > { };
 
 template<class T>
 class optional :
-    public  optional_detail::optional_base<T>, 
+    public  optional_detail::optional_copier<T, optional_detail::optional_base<T>::copy_optimized::value >,
     public  optional_detail::optional_dtor_mixin<optional<T>, optional_detail::optional_base<T>::dtor_optimized::value >
 {
-    typedef optional_detail::optional_base<T> base ;
+    typedef optional_detail::optional_copier<T, optional_detail::optional_base<T>::copy_optimized::value > base ;
 
     typedef BOOST_DEDUCED_TYPENAME base::unspecified_bool_type  unspecified_bool_type ;
 
@@ -584,7 +650,7 @@ class optional :
 
     // Creates a deep copy of another optional<T>
     // Can throw if T::T(T const&) does
-    optional ( optional const& rhs ) : base( static_cast<base const&>(rhs) ) {}
+    //optional ( optional const& rhs ) // default impl (see optional_copier)
 
     // No-throw (assuming T::~T() doesn't)
     //~optional() {}
@@ -616,11 +682,7 @@ class optional :
     // Assigns from another optional<T> (deep-copies the rhs value)
     // Basic Guarantee: If T::T( T const& ) throws, this is left UNINITIALIZED
     //  (NOTE: On BCB, this operator is not actually called and left is left UNMODIFIED in case of a throw)
-    optional& operator= ( optional const& rhs )
-      {
-        this->assign( static_cast<base const&>(rhs) ) ;
-        return *this ;
-      }
+    //optional& operator= ( optional const& rhs ) // default impl (see optional_copier)
 
     // Assigns from a T (deep-copies the rhs value)
     // Basic Guarantee: If T::( T const& ) throws, this is left UNINITIALIZED
