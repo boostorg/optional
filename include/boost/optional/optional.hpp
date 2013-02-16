@@ -17,6 +17,7 @@
 
 #include <new>
 #include <algorithm>
+#include <iosfwd>
 
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
@@ -716,6 +717,11 @@ get_pointer ( optional<T>& opt )
 {
   return opt.get_ptr() ;
 }
+
+// Forward declaration to prevent operator safe-bool from being used.
+template<class CharType, class CharTrait, class T>
+std::basic_ostream<CharType, CharTrait>&
+operator<<(std::basic_ostream<CharType, CharTrait>& out, optional<T> const& v);
 
 // optional's relational operators ( ==, !=, <, >, <=, >= ) have deep-semantics (compare values).
 // WARNING: This is UNLIKE pointers. Use equal_pointees()/less_pointess() in generic code instead.
