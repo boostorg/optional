@@ -918,6 +918,18 @@ inline
 bool operator >= ( none_t x, optional<T> const& y )
 { return !( x < y ) ; }
 
+//
+// forward declarations of operator << and operator >>
+//
+
+template<class S, class T>
+inline
+S& operator << ( S&, optional<T> const& );
+
+template<class S, class T>
+inline
+S& operator >> ( S&, optional<T> const& );
+
 namespace optional_detail {
 
 template<bool use_default_constructor> struct swap_selector;
