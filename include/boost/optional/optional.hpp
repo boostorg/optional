@@ -131,6 +131,9 @@ struct types_when_isnt_ref
 {
   typedef T const& reference_const_type ;
   typedef T &      reference_type ;
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+  typedef T &&     rval_reference_type ;
+#endif
   typedef T const* pointer_const_type ;
   typedef T *      pointer_type ;
   typedef T const& argument_type ;
@@ -140,11 +143,14 @@ struct types_when_is_ref
 {
   typedef BOOST_DEDUCED_TYPENAME remove_reference<T>::type raw_type ;
 
-  typedef raw_type& reference_const_type ;
-  typedef raw_type& reference_type ;
-  typedef raw_type* pointer_const_type ;
-  typedef raw_type* pointer_type ;
-  typedef raw_type& argument_type ;
+  typedef raw_type&  reference_const_type ;
+  typedef raw_type&  reference_type ;
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+  typedef raw_type&& rval_reference_type ;
+#endif
+  typedef raw_type*  pointer_const_type ;
+  typedef raw_type*  pointer_type ;
+  typedef raw_type&  argument_type ;
 } ;
 
 struct optional_tag {} ;
@@ -184,6 +190,9 @@ class optional_base : public optional_tag
 
     typedef BOOST_DEDUCED_TYPENAME types::reference_type       reference_type ;
     typedef BOOST_DEDUCED_TYPENAME types::reference_const_type reference_const_type ;
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    typedef BOOST_DEDUCED_TYPENAME types::rval_reference_type  rval_reference_type ;
+#endif
     typedef BOOST_DEDUCED_TYPENAME types::pointer_type         pointer_type ;
     typedef BOOST_DEDUCED_TYPENAME types::pointer_const_type   pointer_const_type ;
     typedef BOOST_DEDUCED_TYPENAME types::argument_type        argument_type ;
@@ -209,6 +218,17 @@ class optional_base : public optional_tag
       construct(val);
     }
 
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // move-construct an optional<T> initialized from an rvalue-ref to 'val'.
+    // Can throw if T::T(T&&) does
+    optional_base ( rval_reference_type val )
+      :
+      m_initialized(false)
+    {
+      construct( static_cast<T&&>(val) );
+    }
+#endif
+
     // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialzed optional<T>.
     // Can throw if T::T(T const&) does
     optional_base ( bool cond, argument_type val )
@@ -229,6 +249,17 @@ class optional_base : public optional_tag
         construct(rhs.get_impl());
     }
 
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Creates a deep move of another optional<T>
+    // Can throw if T::T(T&&) does
+    optional_base ( optional_base&& rhs )
+      :
+      m_initialized(false)
+    {
+      if ( rhs.is_initialized() )
+        construct( static_cast<T&&>(rhs.get_impl()) );
+    }
+#endif
 
     // This is used for both converting and in-place constructions.
     // Derived classes use the 'tag' to select the appropriate
@@ -279,6 +310,26 @@ class optional_base : public optional_tag
       }
     }
 
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // move-assigns from another _convertible_ optional<U> (deep-moves from the rhs value)
+    template<class U>
+    void assign ( optional<U>&& rhs )
+    {
+      typedef BOOST_DEDUCED_TYPENAME optional<U>::rval_reference_type ref_type;
+      if (is_initialized())
+      {
+        if ( rhs.is_initialized() )
+             assign_value(static_cast<ref_type>(rhs.get()), is_reference_predicate() );
+        else destroy();
+      }
+      else
+      {
+        if ( rhs.is_initialized() )
+          construct(static_cast<ref_type>(rhs.get()));
+      }
+    }
+#endif
+    
     // Assigns from a T (deep-copies the rhs value)
     void assign ( argument_type val )
     {
@@ -286,6 +337,16 @@ class optional_base : public optional_tag
            assign_value(val, is_reference_predicate() );
       else construct(val);
     }
+    
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Assigns from a T (deep-moves the rhs value)
+    void assign ( rval_reference_type val )
+    {
+      if (is_initialized())
+           assign_value( static_cast<rval_reference_type>(val), is_reference_predicate() );
+      else construct( static_cast<rval_reference_type>(val) );
+    }
+#endif
 
     // Assigns from "none", destroying the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
@@ -325,6 +386,14 @@ class optional_base : public optional_tag
        new (m_storage.address()) internal_type(val) ;
        m_initialized = true ;
      }
+     
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    void construct ( rval_reference_type val )
+     {
+       new (m_storage.address()) internal_type( static_cast<rval_reference_type>(val) ) ;
+       m_initialized = true ;
+     }
+#endif
 
 #ifndef BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
     // Constructs in-place using the given factory
@@ -411,6 +480,10 @@ class optional_base : public optional_tag
 
     void assign_value ( argument_type val, is_not_reference_tag ) { get_impl() = val; }
     void assign_value ( argument_type val, is_reference_tag     ) { construct(val); }
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    void assign_value ( rval_reference_type val, is_not_reference_tag ) { get_impl() = static_cast<rval_reference_type>(val); }
+    void assign_value ( rval_reference_type val, is_reference_tag     ) { construct( static_cast<rval_reference_type>(val) ); }
+#endif
 
     void destroy()
     {
@@ -488,21 +561,33 @@ class optional : public optional_detail::optional_base<T>
     typedef BOOST_DEDUCED_TYPENAME base::value_type           value_type ;
     typedef BOOST_DEDUCED_TYPENAME base::reference_type       reference_type ;
     typedef BOOST_DEDUCED_TYPENAME base::reference_const_type reference_const_type ;
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    typedef BOOST_DEDUCED_TYPENAME base::rval_reference_type  rval_reference_type ;
+#endif
     typedef BOOST_DEDUCED_TYPENAME base::pointer_type         pointer_type ;
     typedef BOOST_DEDUCED_TYPENAME base::pointer_const_type   pointer_const_type ;
     typedef BOOST_DEDUCED_TYPENAME base::argument_type        argument_type ;
 
     // Creates an optional<T> uninitialized.
     // No-throw
-    optional() : base() {}
+    optional() BOOST_NOEXCEPT : base() {}
 
     // Creates an optional<T> uninitialized.
     // No-throw
-    optional( none_t none_ ) : base(none_) {}
+    optional( none_t none_ ) BOOST_NOEXCEPT : base(none_) {}
 
     // Creates an optional<T> initialized with 'val'.
     // Can throw if T::T(T const&) does
     optional ( argument_type val ) : base(val) {}
+
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Creates an optional<T> initialized with 'move(val)'.
+    // Can throw if T::T(T &&) does
+    optional ( rval_reference_type val ) BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<T&&>(val))))
+	  : 
+	  base( static_cast<T&&>(val) ) 
+	{}
+#endif
 
     // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialized optional.
     // Can throw if T::T(T const&) does
@@ -521,6 +606,20 @@ class optional : public optional_detail::optional_base<T>
       if ( rhs.is_initialized() )
         this->construct(rhs.get());
     }
+    
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Creates a deep move of another convertible optional<U>
+    // Requires a valid conversion from U to T.
+    // Can throw if T::T(U&&) does
+    template<class U>
+    explicit optional ( optional<U> && rhs )
+      :
+      base()
+    {
+      if ( rhs.is_initialized() )
+        this->construct( static_cast<BOOST_DEDUCED_TYPENAME optional<U>::rval_reference_type>(rhs.get()) );
+    }
+#endif
 
 #ifndef BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
     // Creates an optional<T> with an expression which can be either
@@ -573,6 +672,16 @@ class optional : public optional_detail::optional_base<T>
         return *this ;
       }
 
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Assigns from another optional<T> (deep-moves the rhs value)
+    optional& operator= ( optional && rhs ) 
+	  BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<optional &&>(*rhs))) && BOOST_NOEXCEPT_EXPR(*rhs = static_cast<optional &&>(*rhs)))
+      {
+        this->assign( static_cast<optional &&>(rhs) ) ;
+        return *this ;
+      }
+#endif
+
     // Assigns from a T (deep-copies the rhs value)
     // Basic Guarantee: If T::( T const& ) throws, this is left UNINITIALIZED
     optional& operator= ( argument_type val )
@@ -580,6 +689,15 @@ class optional : public optional_detail::optional_base<T>
         this->assign( val ) ;
         return *this ;
       }
+
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Assigns from a T (deep-moves the rhs value)
+    optional& operator= ( rval_reference_type val )
+      {
+        this->assign( static_cast<rval_reference_type>(val) ) ;
+        return *this ;
+      }
+#endif
 
     // Assigns from a "none"
     // Which destroys the current value, if any, leaving this UNINITIALIZED
@@ -591,10 +709,10 @@ class optional : public optional_detail::optional_base<T>
       }
 
     void swap( optional & arg )
+	  BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<optional &&>(*arg))) && BOOST_NOEXCEPT_EXPR(*arg = static_cast<optional &&>(*arg)))
       {
         // allow for Koenig lookup
-        using boost::swap;
-        swap(*this, arg);
+        boost::swap(*this, arg);
       }
 
 
@@ -961,6 +1079,7 @@ template<class T>
 struct optional_swap_should_use_default_constructor : has_nothrow_default_constructor<T> {} ;
 
 template<class T> inline void swap ( optional<T>& x, optional<T>& y )
+  BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<optional &&>(*x))) && BOOST_NOEXCEPT_EXPR(*y = static_cast<optional &&>(*x)))
 {
     optional_detail::swap_selector<optional_swap_should_use_default_constructor<T>::value>::optional_swap(x, y);
 }
