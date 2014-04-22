@@ -26,7 +26,9 @@
 #include <boost/type_traits/has_nothrow_constructor.hpp>
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/not.hpp>
@@ -36,6 +38,8 @@
 #include <boost/utility/addressof.hpp>
 #include <boost/utility/compare_pointees.hpp>
 #include <boost/utility/in_place_factory.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/move/utility.hpp>
 
 #include <boost/optional/optional_fwd.hpp>
 
@@ -91,7 +95,8 @@ class in_place_factory_base ;
 class typed_in_place_factory_base ;
 
 // This forward is needed to refer to namespace scope swap from the member swap
-template<class T> void swap ( optional<T>& x, optional<T>& y );
+template<class T> void swap ( optional<T>& x, optional<T>& y )
+  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value);
 
 namespace optional_detail {
 
@@ -225,7 +230,7 @@ class optional_base : public optional_tag
       :
       m_initialized(false)
     {
-      construct( static_cast<T&&>(val) );
+      construct( boost::move(val) );
     }
 #endif
 
@@ -257,10 +262,21 @@ class optional_base : public optional_tag
       m_initialized(false)
     {
       if ( rhs.is_initialized() )
-        construct( static_cast<T&&>(rhs.get_impl()) );
+        construct( boost::move(rhs.get_impl()) );
     }
 #endif
 
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+
+    template<class Expr, typename PtrExpr>
+    explicit optional_base ( Expr&& expr, PtrExpr const* tag )
+      :
+      m_initialized(false)
+    {
+      construct(boost::forward<Expr>(expr),tag);
+    }
+
+#else
     // This is used for both converting and in-place constructions.
     // Derived classes use the 'tag' to select the appropriate
     // implementation (the correct 'construct()' overload)
@@ -272,6 +288,7 @@ class optional_base : public optional_tag
       construct(expr,tag);
     }
 
+#endif
 
 
     // No-throw (assuming T::~T() doesn't)
@@ -338,13 +355,13 @@ class optional_base : public optional_tag
       else construct(val);
     }
     
-#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     // Assigns from a T (deep-moves the rhs value)
     void assign ( rval_reference_type val )
     {
       if (is_initialized())
-           assign_value( static_cast<rval_reference_type>(val), is_reference_predicate() );
-      else construct( static_cast<rval_reference_type>(val) );
+           assign_value( boost::move(val), is_reference_predicate() );
+      else construct( boost::move(val) );
     }
 #endif
 
@@ -353,13 +370,25 @@ class optional_base : public optional_tag
     void assign ( none_t ) { destroy(); }
 
 #ifndef BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
+
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    template<class Expr, class ExprPtr>
+    void assign_expr ( Expr&& expr, ExprPtr const* tag )
+    {
+      if (is_initialized())
+        assign_expr_to_initialized(boost::forward<Expr>(expr),tag);
+      else construct(boost::forward<Expr>(expr),tag);
+    }
+#else
     template<class Expr>
     void assign_expr ( Expr const& expr, Expr const* tag )
-      {
-        if (is_initialized())
-             assign_expr_to_initialized(expr,tag);
-        else construct(expr,tag);
-      }
+    {
+      if (is_initialized())
+        assign_expr_to_initialized(expr,tag);
+      else construct(expr,tag);
+    }
+#endif
+
 #endif
 
   public :
@@ -390,7 +419,7 @@ class optional_base : public optional_tag
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     void construct ( rval_reference_type val )
      {
-       new (m_storage.address()) internal_type( static_cast<rval_reference_type>(val) ) ;
+       new (m_storage.address()) internal_type( boost::move(val) ) ;
        m_initialized = true ;
      }
 #endif
@@ -430,7 +459,29 @@ class optional_base : public optional_tag
      }
 #endif
 
-    // Constructs using any expression implicitely convertible to the single argument
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Constructs using any expression implicitly convertible to the single argument
+    // of a one-argument T constructor.
+    // Converting constructions of optional<T> from optional<U> uses this function with
+    // 'Expr' being of type 'U' and relying on a converting constructor of T from U.
+    template<class Expr>
+    void construct ( Expr&& expr, void const* )
+    {
+      new (m_storage.address()) internal_type(boost::forward<Expr>(expr)) ;
+      m_initialized = true ;
+    }
+
+    // Assigns using a form any expression implicitly convertible to the single argument
+    // of a T's assignment operator.
+    // Converting assignments of optional<T> from optional<U> uses this function with
+    // 'Expr' being of type 'U' and relying on a converting assignment of T from U.
+    template<class Expr>
+    void assign_expr_to_initialized ( Expr&& expr, void const* )
+    {
+      assign_value(boost::forward<Expr>(expr), is_reference_predicate());
+    }
+#else
+    // Constructs using any expression implicitly convertible to the single argument
     // of a one-argument T constructor.
     // Converting constructions of optional<T> from optional<U> uses this function with
     // 'Expr' being of type 'U' and relying on a converting constructor of T from U.
@@ -441,7 +492,7 @@ class optional_base : public optional_tag
        m_initialized = true ;
      }
 
-    // Assigns using a form any expression implicitely convertible to the single argument
+    // Assigns using a form any expression implicitly convertible to the single argument
     // of a T's assignment operator.
     // Converting assignments of optional<T> from optional<U> uses this function with
     // 'Expr' being of type 'U' and relying on a converting assignment of T from U.
@@ -450,6 +501,8 @@ class optional_base : public optional_tag
      {
        assign_value(expr, is_reference_predicate());
      }
+
+#endif
 
 #ifdef BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION
     // BCB5.64 (and probably lower versions) workaround.
@@ -583,10 +636,7 @@ class optional : public optional_detail::optional_base<T>
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     // Creates an optional<T> initialized with 'move(val)'.
     // Can throw if T::T(T &&) does
-    optional ( rval_reference_type val ) BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<T&&>(val))))
-	  : 
-	  base( static_cast<T&&>(val) ) 
-	{}
+    optional ( rval_reference_type val ) : base( boost::forward<T>(val) ) {}
 #endif
 
     // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialized optional.
@@ -617,7 +667,7 @@ class optional : public optional_detail::optional_base<T>
       base()
     {
       if ( rhs.is_initialized() )
-        this->construct( static_cast<BOOST_DEDUCED_TYPENAME optional<U>::rval_reference_type>(rhs.get()) );
+        this->construct( boost::move(rhs.get()) );
     }
 #endif
 
@@ -625,32 +675,75 @@ class optional : public optional_detail::optional_base<T>
     // Creates an optional<T> with an expression which can be either
     //  (a) An instance of InPlaceFactory (i.e. in_place(a,b,...,n);
     //  (b) An instance of TypedInPlaceFactory ( i.e. in_place<T>(a,b,...,n);
-    //  (c) Any expression implicitely convertible to the single type
+    //  (c) Any expression implicitly convertible to the single type
     //      of a one-argument T's constructor.
     //  (d*) Weak compilers (BCB) might also resolved Expr as optional<T> and optional<U>
     //       even though explicit overloads are present for these.
     // Depending on the above some T ctor is called.
-    // Can throw is the resolved T ctor throws.
+    // Can throw if the resolved T ctor throws.
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+
+#ifndef BOOST_NO_SFINAE
+#else
+  template<class Expr>
+  explicit optional ( Expr&& expr, typename boost::disable_if<boost::is_same<typename boost::decay<Expr>::type, optional> >::type* = 0 ) 
+    : base(boost::forward<Expr>(expr),boost::addressof(expr)) {}
+#endif
+#else
     template<class Expr>
     explicit optional ( Expr const& expr ) : base(expr,boost::addressof(expr)) {}
+#endif
 #endif
 
     // Creates a deep copy of another optional<T>
     // Can throw if T::T(T const&) does
     optional ( optional const& rhs ) : base( static_cast<base const&>(rhs) ) {}
 
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+	// Creates a deep move of another optional<T>
+	// Can throw if T::T(T&&) does
+	optional ( optional && rhs ) 
+	  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value)
+	  : base( boost::move(rhs) ) 
+	{}
+
+#ifdef BOOST_NO_SFINAE
+  // To avoid too perfect forwarding
+  optional ( optional& rhs ) : base( static_cast<base const&>(rhs) ) {}
+#endif
+
+#endif
    // No-throw (assuming T::~T() doesn't)
     ~optional() {}
 
 #if !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
     // Assigns from an expression. See corresponding constructor.
     // Basic Guarantee: If the resolved T ctor throws, this is left UNINITIALIZED
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+
+    template<class Expr>
+#if !defined BOOST_NO_SFINAE
+    typename boost::disable_if<
+      boost::is_same<typename boost::decay<Expr>::type, optional>,
+      optional&
+    >::type 
+#else
+    optional&
+#endif
+    operator= ( Expr&& expr )
+      {
+        this->assign_expr(boost::forward<Expr>(expr),boost::addressof(expr));
+        return *this ;
+      }
+
+#else
     template<class Expr>
     optional& operator= ( Expr const& expr )
       {
         this->assign_expr(expr,boost::addressof(expr));
         return *this ;
       }
+#endif
 #endif
 
     // Assigns from another convertible optional<U> (converts && deep-copies the rhs value)
@@ -675,11 +768,19 @@ class optional : public optional_detail::optional_base<T>
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     // Assigns from another optional<T> (deep-moves the rhs value)
     optional& operator= ( optional && rhs ) 
-	  BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<optional &&>(*rhs))) && BOOST_NOEXCEPT_EXPR(*rhs = static_cast<optional &&>(*rhs)))
+	  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)
       {
-        this->assign( static_cast<optional &&>(rhs) ) ;
+        this->assign( static_cast<base &&>(rhs) ) ;
         return *this ;
       }
+#ifdef BOOST_NO_SFINAE
+    // to avoid too perfect forwarding
+    optional& operator= ( optional& rhs )
+      {
+        this->assign( static_cast<base const&>(rhs) ) ;
+        return *this ;
+      }
+#endif
 #endif
 
     // Assigns from a T (deep-copies the rhs value)
@@ -694,7 +795,7 @@ class optional : public optional_detail::optional_base<T>
     // Assigns from a T (deep-moves the rhs value)
     optional& operator= ( rval_reference_type val )
       {
-        this->assign( static_cast<rval_reference_type>(val) ) ;
+        this->assign( boost::move(val) ) ;
         return *this ;
       }
 #endif
@@ -709,7 +810,7 @@ class optional : public optional_detail::optional_base<T>
       }
 
     void swap( optional & arg )
-	  BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<optional &&>(*arg))) && BOOST_NOEXCEPT_EXPR(*arg = static_cast<optional &&>(*arg)))
+	  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)
       {
         // allow for Koenig lookup
         boost::swap(*this, arg);
@@ -740,11 +841,11 @@ class optional : public optional_detail::optional_base<T>
 
     // implicit conversion to "bool"
     // No-throw
-    operator unspecified_bool_type() const { return this->safe_bool() ; }
+    operator unspecified_bool_type() const BOOST_NOEXCEPT { return this->safe_bool() ; }
 
     // This is provided for those compilers which don't like the conversion to bool
     // on some contexts.
-    bool operator!() const { return !this->is_initialized() ; }
+    bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
 } ;
 
 // Returns optional<T>(v)
@@ -1079,7 +1180,7 @@ template<class T>
 struct optional_swap_should_use_default_constructor : has_nothrow_default_constructor<T> {} ;
 
 template<class T> inline void swap ( optional<T>& x, optional<T>& y )
-  BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(T(static_cast<optional &&>(*x))) && BOOST_NOEXCEPT_EXPR(*y = static_cast<optional &&>(*x)))
+  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)
 {
     optional_detail::swap_selector<optional_swap_should_use_default_constructor<T>::value>::optional_swap(x, y);
 }
