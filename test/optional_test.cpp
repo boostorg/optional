@@ -1086,8 +1086,8 @@ namespace optional_swap_test
   //
   void swap(boost::optional<class_whose_explicit_ctor_should_be_used> & x, boost::optional<class_whose_explicit_ctor_should_be_used> & y)
   {
-    bool hasX = x;
-    bool hasY = y;
+    bool hasX(x);
+    bool hasY(y);
 
     if ( !hasX && !hasY )
      return;

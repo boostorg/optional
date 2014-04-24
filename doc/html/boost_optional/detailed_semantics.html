@@ -981,15 +981,18 @@
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
 <a name="reference_optional_operator_bool"></a><div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">operator</span> </code><span class="emphasis"><em>unspecified-bool-type</em></span><code class="computeroutput"><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span></code>
+        <code class="computeroutput"><span class="keyword">explicit</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">operator</span> <span class="keyword">bool</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <span class="bold"><strong>Returns:</strong></span> An unspecified value which if
-          used on a boolean context is equivalent to (<code class="computeroutput"><span class="identifier">get_ptr</span><span class="special">()</span> <span class="special">!=</span> <span class="number">0</span></code>)
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">get_ptr</span><span class="special">()</span> <span class="special">!=</span> <span class="number">0</span></code>.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Throws:</strong></span> Nothing.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
+          explicit conversion operators this falls back to safe-bool idiom.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Example:</strong></span>

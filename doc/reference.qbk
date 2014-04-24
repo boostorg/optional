@@ -66,7 +66,7 @@
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
 
-        operator unspecified-bool-type() const ; ``[link reference_optional_operator_bool __GO_TO__]``
+        explicit operator bool() const ; ``[link reference_optional_operator_bool __GO_TO__]``
 
         bool operator!() const ; ``[link reference_optional_operator_not __GO_TO__]``
 
@@ -657,11 +657,11 @@ __SPACE__
 
 [#reference_optional_operator_bool]
 
-[: `optional<T>::operator `['unspecified-bool-type]`() const ;`]
+[: `explicit optional<T>::operator bool() const ;`]
 
-* [*Returns:] An unspecified value which if used on a boolean context
-is equivalent to (`get_ptr() != 0`)
+* [*Returns:] `get_ptr() != 0`.
 * [*Throws:] Nothing.
+* [*Notes:] On compilers that do not support explicit conversion operators this falls back to safe-bool idiom.
 * [*Example:]
 ``
 optional<T> def ;

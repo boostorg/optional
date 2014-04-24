@@ -36,6 +36,7 @@
 #include <boost/utility/addressof.hpp>
 #include <boost/utility/compare_pointees.hpp>
 #include <boost/utility/in_place_factory.hpp>
+#include <boost/utility/explicit_operator_bool.hpp>
 
 #include <boost/optional/optional_fwd.hpp>
 
@@ -180,8 +181,6 @@ class optional_base : public optional_tag
     typedef BOOST_DEDUCED_TYPENAME mpl::if_<is_reference_predicate,types_when_ref,types_when_not_ref>::type types ;
 
   protected:
-    typedef bool (this_type::*unspecified_bool_type)() const;
-
     typedef BOOST_DEDUCED_TYPENAME types::reference_type       reference_type ;
     typedef BOOST_DEDUCED_TYPENAME types::reference_const_type reference_const_type ;
     typedef BOOST_DEDUCED_TYPENAME types::pointer_type         pointer_type ;
@@ -418,8 +417,6 @@ class optional_base : public optional_tag
         destroy_impl(is_reference_predicate()) ;
     }
 
-    unspecified_bool_type safe_bool() const { return m_initialized ? &this_type::is_initialized : 0 ; }
-
     reference_const_type get_impl() const { return dereference(get_object(), is_reference_predicate() ) ; }
     reference_type       get_impl()       { return dereference(get_object(), is_reference_predicate() ) ; }
 
@@ -478,8 +475,6 @@ template<class T>
 class optional : public optional_detail::optional_base<T>
 {
     typedef optional_detail::optional_base<T> base ;
-
-    typedef BOOST_DEDUCED_TYPENAME base::unspecified_bool_type  unspecified_bool_type ;
 
   public :
 
@@ -620,13 +615,9 @@ class optional : public optional_detail::optional_base<T>
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
 
-    // implicit conversion to "bool"
-    // No-throw
-    operator unspecified_bool_type() const { return this->safe_bool() ; }
-
-    // This is provided for those compilers which don't like the conversion to bool
-    // on some contexts.
     bool operator!() const { return !this->is_initialized() ; }
+    
+    BOOST_EXPLICIT_OPERATOR_BOOL()
 } ;
 
 // Returns optional<T>(v)
