@@ -146,7 +146,8 @@ void test_move_ctor_from_optional_T()
 
 void test_move_assign_from_U()
 {
-  optional<Oracle> o1;
+  optional<Oracle> o1 = boost::none; // test if additional ctors didn't break it
+  o1 = boost::none;                  // test if additional assignments didn't break it
   o1 = OracleVal();
   BOOST_CHECK(o1);
   

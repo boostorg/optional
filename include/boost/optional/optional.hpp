@@ -27,6 +27,7 @@
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/decay.hpp>
+ #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
@@ -425,6 +426,41 @@ class optional_base : public optional_tag
 #endif
 
 #ifndef BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
+
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Constructs in-place using the given factory
+    template<class Expr>
+    void construct ( Expr&& factory, in_place_factory_base const* )
+     {
+       BOOST_STATIC_ASSERT ( ::boost::mpl::not_<is_reference_predicate>::value ) ;
+       boost_optional_detail::construct<value_type>(factory, m_storage.address());
+       m_initialized = true ;
+     }
+
+    // Constructs in-place using the given typed factory
+    template<class Expr>
+    void construct ( Expr&& factory, typed_in_place_factory_base const* )
+     {
+       BOOST_STATIC_ASSERT ( ::boost::mpl::not_<is_reference_predicate>::value ) ;
+       factory.apply(m_storage.address()) ;
+       m_initialized = true ;
+     }
+
+    template<class Expr>
+    void assign_expr_to_initialized ( Expr&& factory, in_place_factory_base const* tag )
+     {
+       destroy();
+       construct(factory,tag);
+     }
+
+    // Constructs in-place using the given typed factory
+    template<class Expr>
+    void assign_expr_to_initialized ( Expr&& factory, typed_in_place_factory_base const* tag )
+     {
+       destroy();
+       construct(factory,tag);
+     }
+#else
     // Constructs in-place using the given factory
     template<class Expr>
     void construct ( Expr const& factory, in_place_factory_base const* )
@@ -457,6 +493,8 @@ class optional_base : public optional_tag
        destroy();
        construct(factory,tag);
      }
+#endif
+
 #endif
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
@@ -683,12 +721,16 @@ class optional : public optional_detail::optional_base<T>
     // Can throw if the resolved T ctor throws.
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
 
-#ifndef BOOST_NO_SFINAE
-#else
+
   template<class Expr>
-  explicit optional ( Expr&& expr, typename boost::disable_if<boost::is_same<typename boost::decay<Expr>::type, optional> >::type* = 0 ) 
+  explicit optional ( Expr&& expr, 
+                      typename boost::disable_if_c<
+                        (boost::is_base_of<optional_detail::optional_tag, typename boost::decay<Expr>::type>::value) || 
+                        boost::is_same<typename boost::decay<Expr>::type, optional>::value || 
+                        boost::is_same<typename boost::decay<Expr>::type, none_t>::value >::type* = 0 
+  ) 
     : base(boost::forward<Expr>(expr),boost::addressof(expr)) {}
-#endif
+
 #else
     template<class Expr>
     explicit optional ( Expr const& expr ) : base(expr,boost::addressof(expr)) {}
@@ -707,11 +749,6 @@ class optional : public optional_detail::optional_base<T>
 	  : base( boost::move(rhs) ) 
 	{}
 
-#ifdef BOOST_NO_SFINAE
-  // To avoid too perfect forwarding
-  optional ( optional& rhs ) : base( static_cast<base const&>(rhs) ) {}
-#endif
-
 #endif
    // No-throw (assuming T::~T() doesn't)
     ~optional() {}
@@ -722,14 +759,10 @@ class optional : public optional_detail::optional_base<T>
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
 
     template<class Expr>
-#if !defined BOOST_NO_SFINAE
-    typename boost::disable_if<
-      boost::is_same<typename boost::decay<Expr>::type, optional>,
+    typename boost::disable_if_c<
+      boost::is_base_of<optional_detail::optional_tag, typename boost::decay<Expr>::type>::value || boost::is_same<typename boost::decay<Expr>::type, optional>::value || boost::is_same<typename boost::decay<Expr>::type, none_t>::value,
       optional&
     >::type 
-#else
-    optional&
-#endif
     operator= ( Expr&& expr )
       {
         this->assign_expr(boost::forward<Expr>(expr),boost::addressof(expr));
@@ -743,8 +776,8 @@ class optional : public optional_detail::optional_base<T>
         this->assign_expr(expr,boost::addressof(expr));
         return *this ;
       }
-#endif
-#endif
+#endif // !defined  BOOST_NO_CXX11_RVALUE_REFERENCES
+#endif // !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
 
     // Assigns from another convertible optional<U> (converts && deep-copies the rhs value)
     // Requires a valid conversion from U to T.
@@ -773,14 +806,6 @@ class optional : public optional_detail::optional_base<T>
         this->assign( static_cast<base &&>(rhs) ) ;
         return *this ;
       }
-#ifdef BOOST_NO_SFINAE
-    // to avoid too perfect forwarding
-    optional& operator= ( optional& rhs )
-      {
-        this->assign( static_cast<base const&>(rhs) ) ;
-        return *this ;
-      }
-#endif
 #endif
 
     // Assigns from a T (deep-copies the rhs value)
