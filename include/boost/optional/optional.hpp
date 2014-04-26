@@ -21,13 +21,14 @@
 
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/decay.hpp>
- #include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
@@ -139,6 +140,7 @@ struct types_when_isnt_ref
   typedef T &      reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
   typedef T &&     rval_reference_type ;
+  static rval_reference_type move(reference_type r) { return boost::move(r); }
 #endif
   typedef T const* pointer_const_type ;
   typedef T *      pointer_type ;
@@ -153,6 +155,7 @@ struct types_when_is_ref
   typedef raw_type&  reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
   typedef raw_type&& rval_reference_type ;
+  static reference_type move(reference_type r) { return r; }
 #endif
   typedef raw_type*  pointer_const_type ;
   typedef raw_type*  pointer_type ;
@@ -310,6 +313,24 @@ class optional_base : public optional_tag
           construct(rhs.get_impl());
       }
     }
+    
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Assigns from another optional<T> (deep-moves the rhs value)
+    void assign ( optional_base&& rhs )
+    {
+      if (is_initialized())
+      {
+        if ( rhs.is_initialized() )
+             assign_value(boost::move(rhs.get_impl()), is_reference_predicate() );
+        else destroy();
+      }
+      else
+      {
+        if ( rhs.is_initialized() )
+          construct(boost::move(rhs.get_impl()));
+      }
+    }
+#endif 
 
     // Assigns from another _convertible_ optional<U> (deep-copies the rhs value)
     template<class U>
@@ -328,7 +349,7 @@ class optional_base : public optional_tag
       }
     }
 
-#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     // move-assigns from another _convertible_ optional<U> (deep-moves from the rhs value)
     template<class U>
     void assign ( optional<U>&& rhs )
@@ -420,7 +441,7 @@ class optional_base : public optional_tag
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     void construct ( rval_reference_type val )
      {
-       new (m_storage.address()) internal_type( boost::move(val) ) ;
+       new (m_storage.address()) internal_type( types::move(val) ) ;
        m_initialized = true ;
      }
 #endif
@@ -726,7 +747,6 @@ class optional : public optional_detail::optional_base<T>
   explicit optional ( Expr&& expr, 
                       typename boost::disable_if_c<
                         (boost::is_base_of<optional_detail::optional_tag, typename boost::decay<Expr>::type>::value) || 
-                        boost::is_same<typename boost::decay<Expr>::type, optional>::value || 
                         boost::is_same<typename boost::decay<Expr>::type, none_t>::value >::type* = 0 
   ) 
     : base(boost::forward<Expr>(expr),boost::addressof(expr)) {}
@@ -760,7 +780,7 @@ class optional : public optional_detail::optional_base<T>
 
     template<class Expr>
     typename boost::disable_if_c<
-      boost::is_base_of<optional_detail::optional_tag, typename boost::decay<Expr>::type>::value || boost::is_same<typename boost::decay<Expr>::type, optional>::value || boost::is_same<typename boost::decay<Expr>::type, none_t>::value,
+      boost::is_base_of<optional_detail::optional_tag, typename boost::decay<Expr>::type>::value || boost::is_same<typename boost::decay<Expr>::type, none_t>::value,
       optional&
     >::type 
     operator= ( Expr&& expr )
@@ -872,6 +892,14 @@ class optional : public optional_detail::optional_base<T>
     // on some contexts.
     bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
 } ;
+
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+template<class T>
+class optional<T&&>
+{
+  BOOST_STATIC_ASSERT_MSG(sizeof(T) == 0, "Optional rvalue references are illegal.");
+} ;
+#endif
 
 // Returns optional<T>(v)
 template<class T>

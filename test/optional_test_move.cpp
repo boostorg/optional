@@ -20,6 +20,7 @@
 #include "boost/bind/apply.hpp" // Included just to test proper interaction with boost::apply<> as reported by Daniel Wallin
 #include "boost/mpl/bool.hpp"
 #include "boost/mpl/bool_fwd.hpp"  // For mpl::true_ and mpl::false_
+#include "boost/static_assert.hpp"
 
 #include "boost/optional/optional.hpp"
 
@@ -91,7 +92,6 @@ void test_move_ctor_from_U()
   OracleVal v1;
   optional<Oracle> o2 (v1);
   BOOST_CHECK(o2);
-  std::cout << "AK" << " @@@ " << o2->s << std::endl;
   BOOST_CHECK(o2->s == sValueCopyConstructed || o2->s == sCopyConstructed || o2->s == sMoveConstructed );
   BOOST_CHECK(v1.s == sIntConstructed);
     
@@ -204,7 +204,7 @@ void test_move_assign_from_T()
   BOOST_CHECK(v1.s == sMovedFrom);
 }
 
-void test_move_ssign_from_optional_T()
+void test_move_assign_from_optional_T()
 {
     optional<Oracle> o1;
     optional<Oracle> o2;
@@ -212,8 +212,8 @@ void test_move_ssign_from_optional_T()
     BOOST_CHECK(!o1);
     optional<Oracle> o3((Oracle()));
     o1 = o3;
-    /*BOOST_CHECK(o3);
-    BOOST_CHECK(o3->s == sDefaultConstructed);
+    BOOST_CHECK(o3);
+    BOOST_CHECK(o3->s == sMoveConstructed);
     BOOST_CHECK(o1);
     BOOST_CHECK(o1->s == sCopyConstructed);
     
@@ -225,9 +225,82 @@ void test_move_ssign_from_optional_T()
     
     o2 = optional<Oracle>((Oracle()));
     BOOST_CHECK(o2);
-    BOOST_CHECK(o2->s == sMoveAssigned);*/
+    BOOST_CHECK(o2->s == sMoveAssigned);
 }
 
+class MoveOnly
+{
+public:
+  int val;
+  MoveOnly(int v) : val(v) {}
+  MoveOnly(MoveOnly&& rhs) : val(rhs.val) { rhs.val = 0; }
+  void operator=(MoveOnly&& rhs) {val = rhs.val; rhs.val = 0; }
+  
+private:
+  MoveOnly(MoveOnly const&);
+  void operator=(MoveOnly const&);
+};
+
+void test_with_move_only()
+{
+    optional<MoveOnly> o1;
+    optional<MoveOnly> o2((MoveOnly(1)));
+    BOOST_CHECK(o2);
+    BOOST_CHECK(o2->val == 1);
+    optional<MoveOnly> o3 (boost::move(o1));
+    BOOST_CHECK(!o3);
+    optional<MoveOnly> o4 (boost::move(o2));
+    BOOST_CHECK(o4);
+    BOOST_CHECK(o4->val == 1);
+    BOOST_CHECK(o2);
+    BOOST_CHECK(o2->val == 0);
+    
+    o3 = boost::move(o4);
+    BOOST_CHECK(o3);
+    BOOST_CHECK(o3->val == 1);
+    BOOST_CHECK(o4);
+    BOOST_CHECK(o4->val == 0);
+}
+
+// these 4 classes have different noexcept signatures in move operations
+struct NothrowBoth {
+  NothrowBoth(NothrowBoth&&) BOOST_NOEXCEPT_IF(true) {};
+  void operator=(NothrowBoth&&) BOOST_NOEXCEPT_IF(true) {};
+};
+struct NothrowCtor {
+  NothrowCtor(NothrowCtor&&) BOOST_NOEXCEPT_IF(true) {};
+  void operator=(NothrowCtor&&) BOOST_NOEXCEPT_IF(false) {};
+};
+struct NothrowAssign {
+  NothrowAssign(NothrowAssign&&) BOOST_NOEXCEPT_IF(false) {};
+  void operator=(NothrowAssign&&) BOOST_NOEXCEPT_IF(true) {};
+};
+struct NothrowNone {
+  NothrowNone(NothrowNone&&) BOOST_NOEXCEPT_IF(false) {};
+  void operator=(NothrowNone&&) BOOST_NOEXCEPT_IF(false) {};
+};
+
+#ifndef BOOST_NO_NOEXCEPT
+
+void test_noexcept() // this is a compile-time test
+{
+    BOOST_STATIC_ASSERT(::boost::is_nothrow_move_constructible<optional<NothrowBoth> >::value);
+    BOOST_STATIC_ASSERT(::boost::is_nothrow_move_assignable<optional<NothrowBoth> >::value);
+    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowBoth>()));
+    
+    BOOST_STATIC_ASSERT(::boost::is_nothrow_move_constructible<optional<NothrowCtor> >::value);
+    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<optional<NothrowCtor> >::value);
+    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowCtor>()));
+    
+    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_constructible<optional<NothrowAssign> >::value);
+    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<optional<NothrowAssign> >::value);
+    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowAssign>()));
+    
+    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_constructible<optional<NothrowNone> >::value);
+    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<optional<NothrowNone> >::value);
+    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowNone>()));
+}
+#endif // !defned BOOST_NO_NOEXCEPT
 
 #endif
 
@@ -241,7 +314,8 @@ int test_main( int, char* [] )
     test_move_ctor_from_optional_T();
     test_move_assign_from_U();
     test_move_assign_from_T();
-    test_move_ssign_from_optional_T();
+    test_move_assign_from_optional_T();
+    test_with_move_only();
 #endif
   }
   catch ( ... )
