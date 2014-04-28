@@ -29,7 +29,9 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_lvalue_reference.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/is_rvalue_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -146,6 +148,7 @@ struct types_when_isnt_ref
   typedef T *      pointer_type ;
   typedef T const& argument_type ;
 } ;
+
 template<class T>
 struct types_when_is_ref
 {
@@ -161,6 +164,14 @@ struct types_when_is_ref
   typedef raw_type*  pointer_type ;
   typedef raw_type&  argument_type ;
 } ;
+
+template <class To, class From>
+void prevent_binding_rvalue_ref_to_optional_lvalue_ref()
+{
+  BOOST_STATIC_ASSERT_MSG(
+    !boost::is_lvalue_reference<To>::value || !boost::is_rvalue_reference<From>::value, 
+    "binding rvalue references to optional lvalue references is disallowed"); 
+}
 
 struct optional_tag {} ;
 
@@ -272,7 +283,7 @@ class optional_base : public optional_tag
 
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
 
-    template<class Expr, typename PtrExpr>
+    template<class Expr, class PtrExpr>
     explicit optional_base ( Expr&& expr, PtrExpr const* tag )
       :
       m_initialized(false)
@@ -695,7 +706,8 @@ class optional : public optional_detail::optional_base<T>
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     // Creates an optional<T> initialized with 'move(val)'.
     // Can throw if T::T(T &&) does
-    optional ( rval_reference_type val ) : base( boost::forward<T>(val) ) {}
+    optional ( rval_reference_type val ) : base( boost::forward<T>(val) ) 
+      {optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, rval_reference_type>();}
 #endif
 
     // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialized optional.
@@ -740,22 +752,23 @@ class optional : public optional_detail::optional_base<T>
     //       even though explicit overloads are present for these.
     // Depending on the above some T ctor is called.
     // Can throw if the resolved T ctor throws.
-#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 
 
   template<class Expr>
   explicit optional ( Expr&& expr, 
-                      typename boost::disable_if_c<
-                        (boost::is_base_of<optional_detail::optional_tag, typename boost::decay<Expr>::type>::value) || 
-                        boost::is_same<typename boost::decay<Expr>::type, none_t>::value >::type* = 0 
+                      BOOST_DEDUCED_TYPENAME boost::disable_if_c<
+                        (boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type>::value) || 
+                        boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type, none_t>::value >::type* = 0 
   ) 
-    : base(boost::forward<Expr>(expr),boost::addressof(expr)) {}
+    : base(boost::forward<Expr>(expr),boost::addressof(expr)) 
+    {optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, rval_reference_type>();}
 
 #else
     template<class Expr>
     explicit optional ( Expr const& expr ) : base(expr,boost::addressof(expr)) {}
-#endif
-#endif
+#endif // !defined BOOST_NO_CXX11_RVALUE_REFERENCES
+#endif // !defined BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
 
     // Creates a deep copy of another optional<T>
     // Can throw if T::T(T const&) does
@@ -779,12 +792,14 @@ class optional : public optional_detail::optional_base<T>
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
 
     template<class Expr>
-    typename boost::disable_if_c<
-      boost::is_base_of<optional_detail::optional_tag, typename boost::decay<Expr>::type>::value || boost::is_same<typename boost::decay<Expr>::type, none_t>::value,
+    BOOST_DEDUCED_TYPENAME boost::disable_if_c<
+      boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type>::value || 
+        boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type, none_t>::value,
       optional&
     >::type 
     operator= ( Expr&& expr )
       {
+        optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, rval_reference_type>();
         this->assign_expr(boost::forward<Expr>(expr),boost::addressof(expr));
         return *this ;
       }
@@ -836,7 +851,7 @@ class optional : public optional_detail::optional_base<T>
         return *this ;
       }
 
-#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     // Assigns from a T (deep-moves the rhs value)
     optional& operator= ( rval_reference_type val )
       {

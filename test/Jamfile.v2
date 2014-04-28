@@ -32,5 +32,9 @@ import testing ;
     [ compile-fail optional_test_inplace_fail2.cpp ]
     [ compile-fail optional_test_fail_copying_a_moveable_type.cpp ]
     [ compile-fail optional_test_fail_optional_rvalue_ref.cpp ]
+    [ compile-fail optional_test_ref_fail_init_from_Trefref.cpp ]
+    [ compile-fail optional_test_ref_fail_init_from_Urefref.cpp ]
+    [ compile-fail optional_test_ref_fail_assign_from_Trefref.cpp ]
+    [ compile-fail optional_test_ref_fail_assign_from_Urefref.cpp ]
   ;
 }
