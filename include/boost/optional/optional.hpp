@@ -30,6 +30,8 @@
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_lvalue_reference.hpp>
+#include <boost/type_traits/is_nothrow_move_assignable.hpp>
+#include <boost/type_traits/is_nothrow_move_constructible.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -99,8 +101,7 @@ class in_place_factory_base ;
 class typed_in_place_factory_base ;
 
 // This forward is needed to refer to namespace scope swap from the member swap
-template<class T> void swap ( optional<T>& x, optional<T>& y )
-  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value);
+template<class T> void swap ( optional<T>& x, optional<T>& y );
 
 namespace optional_detail {
 
@@ -1242,6 +1243,37 @@ struct swap_selector<true>
     }
 };
 
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+template<>
+struct swap_selector<false>
+{
+    template<class T>
+    static void optional_swap ( optional<T>& x, optional<T>& y ) 
+    //BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && BOOST_NOEXCEPT_EXPR(boost::swap(*x, *y)))
+    {
+        if(x)
+        {
+            if (y)
+            {
+                boost::swap(*x, *y);
+            }
+            else
+            {
+                y = boost::move(*x);
+                x = boost::none;
+            }
+        }
+        else
+        {
+            if (y)
+            {
+                x = boost::move(*y);
+                y = boost::none;
+            }
+        }
+    }
+};
+#else
 template<>
 struct swap_selector<false>
 {
@@ -1268,6 +1300,7 @@ struct swap_selector<false>
         }
     }
 };
+#endif // !defined BOOST_NO_CXX11_RVALUE_REFERENCES
 
 } // namespace optional_detail
 
@@ -1275,7 +1308,7 @@ template<class T>
 struct optional_swap_should_use_default_constructor : has_nothrow_default_constructor<T> {} ;
 
 template<class T> inline void swap ( optional<T>& x, optional<T>& y )
-  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)
+  //BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && BOOST_NOEXCEPT_EXPR(boost::swap(*x, *y)))
 {
     optional_detail::swap_selector<optional_swap_should_use_default_constructor<T>::value>::optional_swap(x, y);
 }

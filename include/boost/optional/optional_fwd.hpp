@@ -16,16 +16,13 @@
 #ifndef BOOST_OPTIONAL_OPTIONAL_FWD_FLC_19NOV2002_HPP
 #define BOOST_OPTIONAL_OPTIONAL_FWD_FLC_19NOV2002_HPP
 #include <boost/config.hpp>
-#include <boost/type_traits/is_nothrow_move_assignable.hpp>
-#include <boost/type_traits/is_nothrow_move_constructible.hpp>
 
 
 namespace boost {
 
 template<class T> class optional ;
 
-template<class T> void swap ( optional<T>& , optional<T>& )
-    BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value);
+template<class T> void swap ( optional<T>& , optional<T>& );
 
 template<class T> struct optional_swap_should_use_default_constructor ;
 

@@ -72,7 +72,7 @@
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
 <a name="reference_optional_constructor"></a><div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">();</span></code>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">()</span> <span class="keyword">noexcept</span><span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -82,11 +82,7 @@
           <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is <span class="underline">uninitialized</span>.
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Throws:</strong></span> Nothing.
-        </li>
-<li class="listitem">
-          Notes: T's default constructor <span class="underline">is not</span>
-          called.
+          <span class="bold"><strong>Notes:</strong></span> T's default constructor <span class="underline">is not</span> called.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Example:</strong></span>
@@ -99,7 +95,7 @@
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
 <a name="reference_optional_constructor_none_t"></a><div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">none_t</span> <span class="special">);</span></code>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">none_t</span> <span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -108,9 +104,6 @@
         </li>
 <li class="listitem">
           <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is <span class="underline">uninitialized</span>.
-        </li>
-<li class="listitem">
-          <span class="bold"><strong>Throws:</strong></span> Nothing.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Notes:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>'s
@@ -133,11 +126,15 @@
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">is_copy_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+          is <code class="computeroutput"><span class="keyword">true</span></code>.
+        </li>
+<li class="listitem">
           <span class="bold"><strong>Effect:</strong></span> Directly-Constructs an <code class="computeroutput"><span class="identifier">optional</span></code>.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is <span class="underline">initialized</span>
-          and its value is a<span class="emphasis"><em>copy</em></span> of <code class="computeroutput"><span class="identifier">v</span></code>.
+          and its value is a <span class="emphasis"><em>copy</em></span> of <code class="computeroutput"><span class="identifier">v</span></code>.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
@@ -196,6 +193,58 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<a name="reference_optional_constructor_move_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span> </code><span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+        <span class="identifier">v</span> <span class="special">)</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">is_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+          is <code class="computeroutput"><span class="keyword">true</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Directly-Move-Constructs an <code class="computeroutput"><span class="identifier">optional</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is <span class="underline">initialized</span>
+          and its value is move-constructed from <code class="computeroutput"><span class="identifier">v</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
+          <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> throws.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes: </strong></span> <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
+          <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> is called.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Exception Safety:</strong></span> Exceptions can only
+          be thrown during <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="special">);</span></code>
+          in that case, the state of <code class="computeroutput"><span class="identifier">v</span></code>
+          is determined by exception safety guarantees for <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;&amp;)</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v1</span><span class="special">,</span> <span class="identifier">v2</span><span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">opt</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">v1</span><span class="special">));</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">opt</span> <span class="special">==</span> <span class="identifier">v2</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="identifier">ref</span> <span class="special">)</span> <span class="special">=</span> <span class="keyword">delete</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> This constructor is deleted
+        </li></ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_constructor_bool_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="keyword">bool</span> <span class="identifier">condition</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span></code>
       </p></blockquote></div>
@@ -229,6 +278,10 @@
         <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span> </code><span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">optional</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span> <span class="special">);</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">is_copy_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+          is <code class="computeroutput"><span class="keyword">true</span></code>.
+        </li>
 <li class="listitem">
           <span class="bold"><strong>Effect:</strong></span> Copy-Constructs an <code class="computeroutput"><span class="identifier">optional</span></code>.
         </li>
@@ -323,6 +376,116 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<a name="reference_optional_move_constructor_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span> </code><span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">optional</span><span class="special">&amp;&amp;</span> <span class="identifier">rhs</span>
+        <span class="special">)</span> <span class="keyword">noexcept</span><span class="special">(</span></code><span class="emphasis"><em>see below</em></span><code class="computeroutput"><span class="special">);</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">is_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>
+          is <code class="computeroutput"><span class="keyword">true</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Move-constructs an <code class="computeroutput"><span class="identifier">optional</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initialized and its value is move constructed from <code class="computeroutput"><span class="identifier">rhs</span></code>;
+          else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
+          <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> throws.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">T</span>
+          <span class="special">&amp;&amp;</span> <span class="special">)</span></code>
+          is called. The expression inside <code class="computeroutput"><span class="keyword">noexcept</span></code>
+          is equivalent to <code class="computeroutput"><span class="identifier">is_nothrow_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Exception Safety:</strong></span> Exceptions can only
+          be thrown during <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="special">);</span></code>
+          in that case, <code class="computeroutput"><span class="identifier">rhs</span></code> remains
+          initialized and the value of <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code> is determined by exception safety
+          of <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;&amp;)</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span> <span class="identifier">uninit</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(!</span><span class="identifier">uninit</span><span class="special">);</span>
+
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span> <span class="identifier">uinit2</span> <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">uninit</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">uninit2</span> <span class="special">==</span> <span class="identifier">uninit</span> <span class="special">);</span>
+
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span> <span class="identifier">init</span><span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">uniqye_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">new</span> <span class="identifier">T</span><span class="special">(</span><span class="number">2</span><span class="special">))</span> <span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">**</span><span class="identifier">init</span> <span class="special">==</span> <span class="identifier">T</span><span class="special">(</span><span class="number">2</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span> <span class="identifier">init2</span> <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">init</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">init</span> <span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">init</span> <span class="special">==</span> <span class="keyword">nullptr</span> <span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">init2</span> <span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">**</span><span class="identifier">init2</span> <span class="special">==</span> <span class="identifier">T</span><span class="special">(</span><span class="number">2</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">optional</span> <span class="special">&amp;&amp;</span>
+        <span class="identifier">rhs</span> <span class="special">);</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Move-Constructs an <code class="computeroutput"><span class="identifier">optional</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initialized and its value is another reference to the same object referenced
+          by <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>;
+          else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Nothing.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          and <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
+          will reefer to the same object (they alias).
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;&gt;</span> <span class="identifier">uninit</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(!</span><span class="identifier">uninit</span><span class="special">);</span>
+
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;&gt;</span> <span class="identifier">uinit2</span> <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">uninit</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">uninit2</span> <span class="special">==</span> <span class="identifier">uninit</span> <span class="special">);</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">T</span><span class="special">(</span><span class="number">2</span><span class="special">))</span> <span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;&gt;</span> <span class="identifier">init</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">init</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span>
+
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;&gt;</span> <span class="identifier">init2</span> <span class="special">(</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">init</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">init2</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span>
+
+<span class="special">*</span><span class="identifier">v</span> <span class="special">=</span> <span class="number">3</span> <span class="special">;</span>
+
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">**</span><span class="identifier">init</span>  <span class="special">==</span> <span class="number">3</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">**</span><span class="identifier">init2</span> <span class="special">==</span> <span class="number">3</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_constructor_other_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">explicit</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
         <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span> <span class="special">);</span></code>
@@ -364,6 +527,52 @@
 <span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">==</span> <span class="number">123.4</span> <span class="special">)</span> <span class="special">;</span>
 
 <span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span> <span class="special">*</span><span class="identifier">y</span> <span class="special">==</span> <span class="number">123</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<a name="reference_optional_move_constructor_other_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">explicit</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
+        <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;&amp;</span>
+        <span class="identifier">rhs</span> <span class="special">);</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Move-constructs an <code class="computeroutput"><span class="identifier">optional</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initialized and its value is move constructed from <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>; else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
+          <span class="identifier">U</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> throws.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes: </strong></span> <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
+          <span class="identifier">U</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> is called if <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, which requires a valid conversion from <code class="computeroutput"><span class="identifier">U</span></code>
+          to <code class="computeroutput"><span class="identifier">T</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Exception Safety:</strong></span> Exceptions can only
+          be thrown during <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">U</span><span class="special">&amp;&amp;</span> <span class="special">);</span></code>
+          in that case, <code class="computeroutput"><span class="identifier">rhs</span></code> remains
+          initialized and the value of <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code> is determined by exception safety
+          guarantee of <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">U</span><span class="special">&amp;&amp;</span> <span class="special">)</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">x</span><span class="special">(</span><span class="number">123.4</span><span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">x</span> <span class="special">==</span> <span class="number">123.4</span> <span class="special">)</span> <span class="special">;</span>
+
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">y</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">x</span><span class="special">))</span> <span class="special">;</span>
 <span class="identifier">assert</span><span class="special">(</span> <span class="special">*</span><span class="identifier">y</span> <span class="special">==</span> <span class="number">123</span> <span class="special">)</span> <span class="special">;</span>
 </pre>
         </li>
@@ -514,6 +723,66 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<a name="reference_optional_operator_move_equal_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="identifier">rhs</span>
+        <span class="special">)</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Moves the value <code class="computeroutput"><span class="identifier">rhs</span></code> to an <code class="computeroutput"><span class="identifier">optional</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized and its value is moved
+          from <code class="computeroutput"><span class="identifier">rhs</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="special">)</span></code>
+          or <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span><span class="identifier">T</span>
+          <span class="special">&amp;&amp;)</span></code> throws.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> was initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
+          move-assignment operator is used, otherwise, its move-constructor is used.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Exception Safety:</strong></span> In the event of an exception,
+          the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is unchanged and its value unspecified
+          as far as <code class="computeroutput"><span class="identifier">optional</span></code> is concerned
+          (it is up to <code class="computeroutput"><span class="identifier">T</span></code>'s <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>).
+          If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initially uninitialized and <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <span class="emphasis"><em>move constructor</em></span> fails, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is left properly uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">x</span><span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">def</span> <span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">opt</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">;</span>
+
+<span class="identifier">T</span> <span class="identifier">y1</span><span class="special">,</span> <span class="identifier">y2</span><span class="special">,</span> <span class="identifier">yR</span><span class="special">;</span>
+<span class="identifier">def</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">y1</span><span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">def</span> <span class="special">==</span> <span class="identifier">yR</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">opt</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">y2</span><span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">opt</span> <span class="special">==</span> <span class="identifier">yR</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+        <span class="identifier">rhs</span> <span class="special">)</span>
+        <span class="special">=</span> <span class="keyword">delete</span><span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> This assignment operator is deleted.
+        </li></ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_operator_equal_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="identifier">optional</span><span class="special">&amp;</span>
         <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">optional</span>
@@ -616,6 +885,75 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<a name="reference_optional_operator_move_equal_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&amp;&amp;</span> <span class="identifier">rhs</span>
+        <span class="special">)</span> <span class="keyword">noexcept</span><span class="special">(</span></code><span class="emphasis"><em>see below</em></span><code class="computeroutput"><span class="special">);</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Move-assigns another <code class="computeroutput"><span class="identifier">optional</span></code> to an <code class="computeroutput"><span class="identifier">optional</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initialized and its value is moved from <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>, <code class="computeroutput"><span class="identifier">rhs</span></code>
+          remains initialized; else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="keyword">operator</span><span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> or <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
+          <span class="identifier">T</span> <span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> throws.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> If both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and <code class="computeroutput"><span class="identifier">rhs</span></code>
+          are initially initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <span class="emphasis"><em>move assignment operator</em></span> is used. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is
+          initially initialized but <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is uninitialized, <code class="computeroutput"><span class="identifier">T</span></code>'s [destructor]
+          is called. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initially uninitialized but <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s <span class="emphasis"><em>move
+          constructor</em></span> is called. The expression inside <code class="computeroutput"><span class="keyword">noexcept</span></code>
+          is equivalent to <code class="computeroutput"><span class="identifier">is_nothrow_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
+          <span class="special">&amp;&amp;</span> <span class="identifier">is_nothrow_move_assignable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Exception Safety:</strong></span> In the event of an exception,
+          the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is unchanged and its value unspecified
+          as far as optional is concerned (it is up to <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>).
+          If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initially uninitialized and <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <span class="emphasis"><em>move constructor</em></span> fails, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is left properly uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">opt</span><span class="special">(</span><span class="identifier">T</span><span class="special">(</span><span class="number">2</span><span class="special">))</span> <span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">def</span> <span class="special">;</span>
+
+<span class="identifier">opt</span> <span class="special">=</span> <span class="identifier">def</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">def</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">opt</span> <span class="special">)</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">opt</span> <span class="special">==</span> <span class="identifier">T</span><span class="special">(</span><span class="number">2</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span> <span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;&amp;&amp;</span>
+        <span class="identifier">rhs</span> <span class="special">)</span>
+        <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Same as <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span> <span class="special">)</span></code>.
+        </li></ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_operator_equal_other_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">optional</span><span class="special">&amp;</span>
         <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span>
@@ -669,6 +1007,59 @@
 <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">opt1</span><span class="special">;</span>
 
 <span class="identifier">opt1</span> <span class="special">=</span> <span class="identifier">opt0</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">opt1</span> <span class="special">==</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<a name="reference_optional_operator_move_equal_other_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">optional</span><span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;&amp;</span>
+        <span class="identifier">rhs</span> <span class="special">)</span>
+        <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> Move-assigns another convertible
+          optional to an optional.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
+          is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initialized and its value is moved from the value of <code class="computeroutput"><span class="identifier">rhs</span></code>;
+          else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">U</span><span class="special">&amp;&amp;</span> <span class="special">)</span></code>
+          or <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">U</span><span class="special">&amp;&amp;</span> <span class="special">)</span></code>
+          throws.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> If both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and <code class="computeroutput"><span class="identifier">rhs</span></code>
+          are initially initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <span class="emphasis"><em>assignment operator</em></span> (from <code class="computeroutput"><span class="identifier">U</span><span class="special">&amp;&amp;</span></code>) is used. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initially initialized but <code class="computeroutput"><span class="identifier">rhs</span></code> is uninitialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <span class="emphasis"><em>destructor</em></span> is called. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initially uninitialized but <code class="computeroutput"><span class="identifier">rhs</span></code> is initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <span class="emphasis"><em>converting constructor</em></span> (from <code class="computeroutput"><span class="identifier">U</span><span class="special">&amp;&amp;</span></code>) is called.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Exception Safety:</strong></span> In the event of an exception,
+          the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is unchanged and its value unspecified
+          as far as optional is concerned (it is up to <code class="computeroutput"><span class="identifier">T</span></code>'s
+          <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>).
+          If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initially uninitialized and <code class="computeroutput"><span class="identifier">T</span></code>'s
+          converting constructor fails, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is left properly uninitialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v</span><span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">opt0</span><span class="special">(</span><span class="identifier">v</span><span class="special">);</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">opt1</span><span class="special">;</span>
+
+<span class="identifier">opt1</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">opt0</span><span class="special">)</span> <span class="special">;</span>
 <span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">opt1</span> <span class="special">==</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">)</span> <span class="special">)</span> <span class="special">;</span>
 </pre>
         </li>
@@ -768,7 +1159,7 @@
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <span class="bold"><strong>Requirements:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
         </li>
 <li class="listitem">
           <span class="bold"><strong>Returns:</strong></span> A reference to the contained
@@ -870,7 +1261,7 @@
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <span class="bold"><strong>Requirements: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
+          <span class="bold"><strong>Requires: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
         </li>
 <li class="listitem">
           <span class="bold"><strong>Returns:</strong></span> <span class="underline">The</span>
@@ -956,7 +1347,7 @@
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <span class="bold"><strong>Requirements: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized.
+          <span class="bold"><strong>Requires: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Returns:</strong></span> A pointer to the contained value.
@@ -1005,15 +1396,12 @@
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
 <a name="reference_optional_operator_not"></a><div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">!()</span> <span class="special">;</span></code>
+        <code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">!()</span> <span class="keyword">noexcept</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           <span class="bold"><strong>Returns:</strong></span> If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is uninitialized, <code class="computeroutput"><span class="keyword">true</span></code>;
           else <code class="computeroutput"><span class="keyword">false</span></code>.
-        </li>
-<li class="listitem">
-          <span class="bold"><strong>Throws:</strong></span> Nothing.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Notes:</strong></span> This operator is provided for those
@@ -1288,7 +1676,7 @@
 <a name="reference_swap_optional_optional"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">swap</span>
         <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span>
-        <span class="identifier">x</span><span class="special">,</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">y</span> <span class="special">);</span></code>
+        <span class="identifier">x</span><span class="special">,</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">y</span> <span class="special">)</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -1305,19 +1693,21 @@
 <li class="listitem">
           <span class="bold"><strong>Throws:</strong></span> If both are initialized, whatever
           <code class="computeroutput"><span class="identifier">swap</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;,</span><span class="identifier">T</span><span class="special">&amp;)</span></code>
-          throws. If only one is initialized, whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code> throws.
+          throws. If only one is initialized, whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> throws.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Notes:</strong></span> If both are initialized, <code class="computeroutput"><span class="identifier">swap</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;,</span><span class="identifier">T</span><span class="special">&amp;)</span></code>
           is used unqualified but with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">swap</span></code>
           introduced in scope. If only one is initialized, <code class="computeroutput"><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span>
-          <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code>
-          is called.
+          <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code> is called.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Exception Safety:</strong></span> If both are initialized,
           this operation has the exception safety guarantees of <code class="computeroutput"><span class="identifier">swap</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;,</span><span class="identifier">T</span><span class="special">&amp;)</span></code>.
-          If only one is initialized, it has the same basic guarantee as <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">reset</span><span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code>.
+          If only one is initialized, it has the same basic guarantee as <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">T</span><span class="special">&amp;&amp;</span>
+          <span class="special">)</span></code>.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Example:</strong></span>

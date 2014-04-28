@@ -314,6 +314,35 @@ void test_move_ctor_from_optional_U()
     BOOST_CHECK(b2->val == 4);
 }
 
+void test_swap()
+{
+    optional<MoveOnly> a((MoveOnly(2)));
+    optional<MoveOnly> b((MoveOnly(3)));
+    swap(a, b);
+    
+    BOOST_CHECK(a->val == 3);
+    BOOST_CHECK(b->val == 2);
+}
+
+void test_optional_ref_to_movables()
+{
+    MoveOnly m(3);
+    optional<MoveOnly&> orm = m;
+    orm->val = 2;
+    BOOST_CHECK(m.val == 2);
+    
+    optional<MoveOnly&> orm2 = orm;
+    orm2->val = 1;
+    BOOST_CHECK(m.val == 1);
+    BOOST_CHECK(orm->val == 1);
+    
+    optional<MoveOnly&> orm3 = boost::move(orm);
+    orm3->val = 4;
+    BOOST_CHECK(m.val == 4);
+    BOOST_CHECK(orm->val == 4);
+    BOOST_CHECK(orm2->val == 4);
+}
+
 // these 4 classes have different noexcept signatures in move operations
 struct NothrowBoth {
   NothrowBoth(NothrowBoth&&) BOOST_NOEXCEPT_IF(true) {};
@@ -370,6 +399,8 @@ int test_main( int, char* [] )
     test_move_assign_from_optional_T();
     test_move_assign_from_optional_U();
     test_with_move_only();
+    test_optional_ref_to_movables();
+    test_swap();
 #endif
   }
   catch ( ... )

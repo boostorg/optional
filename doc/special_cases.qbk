@@ -21,6 +21,13 @@ will nonetheless reefer to the same object.
 * Value-access will actually provide access to the referenced object
 rather than the reference itself.
 
+[heading Rvalue references]
+
+Rvalue references and lvalue references to const have the ability in C++ to extend the life time of a temporary they bind to. Optional references do not have this capability, therefore to avoid surprising effects it is not possible to initialize an optional references from a temporary. Optional rvalue references are disabled altogether. Also, the initialization and assignment of an optional reference to const from rvalue reference is disabled.
+
+    const int& i = 1;            // legal
+    optional<const int&> oi = 1; // illegal
+
 [endsect]
 
 [section Rebinding semantics for assignment of optional references]
