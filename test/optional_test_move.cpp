@@ -239,6 +239,8 @@ public:
 private:
   MoveOnly(MoveOnly const&);
   void operator=(MoveOnly const&);
+  
+  friend class MoveOnlyB;
 };
 
 void test_with_move_only()
@@ -260,6 +262,56 @@ void test_with_move_only()
     BOOST_CHECK(o3->val == 1);
     BOOST_CHECK(o4);
     BOOST_CHECK(o4->val == 0);
+}
+
+class MoveOnlyB
+{
+public:
+  int val;
+  MoveOnlyB(int v) : val(v) {}
+  MoveOnlyB(MoveOnlyB&& rhs) : val(rhs.val) { rhs.val = 0; }
+  void operator=(MoveOnlyB&& rhs) {val = rhs.val; rhs.val = 0; }
+  MoveOnlyB(MoveOnly&& rhs) : val(rhs.val) { rhs.val = 0; }
+  void operator=(MoveOnly&& rhs) {val = rhs.val; rhs.val = 0; }
+  
+private:
+  MoveOnlyB(MoveOnlyB const&);
+  void operator=(MoveOnlyB const&);
+  MoveOnlyB(MoveOnly const&);
+  void operator=(MoveOnly const&);
+};
+
+void test_move_assign_from_optional_U()
+{
+    optional<MoveOnly> a((MoveOnly(2)));
+    optional<MoveOnlyB> b1;
+    b1 = boost::move(a);
+    
+    BOOST_CHECK(b1);
+    BOOST_CHECK(b1->val == 2);
+    BOOST_CHECK(a);
+    BOOST_CHECK(a->val == 0);
+    
+    b1 = MoveOnly(4);
+    
+    BOOST_CHECK(b1);
+    BOOST_CHECK(b1->val == 4);
+}
+
+void test_move_ctor_from_optional_U()
+{
+    optional<MoveOnly> a((MoveOnly(2)));
+    optional<MoveOnlyB> b1(boost::move(a));
+    
+    BOOST_CHECK(b1);
+    BOOST_CHECK(b1->val == 2);
+    BOOST_CHECK(a);
+    BOOST_CHECK(a->val == 0);
+    
+    optional<MoveOnlyB> b2(( optional<MoveOnly>(( MoveOnly(4) )) ));
+    
+    BOOST_CHECK(b2);
+    BOOST_CHECK(b2->val == 4);
 }
 
 // these 4 classes have different noexcept signatures in move operations
@@ -312,9 +364,11 @@ int test_main( int, char* [] )
     test_move_ctor_from_U();
     test_move_ctor_form_T();
     test_move_ctor_from_optional_T();
+    test_move_ctor_from_optional_U();
     test_move_assign_from_U();
     test_move_assign_from_T();
     test_move_assign_from_optional_T();
+    test_move_assign_from_optional_U();
     test_with_move_only();
 #endif
   }

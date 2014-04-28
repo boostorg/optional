@@ -587,6 +587,20 @@ class optional_base : public optional_tag
     // For VC<=70 compilers this workaround dosen't work becasue the comnpiler issues and error
     // instead of choosing the wrong overload
     //
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Notice that 'Expr' will be optional<T> or optional<U> (but not optional_base<..>)
+    template<class Expr>
+    void construct ( Expr&& expr, optional_tag const* )
+     {
+       if ( expr.is_initialized() )
+       {
+         // An exception can be thrown here.
+         // It it happens, THIS will be left uninitialized.
+         new (m_storage.address()) internal_type(types::move(expr.get())) ;
+         m_initialized = true ;
+       }
+     }
+#else
     // Notice that 'Expr' will be optional<T> or optional<U> (but not optional_base<..>)
     template<class Expr>
     void construct ( Expr const& expr, optional_tag const* )
@@ -600,6 +614,7 @@ class optional_base : public optional_tag
        }
      }
 #endif
+#endif // defined BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION
 
     void assign_value ( argument_type val, is_not_reference_tag ) { get_impl() = val; }
     void assign_value ( argument_type val, is_reference_tag     ) { construct(val); }
@@ -814,7 +829,7 @@ class optional : public optional_detail::optional_base<T>
 #endif // !defined  BOOST_NO_CXX11_RVALUE_REFERENCES
 #endif // !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
 
-    // Assigns from another convertible optional<U> (converts && deep-copies the rhs value)
+    // Copy-assigns from another convertible optional<U> (converts && deep-copies the rhs value)
     // Requires a valid conversion from U to T.
     // Basic Guarantee: If T::T( U const& ) throws, this is left UNINITIALIZED
     template<class U>
@@ -823,6 +838,18 @@ class optional : public optional_detail::optional_base<T>
         this->assign(rhs);
         return *this ;
       }
+      
+#ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
+    // Move-assigns from another convertible optional<U> (converts && deep-moves the rhs value)
+    // Requires a valid conversion from U to T.
+    // Basic Guarantee: If T::T( U && ) throws, this is left UNINITIALIZED
+    template<class U>
+    optional& operator= ( optional<U> && rhs )
+      {
+        this->assign(boost::move(rhs));
+        return *this ;
+      }
+#endif
 
     // Assigns from another optional<T> (deep-copies the rhs value)
     // Basic Guarantee: If T::T( T const& ) throws, this is left UNINITIALIZED
