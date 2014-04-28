@@ -22,18 +22,24 @@
 
         // (If T is of reference type, the parameters and results by reference are by value)
 
-        optional () ; ``[link reference_optional_constructor __GO_TO__]``
+        optional () noexcept ; ``[link reference_optional_constructor __GO_TO__]``
 
-        optional ( none_t ) ; ``[link reference_optional_constructor_none_t __GO_TO__]``
+        optional ( none_t ) noexcept ; ``[link reference_optional_constructor_none_t __GO_TO__]``
 
         optional ( T const& v ) ; ``[link reference_optional_constructor_value __GO_TO__]``
+        
+        optional ( T&& v ) ; ``[link reference_optional_constructor_move_value __GO_TO__]``
 
         // [new in 1.34]
         optional ( bool condition, T const& v ) ; ``[link reference_optional_constructor_bool_value __GO_TO__]`` 
 
         optional ( optional const& rhs ) ; ``[link reference_optional_constructor_optional __GO_TO__]``
+        
+        optional ( optional&& rhs ) noexcept(``['see below]``) ; ``[link reference_optional_move_constructor_optional __GO_TO__]``
 
         template<class U> explicit optional ( optional<U> const& rhs ) ; ``[link reference_optional_constructor_other_optional __GO_TO__]``
+        
+        template<class U> explicit optional ( optional<U>&& rhs ) ; ``[link reference_optional_move_constructor_other_optional __GO_TO__]``
 
         template<class InPlaceFactory> explicit optional ( InPlaceFactory const& f ) ; ``[link reference_optional_constructor_factory __GO_TO__]``
 
@@ -42,10 +48,16 @@
         optional& operator = ( none_t ) ; ``[/[link reference_optional_operator_equal_none_t __GO_TO__]]``
 
         optional& operator = ( T const& v ) ; ``[link reference_optional_operator_equal_value __GO_TO__]``
+        
+        optional& operator = ( T&& v ) ; ``[link reference_optional_operator_move_equal_value __GO_TO__]``
 
         optional& operator = ( optional const& rhs ) ; ``[link reference_optional_operator_equal_optional __GO_TO__]``
+        
+        optional& operator = ( optional&& rhs ) noexcept(``['see below]``) ; ``[link reference_optional_operator_move_equal_optional __GO_TO__]``
 
         template<class U> optional& operator = ( optional<U> const& rhs ) ; ``[link reference_optional_operator_equal_other_optional __GO_TO__]``
+        
+        template<class U> optional& operator = ( optional<U>&& rhs ) ; ``[link reference_optional_operator_move_equal_other_optional __GO_TO__]``
 
         template<class InPlaceFactory> optional& operator = ( InPlaceFactory const& f ) ; ``[link reference_optional_operator_equal_factory __GO_TO__]``
 
@@ -68,7 +80,7 @@
 
         explicit operator bool() const ; ``[link reference_optional_operator_bool __GO_TO__]``
 
-        bool operator!() const ; ``[link reference_optional_operator_not __GO_TO__]``
+        bool operator!() const noexcept ; ``[link reference_optional_operator_not __GO_TO__]``
 
         // deprecated methods
 
@@ -151,12 +163,11 @@ __SPACE__
 
 [#reference_optional_constructor]
 
-[: `optional<T>::optional();`]
+[: `optional<T>::optional() noexcept;`]
 
 * [*Effect:] Default-Constructs an `optional`.
 * [*Postconditions:] `*this` is [_uninitialized].
-* [*Throws:] Nothing.
-* Notes: T's default constructor [_is not] called.
+* [*Notes:] T's default constructor [_is not] called.
 * [*Example:]
 ``
 optional<T> def ;
@@ -167,11 +178,10 @@ __SPACE__
 
 [#reference_optional_constructor_none_t]
 
-[: `optional<T>::optional( none_t );`]
+[: `optional<T>::optional( none_t ) noexcept;`]
 
 * [*Effect:] Constructs an `optional` uninitialized.
 * [*Postconditions:] `*this` is [_uninitialized].
-* [*Throws:] Nothing.
 * [*Notes:] `T`'s default constructor [_is not] called. The expression
 `boost::none` denotes an instance of `boost::none_t` that can be used as
 the parameter.
@@ -188,8 +198,9 @@ __SPACE__
 
 [: `optional<T `['(not a ref)]`>::optional( T const& v )`]
 
+* [*Requires:] `is_copy_constructible<T>::value` is `true`.
 * [*Effect:] Directly-Constructs an `optional`.
-* [*Postconditions:] `*this` is [_initialized] and its value is a['copy]
+* [*Postconditions:] `*this` is [_initialized] and its value is a ['copy]
 of `v`.
 * [*Throws:] Whatever `T::T( T const& )` throws.
 * [*Notes: ] `T::T( T const& )` is called.
@@ -222,6 +233,33 @@ assert (*opt == v);
 
 __SPACE__
 
+[#reference_optional_constructor_move_value]
+
+[: `optional<T `['(not a ref)]`>::optional( T&& v )`]
+
+* [*Requires:] `is_move_constructible<T>::value` is `true`.
+* [*Effect:] Directly-Move-Constructs an `optional`.
+* [*Postconditions:] `*this` is [_initialized] and its value is move-constructed from `v`.
+* [*Throws:] Whatever `T::T( T&& )` throws.
+* [*Notes: ] `T::T( T&& )` is called.
+* [*Exception Safety:] Exceptions can only be thrown during
+`T::T( T&& );` in that case, the state of `v` is determined by exception safety guarantees for `T::T(T&&)`.
+* [*Example:]
+``
+T v1, v2;
+optional<T> opt(std::move(v1));
+assert ( *opt == v2 ) ;
+``
+
+__SPACE__
+
+[: `optional<T&>::optional( T&& ref ) = delete`]
+
+* [*Notes:] This constructor is deleted
+
+
+__SPACE__
+
 [#reference_optional_constructor_bool_value]
 
 [: `optional<T` ['(not a ref)]`>::optional( bool condition, T const& v ) ;` ]
@@ -243,6 +281,7 @@ __SPACE__
 
 [: `optional<T `['(not a ref)]`>::optional( optional const& rhs );`]
 
+* [*Requires:] `is_copy_constructible<T>::value` is `true`.
 * [*Effect:] Copy-Constructs an `optional`.
 * [*Postconditions:] If rhs is initialized, `*this` is initialized and
 its value is a ['copy] of the value of `rhs`; else `*this` is uninitialized.
@@ -299,6 +338,70 @@ assert ( *init2 == 3 ) ;
 
 __SPACE__
 
+[#reference_optional_move_constructor_optional]
+
+[: `optional<T `['(not a ref)]`>::optional( optional&& rhs ) noexcept(`['see below]`);`]
+
+* [*Requires:] `is_move_constructible<T>::value` is `true`.
+* [*Effect:] Move-constructs an `optional`.
+* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
+its value is move constructed from `rhs`; else `*this` is uninitialized.
+* [*Throws:] Whatever `T::T( T&& )` throws.
+* [*Notes:] If `rhs` is initialized, `T::T( T && )` is called. The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value`.
+* [*Exception Safety:] Exceptions can only be thrown during
+`T::T( T&& );` in that case, `rhs` remains initialized and the value of `*rhs` is determined by exception safety of `T::T(T&&)`.
+* [*Example:]
+``
+optional<std::unique_ptr<T>> uninit ;
+assert (!uninit);
+
+optional<std::unique_ptr<T>> uinit2 ( std::move(uninit) ) ;
+assert ( uninit2 == uninit );
+
+optional<std::unique_ptr<T>> init( std::uniqye_ptr<T>(new T(2)) );
+assert ( **init == T(2) ) ;
+
+optional<std::unique_ptr<T>> init2 ( std::move(init) ) ;
+assert ( init );
+assert ( *init == nullptr );
+assert ( init2 );
+assert ( **init2 == T(2) ) ;
+``
+
+__SPACE__
+
+[: `optional<T&>::optional( optional && rhs );`]
+
+* [*Effect:] Move-Constructs an `optional`.
+* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and its
+value is another reference to the same object referenced by `*rhs`; else
+`*this` is uninitialized.
+* [*Throws:] Nothing.
+* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will reefer to the
+same object (they alias).
+* [*Example:]
+``
+optional<std::unique_ptr<T>&> uninit ;
+assert (!uninit);
+
+optional<std::unique_ptr<T>&> uinit2 ( std::move(uninit) ) ;
+assert ( uninit2 == uninit );
+
+std::unique_ptr<T> v(new T(2)) ;
+optional<std::unique_ptr<T>&> init(v);
+assert ( *init == v ) ;
+
+optional<std::unique_ptr<T>&> init2 ( std::move(init) ) ;
+assert ( *init2 == v ) ;
+
+*v = 3 ;
+
+assert ( **init  == 3 ) ;
+assert ( **init2 == 3 ) ;
+``
+
+__SPACE__
+
 [#reference_optional_constructor_other_optional]
 
 [: `template<U> explicit optional<T` ['(not a ref)]`>::optional( optional<U> const& rhs );`]
@@ -318,6 +421,30 @@ optional<double> x(123.4);
 assert ( *x == 123.4 ) ;
 
 optional<int> y(x) ;
+assert( *y == 123 ) ;
+``
+
+__SPACE__
+
+[#reference_optional_move_constructor_other_optional]
+
+[: `template<U> explicit optional<T` ['(not a ref)]`>::optional( optional<U>&& rhs );`]
+
+* [*Effect:] Move-constructs an `optional`.
+* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and its
+value is move constructed from `*rhs`; else `*this` is
+uninitialized.
+* [*Throws:] Whatever `T::T( U&& )` throws.
+* [*Notes: ] `T::T( U&& )` is called if `rhs` is initialized, which requires a
+valid conversion from `U` to `T`.
+* [*Exception Safety:] Exceptions can only be thrown during `T::T( U&& );`
+in that case, `rhs` remains initialized and the value of `*rhs` is determined by exception safety guarantee of `T::T( U&& )`.
+* [*Example:]
+``
+optional<double> x(123.4);
+assert ( *x == 123.4 ) ;
+
+optional<int> y(std::move(x)) ;
 assert( *y == 123 ) ;
 ``
 
@@ -410,6 +537,42 @@ assert ( *opt == 4 ) ;
 
 __SPACE__
 
+[#reference_optional_operator_move_equal_value]
+
+[: `optional& optional<T` ['(not a ref)]`>::operator= ( T&& rhs ) ;`]
+
+* [*Effect:] Moves the value `rhs` to an `optional`.
+* [*Postconditions: ] `*this` is initialized and its value is moved from `rhs`.
+* [*Throws:] Whatever `T::operator=( T&& )` or `T::T(T &&)` throws.
+* [*Notes:] If `*this` was initialized, `T`'s move-assignment operator is used,
+otherwise, its move-constructor is used.
+* [*Exception Safety:] In the event of an exception, the initialization
+state of `*this` is unchanged and its value unspecified as far as `optional`
+is concerned (it is up to `T`'s `operator=()`). If `*this` is initially
+uninitialized and `T`'s ['move constructor] fails, `*this` is left properly
+uninitialized.
+* [*Example:]
+``
+T x;
+optional<T> def ;
+optional<T> opt(x) ;
+
+T y1, y2, yR;
+def = std::move(y1) ;
+assert ( *def == yR ) ;
+opt = std::move(y2) ;
+assert ( *opt == yR ) ;
+``
+
+__SPACE__
+
+[: `optional<T&>& optional<T&>::operator= ( T&& rhs ) = delete;`]
+
+* [*Notes:] This assignment operator is deleted.
+
+
+__SPACE__
+
 [#reference_optional_operator_equal_optional]
 
 [: `optional& optional<T` ['(not a ref)]`>::operator= ( optional const& rhs ) ;`]
@@ -471,6 +634,42 @@ assert ( *ora == 4 ) ;
 
 __SPACE__
 
+[#reference_optional_operator_move_equal_optional]
+
+[: `optional& optional<T` ['(not a ref)]`>::operator= ( optional&& rhs ) noexcept(`['see below]`);`]
+
+* [*Effect:] Move-assigns another `optional` to an `optional`.
+* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
+its value is moved from `*rhs`, `rhs` remains initialized; else `*this` is uninitialized.
+* [*Throws:] Whatever `T::operator( T&& )` or  `T::T( T && )` throws.
+* [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
+['move assignment operator] is used. If `*this` is initially initialized but `rhs` is
+uninitialized, `T`'s [destructor] is called. If `*this` is initially uninitialized
+but `rhs` is initialized, `T`'s ['move constructor] is called. The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
+* [*Exception Safety:] In the event of an exception, the initialization state of
+`*this` is unchanged and its value unspecified as far as optional is concerned
+(it is up to `T`'s `operator=()`). If `*this` is initially uninitialized and
+`T`'s ['move constructor] fails, `*this` is left properly uninitialized.
+* [*Example:]
+``
+optional<T> opt(T(2)) ;
+optional<T> def ;
+
+opt = def ;
+assert ( def ) ;
+assert ( opt ) ;
+assert ( *opt == T(2) ) ;
+``
+
+__SPACE__
+
+[: `optional<T&> & optional<T&>::operator= ( optional<T&>&& rhs ) ;`]
+
+* [*Effect:] Same as `optional<T&>::operator= ( optional<T&> const& rhs )`.
+
+__SPACE__
+
+
 [#reference_optional_operator_equal_other_optional]
 
 [: `template<U> optional& optional<T` ['(not a ref)]`>::operator= ( optional<U> const& rhs ) ;`]
@@ -497,6 +696,37 @@ optional<T> opt0(v);
 optional<U> opt1;
 
 opt1 = opt0 ;
+assert ( *opt1 == static_cast<U>(v) ) ;
+``
+
+__SPACE__
+
+[#reference_optional_operator_move_equal_other_optional]
+
+[: `template<U> optional& optional<T` ['(not a ref)]`>::operator= ( optional<U>&& rhs ) ;`]
+
+* [*Effect:] Move-assigns another convertible optional to an optional.
+* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
+its value is moved from the value of `rhs`; else
+`*this` is uninitialized. 
+* [*Throws:] Whatever `T::operator=( U&& )` or `T::T( U&& )` throws.
+* [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
+[' assignment operator] (from `U&&`) is used. If `*this` is initially initialized
+but `rhs` is uninitialized, `T`'s ['destructor] is called. If `*this` is
+initially uninitialized but `rhs` is initialized, `T`'s ['converting constructor]
+(from `U&&`) is called.
+* [*Exception Safety:] In the event of an exception, the initialization state
+of `*this` is unchanged and its value unspecified as far as optional is
+concerned (it is up to `T`'s `operator=()`). If `*this` is initially
+uninitialized and `T`'s converting constructor fails, `*this` is left properly
+uninitialized.
+* [*Example:]
+``
+T v;
+optional<T> opt0(v);
+optional<U> opt1;
+
+opt1 = std::move(opt0) ;
 assert ( *opt1 == static_cast<U>(v) ) ;
 ``
 
@@ -543,7 +773,7 @@ __SPACE__
 [: `inline T const& get ( optional<T` ['(not a ref)]`> const& ) ;`]
 [: `inline T&       get ( optional<T` ['(not a ref)]`> &) ;`]
 
-* [*Requirements:] `*this` is initialized
+* [*Requires:] `*this` is initialized
 * [*Returns:] A reference to the contained value
 * [*Throws:] Nothing.
 * [*Notes:] The requirement is asserted via `BOOST_ASSERT()`.
@@ -593,7 +823,7 @@ __SPACE__
 [: `inline T const& get ( optional<T&> const& ) ;`]
 [: `inline T&       get ( optional<T&> &) ;`]
 
-* [*Requirements: ] `*this` is initialized
+* [*Requires: ] `*this` is initialized
 * [*Returns:] [_The] reference contained.
 * [*Throws:] Nothing.
 * [*Notes:] The requirement is asserted via `BOOST_ASSERT()`.
@@ -641,7 +871,7 @@ __SPACE__
 [: `T const* optional<T` ['(not a ref)]`>::operator ->() const ;`]
 [: `T*       optional<T` ['(not a ref)]`>::operator ->()       ;`]
 
-* [*Requirements: ] `*this` is initialized.
+* [*Requires: ] `*this` is initialized.
 * [*Returns:] A pointer to the contained value.
 * [*Throws:] Nothing.
 * [*Notes:] The requirement is asserted via `BOOST_ASSERT()`.
@@ -675,10 +905,9 @@ __SPACE__
 
 [#reference_optional_operator_not]
 
-[: `bool optional<T>::operator!() ;`]
+[: `bool optional<T>::operator!() noexcept ;`]
 
 * [*Returns:] If `*this` is uninitialized, `true`; else `false`.
-* [*Throws:] Nothing.
 * [*Notes:] This operator is provided for those compilers which can't
 use the ['unspecified-bool-type operator] in certain boolean contexts.
 * [*Example:]
@@ -852,21 +1081,21 @@ __SPACE__
 
 [#reference_swap_optional_optional]
 
-[: `void swap ( optional<T>& x, optional<T>& y );`]
+[: `void swap ( optional<T>& x, optional<T>& y ) ;`]
 
 * [*Effect:] If both `x` and `y` are initialized, calls `swap(*x,*y)`
 using `std::swap`. If only one is initialized, say `x`, calls:
 `y.reset(*x); x.reset();` If none is initialized, does nothing.
 * [*Postconditions:] The states of `x` and `y` interchanged.
 * [*Throws:] If both are initialized, whatever `swap(T&,T&)` throws. If only
-one is initialized, whatever `T::T ( T const& )` throws.
+one is initialized, whatever `T::T ( T&& )` throws.
 * [*Notes:] If both are initialized, `swap(T&,T&)` is used unqualified but
 with `std::swap` introduced in scope.
-If only one is initialized, `T::~T()` and `T::T( T const& )` is called.
+If only one is initialized, `T::~T()` and `T::T( T&& )` is called.
 * [*Exception Safety:] If both are initialized, this operation has the
 exception safety guarantees of `swap(T&,T&)`.
 If only one is initialized, it has the same basic guarantee as
-`optional<T>::reset( T const& )`.
+`optional<T>::operator= ( T&& )`.
 * [*Example:]
 ``
 T x(12);

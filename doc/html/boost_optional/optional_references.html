@@ -68,6 +68,22 @@
           than the reference itself.
         </li>
 </ul></div>
+<h4>
+<a name="boost_optional.optional_references.h0"></a>
+      <span class="phrase"><a name="boost_optional.optional_references.rvalue_references"></a></span><a class="link" href="optional_references.html#boost_optional.optional_references.rvalue_references">Rvalue
+      references</a>
+    </h4>
+<p>
+      Rvalue references and lvalue references to const have the ability in C++ to
+      extend the life time of a temporary they bind to. Optional references do not
+      have this capability, therefore to avoid surprising effects it is not possible
+      to initialize an optional references from a temporary. Optional rvalue references
+      are disabled altogether. Also, the initialization and assignment of an optional
+      reference to const from rvalue reference is disabled.
+    </p>
+<pre class="programlisting"><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>            <span class="comment">// legal</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;&gt;</span> <span class="identifier">oi</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="comment">// illegal</span>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
