@@ -1498,6 +1498,10 @@
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+          shall meet requirements of <code class="computeroutput"><span class="identifier">EqualityComparable</span></code>.
+        </li>
+<li class="listitem">
           <span class="bold"><strong>Returns:</strong></span> If both <code class="computeroutput"><span class="identifier">x</span></code>
           and <code class="computeroutput"><span class="identifier">y</span></code> are initialized,
           <code class="computeroutput"><span class="special">(*</span><span class="identifier">x</span>
@@ -1553,6 +1557,10 @@
         <span class="identifier">y</span> <span class="special">);</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+          shall meet requirements of <code class="computeroutput"><span class="identifier">LessThanComparable</span></code>.
+        </li>
 <li class="listitem">
           <span class="bold"><strong>Returns:</strong></span> If <code class="computeroutput"><span class="identifier">y</span></code>
           is not initialized, <code class="computeroutput"><span class="keyword">false</span></code>.
@@ -1648,7 +1656,8 @@
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           <span class="bold"><strong>Returns: </strong></span> <code class="computeroutput"><span class="special">!(</span>
-          <span class="identifier">y</span><span class="special">&lt;</span><span class="identifier">x</span> <span class="special">);</span></code>
+          <span class="identifier">y</span> <span class="special">&lt;</span>
+          <span class="identifier">x</span> <span class="special">);</span></code>
         </li>
 <li class="listitem">
           <span class="bold"><strong>Throws:</strong></span> Nothing.
@@ -1673,6 +1682,33 @@
           <span class="bold"><strong>Throws:</strong></span> Nothing.
         </li>
 </ul></div>
+<a name="reference_operator_compare_equal_optional_none"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">bool</span> <span class="keyword">operator</span>
+        <span class="special">==</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">none_t</span>
+        <span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">!</span><span class="identifier">x</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+          need not meet requirements of <code class="computeroutput"><span class="identifier">EqualityComparable</span></code>.
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<a name="reference_operator_compare_not_equal_optional_none"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">bool</span> <span class="keyword">operator</span>
+        <span class="special">!=</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">none_t</span>
+        <span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <span class="bold"><strong>Returns: </strong></span> <code class="computeroutput"><span class="special">!(</span>
+          <span class="identifier">x</span> <span class="special">==</span>
+          <span class="identifier">y</span> <span class="special">);</span></code>
+        </li></ul></div>
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>

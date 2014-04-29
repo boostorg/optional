@@ -27,9 +27,9 @@
 <a name="boost_optional.type_requirements"></a><a class="link" href="type_requirements.html" title="Type requirements">Type requirements</a>
 </h2></div></div></div>
 <p>
-      In general, <code class="computeroutput"><span class="identifier">T</span></code> must be <a href="../../../../utility/CopyConstructible.html" target="_top">Copy Constructible</a> and
-      have a no-throw destructor. The copy-constructible requirement is not needed
-      if <span class="bold"><strong>InPlaceFactories</strong></span> are used.
+      In general, <code class="computeroutput"><span class="identifier">T</span></code> must be <code class="computeroutput"><span class="identifier">MoveConstructible</span></code> and have a no-throw destructor.
+      The <code class="computeroutput"><span class="identifier">MoveConstructible</span></code> requirement
+      is not needed if <span class="bold"><strong>InPlaceFactories</strong></span> are used.
     </p>
 <p>
       <code class="computeroutput"><span class="identifier">T</span></code> <span class="underline">is

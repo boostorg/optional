@@ -369,8 +369,8 @@ since it is a no-op.
 
 [section Type requirements]
 
-In general, `T` must be __COPY_CONSTRUCTIBLE__ and have a no-throw destructor.
-The copy-constructible requirement is not needed if [*InPlaceFactories] are used.
+In general, `T` must be `MoveConstructible` and have a no-throw destructor.
+The `MoveConstructible` requirement is not needed if [*InPlaceFactories] are used.
 
 `T` [_is not] required to be __SGI_DEFAULT_CONSTRUCTIBLE__.
 

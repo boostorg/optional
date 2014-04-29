@@ -1143,8 +1143,8 @@ bool operator >= ( T const& x, optional<T> const& y )
 
 template<class T>
 inline
-bool operator == ( optional<T> const& x, none_t )
-{ return equal_pointees(x, optional<T>() ); }
+bool operator == ( optional<T> const& x, none_t ) BOOST_NOEXCEPT
+{ return !x; }
 
 template<class T>
 inline
@@ -1153,8 +1153,8 @@ bool operator < ( optional<T> const& x, none_t )
 
 template<class T>
 inline
-bool operator != ( optional<T> const& x, none_t y )
-{ return !( x == y ) ; }
+bool operator != ( optional<T> const& x, none_t ) BOOST_NOEXCEPT
+{ return bool(x); }
 
 template<class T>
 inline
@@ -1177,8 +1177,8 @@ bool operator >= ( optional<T> const& x, none_t y )
 
 template<class T>
 inline
-bool operator == ( none_t , optional<T> const& y )
-{ return equal_pointees(optional<T>() ,y); }
+bool operator == ( none_t , optional<T> const& y ) BOOST_NOEXCEPT
+{ return !y; }
 
 template<class T>
 inline
@@ -1187,8 +1187,8 @@ bool operator < ( none_t , optional<T> const& y )
 
 template<class T>
 inline
-bool operator != ( none_t x, optional<T> const& y )
-{ return !( x == y ) ; }
+bool operator != ( none_t, optional<T> const& y ) BOOST_NOEXCEPT
+{ return bool(y); }
 
 template<class T>
 inline
