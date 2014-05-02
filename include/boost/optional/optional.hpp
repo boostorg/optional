@@ -775,7 +775,7 @@ class optional : public optional_detail::optional_base<T>
                         boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type, none_t>::value >::type* = 0 
   ) 
     : base(boost::forward<Expr>(expr),boost::addressof(expr)) 
-    {optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, rval_reference_type>();}
+    {optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, Expr&&>();}
 
 #else
     template<class Expr>
@@ -812,7 +812,7 @@ class optional : public optional_detail::optional_base<T>
     >::type 
     operator= ( Expr&& expr )
       {
-        optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, rval_reference_type>();
+        optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, Expr&&>();
         this->assign_expr(boost::forward<Expr>(expr),boost::addressof(expr));
         return *this ;
       }
