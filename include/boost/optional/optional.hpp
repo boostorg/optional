@@ -26,6 +26,7 @@
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
 #include <boost/type_traits/type_with_alignment.hpp>
+#include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -161,7 +162,7 @@ struct types_when_is_ref
   typedef raw_type&  reference_const_type ;
   typedef raw_type&  reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
-  typedef raw_type&& rval_reference_type ;
+  typedef BOOST_DEDUCED_TYPENAME remove_const<raw_type>::type&& rval_reference_type ;
   static reference_type move(reference_type r) { return r; }
 #endif
   typedef raw_type*  pointer_const_type ;
@@ -880,6 +881,7 @@ class optional : public optional_detail::optional_base<T>
     // Assigns from a T (deep-moves the rhs value)
     optional& operator= ( rval_reference_type val )
       {
+        optional_detail::prevent_binding_rvalue_ref_to_optional_lvalue_ref<T, rval_reference_type>();
         this->assign( boost::move(val) ) ;
         return *this ;
       }
