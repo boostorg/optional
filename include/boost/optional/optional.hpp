@@ -1,4 +1,5 @@
 // Copyright (C) 2003, 2008 Fernando Luis Cacciola Carballal.
+// Copyright (C) 2014 Andrzej Krzemienski.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +12,7 @@
 //
 // Revisions:
 // 27 Apr 2008 (improved swap) Fernando Cacciola, Niels Dekker, Thorsten Ottosen
+// 05 May 2014 (Added move semantics) Andrzej Krzemienski
 //
 #ifndef BOOST_OPTIONAL_OPTIONAL_FLC_19NOV2002_HPP
 #define BOOST_OPTIONAL_OPTIONAL_FLC_19NOV2002_HPP
