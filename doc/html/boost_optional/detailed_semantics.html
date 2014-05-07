@@ -632,6 +632,22 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<a name="reference_optional_operator_equal_none_t"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">none_t</span> <span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized destroys its contained
+          value.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is uninitialized.
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_operator_equal_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="identifier">optional</span><span class="special">&amp;</span>
         <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span> <span class="identifier">T</span>
@@ -1122,7 +1138,7 @@
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
 <a name="reference_optional_reset"></a><div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">reset</span><span class="special">()</span> <span class="special">;</span></code>
+        <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">reset</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
           <span class="bold"><strong>Deprecated:</strong></span> Same as <code class="computeroutput"><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">none_t</span> <span class="special">);</span></code>

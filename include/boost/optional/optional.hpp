@@ -405,7 +405,7 @@ class optional_base : public optional_tag
 
     // Assigns from "none", destroying the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
-    void assign ( none_t ) { destroy(); }
+    void assign ( none_t ) BOOST_NOEXCEPT { destroy(); }
 
 #ifndef BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
 
@@ -433,7 +433,7 @@ class optional_base : public optional_tag
 
     // Destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
-    void reset() { destroy(); }
+    void reset() BOOST_NOEXCEPT { destroy(); }
 
     // Replaces the current value -if any- with 'val'
     void reset ( argument_type val ) { assign(val); }
@@ -892,7 +892,7 @@ class optional : public optional_detail::optional_base<T>
     // Assigns from a "none"
     // Which destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
-    optional& operator= ( none_t none_ )
+    optional& operator= ( none_t none_ ) BOOST_NOEXCEPT
       {
         this->assign( none_ ) ;
         return *this ;

@@ -60,7 +60,7 @@
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TypedInPlaceFactory</span><span class="special">&gt;</span> <span class="keyword">explicit</span> <span class="identifier">optional</span> <span class="special">(</span> <span class="identifier">TypedInPlaceFactory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">f</span> <span class="special">)</span> <span class="special">;</span> <a class="link" href="detailed_semantics.html#reference_optional_constructor_factory"><span class="inlinemediaobject"><img src="../images/callouts/R.png" alt="R"></span></a>
 
-    <span class="identifier">optional</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span> <span class="identifier">none_t</span> <span class="special">)</span> <span class="special">;</span>
+    <span class="identifier">optional</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span> <span class="identifier">none_t</span> <span class="special">)</span> <span class="keyword">noexcept</span> <span class="special">;</span> <a class="link" href="detailed_semantics.html#reference_optional_operator_equal_none_t"><span class="inlinemediaobject"><img src="../images/callouts/R.png" alt="R"></span></a>
 
     <span class="identifier">optional</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span> <a class="link" href="detailed_semantics.html#reference_optional_operator_equal_value"><span class="inlinemediaobject"><img src="../images/callouts/R.png" alt="R"></span></a>
 
@@ -100,7 +100,7 @@
     <span class="comment">// deprecated methods</span>
 
     <span class="comment">// (deprecated)</span>
-    <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">()</span> <span class="special">;</span> <a class="link" href="detailed_semantics.html#reference_optional_reset"><span class="inlinemediaobject"><img src="../images/callouts/R.png" alt="R"></span></a>
+    <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">;</span> <a class="link" href="detailed_semantics.html#reference_optional_reset"><span class="inlinemediaobject"><img src="../images/callouts/R.png" alt="R"></span></a>
 
     <span class="comment">// (deprecated)</span>
     <span class="keyword">void</span> <span class="identifier">reset</span> <span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span> <a class="link" href="detailed_semantics.html#reference_optional_reset_value"><span class="inlinemediaobject"><img src="../images/callouts/R.png" alt="R"></span></a>

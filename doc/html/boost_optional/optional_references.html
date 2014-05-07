@@ -60,7 +60,7 @@
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           Copies of <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span></code>
-          will copy the references but all these references will nonetheless reefer
+          will copy the references but all these references will nonetheless refer
           to the same object.
         </li>
 <li class="listitem">
@@ -68,6 +68,21 @@
           than the reference itself.
         </li>
 </ul></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        On compilers that do not conform to Standard C++ rules of reference binding,
+        operations on optional references might give adverse results: rather than
+        binding a reference to a designated object they may create a temporary and
+        bind to it. Compilers known to have these deficiencies include GCC versions
+        4.2, 4.3, 4.4, 4.5; QCC 4.4.2; MSVC versions 8.0, 9.0, 10.0, 11.0, 12.0.
+        On these compilers prefer using direct-initialization and copy assignment
+        of optional references to copy-initialization and assignment from <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span></code>.
+      </p></td></tr>
+</table></div>
 <h4>
 <a name="boost_optional.optional_references.h0"></a>
       <span class="phrase"><a name="boost_optional.optional_references.rvalue_references"></a></span><a class="link" href="optional_references.html#boost_optional.optional_references.rvalue_references">Rvalue

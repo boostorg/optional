@@ -45,7 +45,7 @@
 
         template<class TypedInPlaceFactory> explicit optional ( TypedInPlaceFactory const& f ) ; ``[link reference_optional_constructor_factory __GO_TO__]``
 
-        optional& operator = ( none_t ) ; ``[/[link reference_optional_operator_equal_none_t __GO_TO__]]``
+        optional& operator = ( none_t ) noexcept ; ``[link reference_optional_operator_equal_none_t __GO_TO__]``
 
         optional& operator = ( T const& v ) ; ``[link reference_optional_operator_equal_value __GO_TO__]``
         
@@ -85,7 +85,7 @@
         // deprecated methods
 
         // (deprecated)
-        void reset() ; ``[link reference_optional_reset __GO_TO__]``
+        void reset() noexcept ; ``[link reference_optional_reset __GO_TO__]``
 
         // (deprecated)
         void reset ( T const& ) ; ``[link reference_optional_reset_value __GO_TO__]``
@@ -483,6 +483,15 @@ assert ( *y == v ) ;
 
 __SPACE__
 
+[#reference_optional_operator_equal_none_t]
+
+[: `optional& optional<T>::operator= ( none_t ) noexcept;`]
+
+* [*Effect:] If `*this` is initialized destroys its contained value.
+* [*Postconditions: ] `*this` is uninitialized.
+
+__SPACE__
+
 [#reference_optional_operator_equal_value]
 
 [: `optional& optional<T` ['(not a ref)]`>::operator= ( T const& rhs ) ;`]
@@ -762,7 +771,7 @@ __SPACE__
 
 [#reference_optional_reset]
 
-[: `void optional<T>::reset() ;`]
+[: `void optional<T>::reset() noexcept ;`]
 * [*Deprecated:] Same as `operator=( detail::none_t );`
 
 __SPACE__
