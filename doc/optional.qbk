@@ -46,7 +46,7 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 [section Introduction]
-This library can be used to represent 'optional' (or 'nullable') objects and safely pass them by value:
+This library can be used to represent 'optional' (or 'nullable') objects that can be safely passed by value:
 
     optional<int> readInt(); // this function may return either an int or a not-an-int
 

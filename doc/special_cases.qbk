@@ -21,7 +21,7 @@ will nonetheless refer to the same object.
 * Value-access will actually provide access to the referenced object
 rather than the reference itself.
 
-[warning On compilers that do not conform to Standard C++ rules of reference binding, operations on optional references might give adverse results: rather than binding a reference to a designated object they may create a temporary and bind to it. Compilers known to have these deficiencies include GCC versions 4.2, 4.3, 4.4, 4.5; QCC 4.4.2; MSVC versions 8.0, 9.0, 10.0, 11.0, 12.0. On these compilers prefer using direct-initialization and copy assignment of optional references to copy-initialization and assignment from `T&`.]
+[warning On compilers that do not conform to Standard C++ rules of reference binding, operations on optional references might give adverse results: rather than binding a reference to a designated object they may create an unexpected temporary and bind to it. For more details see [link boost_optional.dependencies_and_portability.optional_reference_binding Dependencies and Portability section].]
 
 [heading Rvalue references]
 
@@ -262,17 +262,17 @@ The factories are implemented in the headers: __IN_PLACE_FACTORY_HPP__ and __TYP
 
 `optional<bool>` should be used with special caution and consideration.
 
-First, it is functionally similar to a tristate boolean (false,maybe,true)
+First, it is functionally similar to a tristate boolean (false, maybe, true)
 —such as __BOOST_TRIBOOL__— except that in a tristate boolean, the maybe state
 [_represents a valid value], unlike the corresponding state of an uninitialized
 `optional<bool>`.
 It should be carefully considered if an `optional<bool>` instead of a `tribool`
 is really needed.
 
-Second, `optional<>` provides an implicit conversion to `bool`. This
-conversion refers to the initialization state and not to the contained value.
-Using `optional<bool>` can lead to subtle errors due to the implicit `bool`
-conversion:
+Second, although `optional<>` provides a contextual conversion to `bool` in C++11,
+ this falls back to an implicit conversion on older compilers. This conversion refers
+ to the initialization state and not to the contained value. Using `optional<bool>`
+ can lead to subtle errors due to the implicit `bool` conversion:
 
     void foo ( bool v ) ;
     void bar()
@@ -289,6 +289,25 @@ The only implicit conversion is to `bool`, and it is safe in the sense that
 typical integral promotions don't apply (i.e. if `foo()` takes an `int`
 instead, it won't compile).
 
+Third, mixed comparisons with `bool` work differently than similar mixed comparisons between pointers and `bool`, so the results might surprise you:
+
+    optional<bool> oEmpty(none), oTrue(true), oFalse(false);
+    
+    if (oEmpty == none);  // renders true
+    if (oEmpty == false); // renders false!
+    if (oEmpty == true);  // renders false!
+     
+    if (oFalse == none);  // renders false
+    if (oFalse == false); // renders true!
+    if (oFalse == true);  // renders false
+    
+    if (oTrue == none);   // renders false
+    if (oTrue == false);  // renders false
+    if (oTrue == true);   // renders true
+
+In other words, for `optional<>`, the following assertion does not hold:
+
+    assert((opt == false) == (!opt));
 [endsect]
 
 [section Exception Safety Guarantees]

@@ -939,7 +939,7 @@ __SPACE__
 
 [: `bool optional<T>::is_initialized() const ;`]
 
-* [*Deprecated:] Same as `operator `['unspecified-bool-type]`() ;`
+* [*Deprecated:] Same as `explicit operator bool () ;`
 
 __SPACE__
 
