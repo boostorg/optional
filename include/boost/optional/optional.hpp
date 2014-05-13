@@ -175,9 +175,11 @@ struct types_when_is_ref
 template <class To, class From>
 void prevent_binding_rvalue_ref_to_optional_lvalue_ref()
 {
+#ifndef BOOST_OPTIONAL_ALLOW_BINDING_TO_RVALUES
   BOOST_STATIC_ASSERT_MSG(
     !boost::is_lvalue_reference<To>::value || !boost::is_rvalue_reference<From>::value, 
-    "binding rvalue references to optional lvalue references is disallowed"); 
+    "binding rvalue references to optional lvalue references is disallowed");
+#endif    
 }
 
 struct optional_tag {} ;
