@@ -2,8 +2,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>A note about optional&lt;bool&gt;</title>
-<link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="prev" href="in_place_factories.html" title="In-Place Factories">
@@ -32,7 +32,7 @@
       be used with special caution and consideration.
     </p>
 <p>
-      First, it is functionally similar to a tristate boolean (false,maybe,true)
+      First, it is functionally similar to a tristate boolean (false, maybe, true)
       &#8212;such as <a href="../../../../../doc/html/tribool.html" target="_top">boost::tribool</a>&#8212;
       except that in a tristate boolean, the maybe state <span class="underline">represents
       a valid value</span>, unlike the corresponding state of an uninitialized
@@ -42,10 +42,11 @@
       needed.
     </p>
 <p>
-      Second, <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;&gt;</span></code>
-      provides an implicit conversion to <code class="computeroutput"><span class="keyword">bool</span></code>.
-      This conversion refers to the initialization state and not to the contained
-      value. Using <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;</span></code> can
+      Second, although <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;&gt;</span></code>
+      provides a contextual conversion to <code class="computeroutput"><span class="keyword">bool</span></code>
+      in C++11, this falls back to an implicit conversion on older compilers. This
+      conversion refers to the initialization state and not to the contained value.
+      Using <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;</span></code> can
       lead to subtle errors due to the implicit <code class="computeroutput"><span class="keyword">bool</span></code>
       conversion:
     </p>
@@ -67,10 +68,33 @@
       takes an <code class="computeroutput"><span class="keyword">int</span></code> instead, it won't
       compile).
     </p>
+<p>
+      Third, mixed comparisons with <code class="computeroutput"><span class="keyword">bool</span></code>
+      work differently than similar mixed comparisons between pointers and <code class="computeroutput"><span class="keyword">bool</span></code>, so the results might surprise you:
+    </p>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;</span> <span class="identifier">oEmpty</span><span class="special">(</span><span class="identifier">none</span><span class="special">),</span> <span class="identifier">oTrue</span><span class="special">(</span><span class="keyword">true</span><span class="special">),</span> <span class="identifier">oFalse</span><span class="special">(</span><span class="keyword">false</span><span class="special">);</span>
+
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oEmpty</span> <span class="special">==</span> <span class="identifier">none</span><span class="special">);</span>  <span class="comment">// renders true</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oEmpty</span> <span class="special">==</span> <span class="keyword">false</span><span class="special">);</span> <span class="comment">// renders false!</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oEmpty</span> <span class="special">==</span> <span class="keyword">true</span><span class="special">);</span>  <span class="comment">// renders false!</span>
+
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oFalse</span> <span class="special">==</span> <span class="identifier">none</span><span class="special">);</span>  <span class="comment">// renders false</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oFalse</span> <span class="special">==</span> <span class="keyword">false</span><span class="special">);</span> <span class="comment">// renders true!</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oFalse</span> <span class="special">==</span> <span class="keyword">true</span><span class="special">);</span>  <span class="comment">// renders false</span>
+
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oTrue</span> <span class="special">==</span> <span class="identifier">none</span><span class="special">);</span>   <span class="comment">// renders false</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oTrue</span> <span class="special">==</span> <span class="keyword">false</span><span class="special">);</span>  <span class="comment">// renders false</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oTrue</span> <span class="special">==</span> <span class="keyword">true</span><span class="special">);</span>   <span class="comment">// renders true</span>
+</pre>
+<p>
+      In other words, for <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;&gt;</span></code>, the following assertion does not hold:
+    </p>
+<pre class="programlisting"><span class="identifier">assert</span><span class="special">((</span><span class="identifier">opt</span> <span class="special">==</span> <span class="keyword">false</span><span class="special">)</span> <span class="special">==</span> <span class="special">(!</span><span class="identifier">opt</span><span class="special">));</span>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014 Andrzej Krzemie&#324;ski<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

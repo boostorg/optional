@@ -2,8 +2,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Optional references</title>
-<link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="prev" href="examples.html" title="Examples">
@@ -60,7 +60,7 @@
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           Copies of <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span></code>
-          will copy the references but all these references will nonetheless reefer
+          will copy the references but all these references will nonetheless refer
           to the same object.
         </li>
 <li class="listitem">
@@ -68,10 +68,39 @@
           than the reference itself.
         </li>
 </ul></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        On compilers that do not conform to Standard C++ rules of reference binding,
+        operations on optional references might give adverse results: rather than
+        binding a reference to a designated object they may create an unexpected
+        temporary and bind to it. For more details see <a class="link" href="dependencies_and_portability.html#boost_optional.dependencies_and_portability.optional_reference_binding" title="Optional Reference Binding">Dependencies
+        and Portability section</a>.
+      </p></td></tr>
+</table></div>
+<h4>
+<a name="boost_optional.optional_references.h0"></a>
+      <span class="phrase"><a name="boost_optional.optional_references.rvalue_references"></a></span><a class="link" href="optional_references.html#boost_optional.optional_references.rvalue_references">Rvalue
+      references</a>
+    </h4>
+<p>
+      Rvalue references and lvalue references to const have the ability in C++ to
+      extend the life time of a temporary they bind to. Optional references do not
+      have this capability, therefore to avoid surprising effects it is not possible
+      to initialize an optional references from a temporary. Optional rvalue references
+      are disabled altogether. Also, the initialization and assignment of an optional
+      reference to const from rvalue reference is disabled.
+    </p>
+<pre class="programlisting"><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>            <span class="comment">// legal</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;&gt;</span> <span class="identifier">oi</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span> <span class="comment">// illegal</span>
+</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014 Andrzej Krzemie&#324;ski<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

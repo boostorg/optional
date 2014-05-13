@@ -2,8 +2,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Implementation Notes</title>
-<link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.77.1">
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="prev" href="type_requirements.html" title="Type requirements">
@@ -31,17 +31,17 @@
       currently implemented using a custom aligned storage facility built from <code class="computeroutput"><span class="identifier">alignment_of</span></code> and <code class="computeroutput"><span class="identifier">type_with_alignment</span></code>
       (both from Type Traits). It uses a separate boolean flag to indicate the initialization
       state. Placement new with <code class="computeroutput"><span class="identifier">T</span></code>'s
-      copy constructor and <code class="computeroutput"><span class="identifier">T</span></code>'s destructor
-      are explicitly used to initialize,copy and destroy optional values. As a result,
-      <code class="computeroutput"><span class="identifier">T</span></code>'s default constructor is
-      effectively by-passed, but the exception guarantees are basic. It is planned
-      to replace the current implementation with another with stronger exception
-      safety, such as a future <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">variant</span></code>.
+      copy/move constructor and <code class="computeroutput"><span class="identifier">T</span></code>'s
+      destructor are explicitly used to initialize, copy, move and destroy optional
+      values. As a result, <code class="computeroutput"><span class="identifier">T</span></code>'s default
+      constructor is effectively by-passed, but the exception guarantees are basic.
+      It is planned to replace the current implementation with another with stronger
+      exception safety, such as a future <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">variant</span></code>.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014 Andrzej Krzemie&#324;ski<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
