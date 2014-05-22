@@ -149,7 +149,13 @@ struct types_when_isnt_ref
   typedef T &      reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
   typedef T &&     rval_reference_type ;
+#ifdef BOOST_MOVE_OLD_RVALUE_REF_BINDING_RULES
+  // GCC 4.4 has support for an early draft of rvalue references. The conforming version below
+  // causes warnings about returning references to a temporary.
+  static T&& move(T&& r) { return r; }
+#else
   static rval_reference_type move(reference_type r) { return boost::move(r); }
+#endif
 #endif
   typedef T const* pointer_const_type ;
   typedef T *      pointer_type ;
