@@ -336,7 +336,7 @@ Regarding the following assignment functions:
 
 They forward calls to the corresponding `T`'s constructors or assignments (depending on whether the optional object is initialized or not); so if both `T`'s constructor and the assignment provide strong exception safety guarantee, `optional<T>`'s assignment also provides strong exception safety guarantee; otherwise we only get the basic guarantee. Additionally, if both involved `T`'s constructor and the assignment never throw, `optional<T>`'s assignment also never throws.
 
-Unless `T`'s constructor or assignment throws, `optional<T>` does not throw anything else on its own. A throw during assignment never changes the initialization state of any optional object involved:
+Unless `T`'s constructor or assignment throws, assignments to `optional<T>` do not throw anything else on its own. A throw during assignment never changes the initialization state of any optional object involved:
 
 
     optional<T> opt1(val1);

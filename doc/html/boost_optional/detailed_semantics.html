@@ -1203,6 +1203,43 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<a name="reference_optional_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">();</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Returns:</strong></span> A reference to the contained
+          value, if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is initialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> An instance of <code class="computeroutput"><span class="identifier">bad_optional_access</span></code>,
+          if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is not initialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v</span> <span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">o0</span><span class="special">,</span> <span class="identifier">o1</span> <span class="special">(</span> <span class="identifier">v</span> <span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">o1</span><span class="special">.</span><span class="identifier">value</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">);</span>
+
+<span class="keyword">try</span> <span class="special">{</span>
+  <span class="identifier">o0</span><span class="special">.</span><span class="identifier">value</span><span class="special">();</span> <span class="comment">// throws</span>
+  <span class="identifier">assert</span> <span class="special">(</span> <span class="keyword">false</span> <span class="special">);</span>
+<span class="special">}</span>
+<span class="keyword">catch</span><span class="special">(</span><span class="identifier">bad_optional_access</span><span class="special">&amp;)</span> <span class="special">{</span>
+  <span class="identifier">asert</span> <span class="special">(</span> <span class="keyword">true</span> <span class="special">);</span>
+<span class="special">}</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_get_value_or_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
         <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">get_value_or</span><span class="special">(</span>

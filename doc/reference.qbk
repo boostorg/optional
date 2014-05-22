@@ -74,6 +74,9 @@
 
         T const& operator *() const ; ``[link reference_optional_get __GO_TO__]``
         T&       operator *() ; ``[link reference_optional_get __GO_TO__]``
+        
+        T const& value() const ; ``[link reference_optional_value __GO_TO__]``
+        T&       value() ; ``[link reference_optional_value __GO_TO__]``
 
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
@@ -799,6 +802,31 @@ assert ( u == v ) ;
 T w ;
 *opt = w ;
 assert ( *opt == w ) ;
+``
+
+__SPACE__
+
+
+[#reference_optional_value]
+
+[: `T const& optional<T>::value() const ;`]
+[: `T&       optional<T>::value();`]
+
+* [*Returns:] A reference to the contained value, if `*this` is initialized.
+* [*Throws:] An instance of `bad_optional_access`, if `*this` is not initialized.
+* [*Example:]
+``
+T v ;
+optional<T> o0, o1 ( v );
+assert ( o1.value() == v );
+
+try {
+  o0.value(); // throws
+  assert ( false );
+}
+catch(bad_optional_access&) {
+  asert ( true );
+}
 ``
 
 __SPACE__

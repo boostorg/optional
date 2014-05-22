@@ -23,7 +23,9 @@
 
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
+#include <boost/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
@@ -935,6 +937,22 @@ class optional : public optional_detail::optional_base<T>
     // No-throw
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
+    
+    reference_const_type value() const
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+      
+    reference_type value()
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
 
     bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
     
