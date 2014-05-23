@@ -1235,6 +1235,30 @@
   <span class="identifier">asert</span> <span class="special">(</span> <span class="keyword">true</span> <span class="special">);</span>
 <span class="special">}</span>
 </pre>
+          <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+        </li>
+</ul></div>
+<a name="reference_optional_value_or"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_or</span><span class="special">(</span><span class="identifier">U</span> <span class="special">&amp;&amp;</span>
+        <span class="identifier">v</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+          is CopyConstructible.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
+          <span class="special">?</span> <span class="special">**</span><span class="keyword">this</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the selected
+          constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> On compilers without rvalue reference
+          support the type of <code class="computeroutput"><span class="identifier">v</span></code> becomes
+          <code class="computeroutput"><span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
         </li>
 </ul></div>
 <p>
@@ -1264,6 +1288,9 @@
         <span class="identifier">o</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">default</span> <span class="special">)</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Deprecated:</strong></span> Use <code class="computeroutput"><span class="identifier">value_or</span><span class="special">()</span></code> instead.
+        </li>
 <li class="listitem">
           <span class="bold"><strong>Returns:</strong></span> A reference to the contained
           value, if any, or <code class="computeroutput"><span class="keyword">default</span></code>.

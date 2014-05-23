@@ -66,9 +66,6 @@
         T const& get() const ; ``[link reference_optional_get __GO_TO__]``
         T&       get() ; ``[link reference_optional_get __GO_TO__]``
 
-        // [new in 1.34]
-        T const& get_value_or( T const& default ) const ; ``[link reference_optional_get_value_or_value __GO_TO__]`` 
-
         T const* operator ->() const ; ``[link reference_optional_operator_arrow __GO_TO__]``
         T*       operator ->() ; ``[link reference_optional_operator_arrow __GO_TO__]``
 
@@ -77,6 +74,8 @@
         
         T const& value() const ; ``[link reference_optional_value __GO_TO__]``
         T&       value() ; ``[link reference_optional_value __GO_TO__]``
+        
+        template<class U> T value_or( U && v ) const ; ``[link reference_optional_value_or __GO_TO__]``
 
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
@@ -96,6 +95,8 @@
         // (deprecated)
         bool is_initialized() const ; ``[link reference_optional_is_initialized __GO_TO__]``
 
+        // (deprecated)
+        T const& get_value_or( T const& default ) const ; ``[link reference_optional_get_value_or_value __GO_TO__]`` 
     };
 
     template<class T> inline bool operator == ( optional<T> const& x, optional<T> const& y ) ; ``[link reference_operator_compare_equal_optional_optional __GO_TO__]``
@@ -114,13 +115,10 @@
 
     template<class T> inline bool operator != ( optional<T> const& x, none_t ) noexcept ; ``[link reference_operator_compare_not_equal_optional_none __GO_TO__]``
 
-    // [new in 1.34]
     template<class T> inline optional<T> make_optional ( T const& v ) ; ``[link reference_make_optional_value __GO_TO__]``
 
-    // [new in 1.34]
     template<class T> inline optional<T> make_optional ( bool condition, T const& v ) ; ``[link reference_make_optional_bool_value __GO_TO__]``
 
-    // [new in 1.34]
     template<class T> inline T const& get_optional_value_or ( optional<T> const& opt, T const& default ) ; ``[link reference_optional_get_value_or_value __GO_TO__]`` 
 
     template<class T> inline T const& get ( optional<T> const& opt ) ; ``[link reference_optional_get __GO_TO__]``
@@ -828,6 +826,17 @@ catch(bad_optional_access&) {
   asert ( true );
 }
 ``
+__SPACE__
+
+
+[#reference_optional_value_or]
+
+[: `template<class U> T optional<T>::value_or(U && v) const ;`]
+
+* [*Requires:] `T` is CopyConstructible.
+* [*Returns:] `bool(*this) ? **this : static_cast<T>(forward<U>(v))`.
+* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Notes:] On compilers without rvalue reference support the type of `v` becomes `U const&`.
 
 __SPACE__
 
@@ -839,6 +848,7 @@ __SPACE__
 [: `inline T const& get_optional_value_or ( optional<T` ['(not a ref)]`> const& o, T const& default ) ;`]
 [: `inline T&       get_optional_value_or ( optional<T` ['(not a ref)]`>&       o, T&       default ) ;`]
 
+* [*Deprecated:] Use `value_or()` instead.
 * [*Returns:] A reference to the contained value, if any, or `default`.
 * [*Throws:] Nothing.
 * [*Example:]

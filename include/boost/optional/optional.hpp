@@ -23,7 +23,7 @@
 
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
-#include <boost/bad_optional_access.hpp>
+#include <boost/optional/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/type.hpp>
@@ -441,11 +441,11 @@ class optional_base : public optional_tag
 
   public :
 
-    // Destroys the current value, if any, leaving this UNINITIALIZED
+    // **DEPPRECATED** Destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
     void reset() BOOST_NOEXCEPT { destroy(); }
 
-    // Replaces the current value -if any- with 'val'
+    // **DEPPRECATED** Replaces the current value -if any- with 'val'
     void reset ( argument_type val ) { assign(val); }
 
     // Returns a pointer to the value if this is initialized, otherwise,
@@ -954,6 +954,14 @@ class optional : public optional_detail::optional_base<T>
           throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
       }
 
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    template <class U>
+    value_type value_or ( U&& v ) const { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
+#else
+    template <class U>
+    value_type value_or ( U const& v ) const { return this->is_initialized() ? get() : static_cast<value_type>(v); }
+#endif
+      
     bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
     
     BOOST_EXPLICIT_OPERATOR_BOOL()

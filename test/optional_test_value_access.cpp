@@ -41,6 +41,20 @@ struct IntWrapper
 };
 
 template <typename T>
+void test_function_value_or_for()
+{
+  optional<T> oM0;
+  const optional<T> oC0;
+  optional<T> oM1(1);
+  const optional<T> oC2(2);
+  
+  BOOST_CHECK(oM0.value_or(5) == 5);
+  BOOST_CHECK(oC0.value_or(5) == 5);
+  BOOST_CHECK(oM1.value_or(5) == 1);
+  BOOST_CHECK(oC2.value_or(5) == 2);
+}
+
+template <typename T>
 void test_function_value_for()
 {
   optional<T> o0;
@@ -85,8 +99,33 @@ void test_function_value_for()
 void test_function_value()
 {
     test_function_value_for<int>();
-    test_function_value_for<float>();
+    test_function_value_for<double>();
     test_function_value_for<IntWrapper>();
+}
+
+struct FatToIntConverter
+{
+  static int conversions;
+  int _val;
+  FatToIntConverter(int val) : _val(val) {}
+  operator int() { conversions += 1; return _val; }
+};
+
+int FatToIntConverter::conversions = 0;
+
+void test_function_value_or()
+{
+    test_function_value_or_for<int>();
+    test_function_value_or_for<double>();
+    test_function_value_or_for<IntWrapper>();
+    
+    optional<int> oi(1);
+    BOOST_CHECK(oi.value_or(FatToIntConverter(2)) == 1);
+    BOOST_CHECK(FatToIntConverter::conversions == 0);
+    
+    oi = boost::none;
+    BOOST_CHECK(oi.value_or(FatToIntConverter(2)) == 2);
+    BOOST_CHECK(FatToIntConverter::conversions == 1);
 }
 
 int test_main( int, char* [] )
@@ -94,7 +133,7 @@ int test_main( int, char* [] )
   try
   {
     test_function_value();
-
+    test_function_value_or();
   }
   catch ( ... )
   {
