@@ -108,7 +108,7 @@ struct FatToIntConverter
   static int conversions;
   int _val;
   FatToIntConverter(int val) : _val(val) {}
-  operator int() { conversions += 1; return _val; }
+  operator int() const { conversions += 1; return _val; }
 };
 
 int FatToIntConverter::conversions = 0;
