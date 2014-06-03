@@ -128,6 +128,35 @@ void test_function_value_or()
     BOOST_CHECK(FatToIntConverter::conversions == 1);
 }
 
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+struct MoveOnly
+{
+    explicit MoveOnly(int){}
+    MoveOnly(MoveOnly &&){}
+    void operator=(MoveOnly &&);
+private:
+    MoveOnly(MoveOnly const&);
+    void operator=(MoveOnly const&);
+};
+
+optional<MoveOnly> makeMoveOnly()
+{
+    return MoveOnly(1);
+}
+
+// compile-time test
+void test_move_only_getters()
+{
+    MoveOnly m1 = *makeMoveOnly();
+    MoveOnly m2 = makeMoveOnly().value();
+    MoveOnly m3 = makeMoveOnly().value_or(MoveOnly(1));
+    unused_variable(m1);
+    unused_variable(m2);
+    unused_variable(m3);
+}
+
+#endif
+
 int test_main( int, char* [] )
 {
   try

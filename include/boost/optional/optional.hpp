@@ -958,9 +958,40 @@ class optional : public optional_detail::optional_base<T>
     // Returns a reference to the value if this is initialized, otherwise,
     // the behaviour is UNDEFINED
     // No-throw
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+    reference_const_type operator *() const& { return this->get() ; }
+    reference_type       operator *() &      { return this->get() ; }
+    rval_reference_type  operator *() &&     { return boost::move(this->get()) ; }
+#else
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
-    
+#endif
+
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+    reference_const_type value() const&
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+      
+    reference_type value() &
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+      
+    rval_reference_type value() &&
+      { 
+        if (this->is_initialized())
+          return boost::move(this->get()) ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+#else 
     reference_const_type value() const
       { 
         if (this->is_initialized())
@@ -976,10 +1007,20 @@ class optional : public optional_detail::optional_base<T>
         else
           throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
       }
+#endif
 
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     template <class U>
-    value_type value_or ( U&& v ) const { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
+    value_type value_or ( U&& v ) const&
+    { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
+    
+    template <class U>
+    value_type value_or ( U&& v ) && 
+    { return this->is_initialized() ? boost::move(get()) : static_cast<value_type>(boost::forward<U>(v)); }
+#elif !defined BOOST_NO_CXX11_RVALUE_REFERENCES
+    template <class U>
+    value_type value_or ( U&& v ) const 
+    { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
 #else
     template <class U>
     value_type value_or ( U const& v ) const { return this->is_initialized() ? get() : static_cast<value_type>(v); }
