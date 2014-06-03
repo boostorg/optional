@@ -460,14 +460,26 @@ class optional_base : public optional_tag
 
     void construct ( argument_type val )
      {
-       new (m_storage.address()) internal_type(val) ;
+       ::new (m_storage.address()) internal_type(val) ;
        m_initialized = true ;
      }
      
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     void construct ( rval_reference_type val )
      {
-       new (m_storage.address()) internal_type( types::move(val) ) ;
+       ::new (m_storage.address()) internal_type( types::move(val) ) ;
+       m_initialized = true ;
+     }
+#endif
+
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+    // Constructs in-place
+    // upon exception *this is always uninitialized
+    template<class... Args>
+    void emplace_assign ( Args&&... args )
+     {
+       destroy();
+       ::new (m_storage.address()) internal_type( boost::forward<Args>(args)... );
        m_initialized = true ;
      }
 #endif
@@ -507,6 +519,7 @@ class optional_base : public optional_tag
        destroy();
        construct(factory,tag);
      }
+
 #else
     // Constructs in-place using the given factory
     template<class Expr>
@@ -907,6 +920,16 @@ class optional : public optional_detail::optional_base<T>
         this->assign( none_ ) ;
         return *this ;
       }
+      
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+    // Constructs in-place
+    // upon exception *this is always uninitialized
+    template<class... Args>
+    void emplace ( Args&&... args )
+     {
+       this->emplace_assign( boost::forward<Args>(args)... );
+     }
+#endif
 
     void swap( optional & arg )
 	  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)

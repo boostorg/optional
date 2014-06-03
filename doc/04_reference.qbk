@@ -58,6 +58,8 @@
         template<class U> optional& operator = ( optional<U> const& rhs ) ; ``[link reference_optional_operator_equal_other_optional __GO_TO__]``
         
         template<class U> optional& operator = ( optional<U>&& rhs ) ; ``[link reference_optional_operator_move_equal_other_optional __GO_TO__]``
+        
+        template<class... Args> void emplace ( Args...&& args ) ; ``[link reference_optional_emplace __GO_TO__]``
 
         template<class InPlaceFactory> optional& operator = ( InPlaceFactory const& f ) ; ``[link reference_optional_operator_equal_factory __GO_TO__]``
 
@@ -746,6 +748,21 @@ assert ( *opt1 == static_cast<U>(v) ) ;
 
 __SPACE__
 
+[#reference_optional_emplace]
+
+[: `template<class... Args> void optional<T` ['(not a ref)]`>::emplace( Args...&& args );`]
+
+* [*Requires:] The compiler supports rvalue references and variadic templates.
+* [*Effect:] If `*this` is initialized calls `*this = none`.
+ Then initializes in-place the contained value as if direct-initializing an object
+ of type `T` with `std::forward<Args>(args)...`. 
+* [*Postconditions: ] `*this` is [_initialized].
+* [*Throws:] Whatever the selected `T`'s  constructor throws.
+* [*Notes:] `T` need not be `MoveConstructible` or `MoveAssignable`.
+* [*Exception Safety:] If an exception is thrown during the initialization of `T`, `*this` is ['uninitialized].
+
+__SPACE__
+
 [#reference_optional_operator_equal_factory]
 
 [: `template<InPlaceFactory> optional<T>& optional<T` ['(not a ref)]`>::operator=( InPlaceFactory const& f );`]
@@ -823,7 +840,7 @@ try {
   assert ( false );
 }
 catch(bad_optional_access&) {
-  asert ( true );
+  assert ( true );
 }
 ``
 __SPACE__

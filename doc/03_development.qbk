@@ -13,13 +13,13 @@
 [section The models]
 
 In C++, we can ['declare] an object (a variable) of type `T`, and we can give this
-variable an ['initial value] (through an ['initializer]. (c.f. 8.5)).
+variable an ['initial value] (through an ['initializer]. (cf. 8.5)).
 When a declaration includes a non-empty initializer (an initial value is given),
 it is said that the object has been initialized.
 If the declaration uses an empty initializer (no initial value is given), and
 neither default nor value initialization applies, it is said that the object is
 [*uninitialized]. Its actual value exist but has an ['indeterminate initial value]
-(c.f. 8.5.9).
+(cf. 8.5/11).
 `optional<T>` intends to formalize the notion of initialization (or lack of it)
 allowing a program to test whether an object has been initialized and stating
 that access to the value of an uninitialized object is undefined behavior. That
@@ -38,7 +38,7 @@ additional information to tell if an object has been effectively initialized.
 One of the typical ways in which this has been historically dealt with is via
 a special value: `EOF`, `npos`, -1, etc... This is equivalent to adding the
 special value to the set of possible values of a given type. This super set of
-`T` plus some ['nil_t]—were `nil_t` is some stateless POD-can be modeled in modern
+`T` plus some ['nil_t]—where `nil_t` is some stateless POD—can be modeled in modern
 languages as a [*discriminated union] of T and nil_t. Discriminated unions are
 often called ['variants]. A variant has a ['current type], which in our case is either
 `T` or `nil_t`.
@@ -197,7 +197,7 @@ be undefined unless the implied pointee actually exist.
 Such a ['de facto] idiom for referring to optional objects can be formalized
 in the form of a concept: the __OPTIONAL_POINTEE__ concept.
 This concept captures the syntactic usage of operators `*`, `->` and
-conversion to `bool` to convey the notion of optionality.
+contextual conversion to `bool` to convey the notion of optionality.
 
 However, pointers are good to [_refer] to optional objects, but not particularly
 good to handle the optional objects in all other respects, such as initializing

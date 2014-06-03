@@ -1083,6 +1083,42 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<a name="reference_optional_emplace"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
+        <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">emplace</span><span class="special">(</span> <span class="identifier">Args</span><span class="special">...&amp;&amp;</span>
+        <span class="identifier">args</span> <span class="special">);</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> The compiler supports rvalue
+          references and variadic templates.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Effect:</strong></span> If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized calls <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span> <span class="special">=</span>
+          <span class="identifier">none</span></code>. Then initializes in-place
+          the contained value as if direct-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code> with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">Args</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Postconditions: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is <span class="underline">initialized</span>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Whatever the selected <code class="computeroutput"><span class="identifier">T</span></code>'s constructor throws.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+          need not be <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>
+          or <code class="computeroutput"><span class="identifier">MoveAssignable</span></code>.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Exception Safety:</strong></span> If an exception is thrown
+          during the initialization of <code class="computeroutput"><span class="identifier">T</span></code>,
+          <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+          is <span class="emphasis"><em>uninitialized</em></span>.
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_operator_equal_factory"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">InPlaceFactory</span><span class="special">&gt;</span>
         <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">InPlaceFactory</span>
@@ -1232,7 +1268,7 @@
   <span class="identifier">assert</span> <span class="special">(</span> <span class="keyword">false</span> <span class="special">);</span>
 <span class="special">}</span>
 <span class="keyword">catch</span><span class="special">(</span><span class="identifier">bad_optional_access</span><span class="special">&amp;)</span> <span class="special">{</span>
-  <span class="identifier">asert</span> <span class="special">(</span> <span class="keyword">true</span> <span class="special">);</span>
+  <span class="identifier">assert</span> <span class="special">(</span> <span class="keyword">true</span> <span class="special">);</span>
 <span class="special">}</span>
 </pre>
           <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>

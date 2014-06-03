@@ -118,6 +118,13 @@
       This also applies to move assignments/constructors. However, move operations
       are made no-throw more often.
     </p>
+<p>
+      Operation <code class="computeroutput"><span class="identifier">emplace</span></code> provides
+      basic exception safety guarantee. If it throws, the optional object becomes
+      uninitialized regardless of its initial state, and its previous contained value
+      (if any) is destroyed. It doesn't call any assignment or move/copy constructor
+      on <code class="computeroutput"><span class="identifier">T</span></code>.
+    </p>
 <h4>
 <a name="boost_optional.exception_safety_guarantees.h0"></a>
       <span class="phrase"><a name="boost_optional.exception_safety_guarantees.swap"></a></span><a class="link" href="exception_safety_guarantees.html#boost_optional.exception_safety_guarantees.swap">Swap</a>

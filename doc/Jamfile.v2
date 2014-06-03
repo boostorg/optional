@@ -17,7 +17,7 @@ path-constant images : html ;
 
 xml optional
     :
-        optional.qbk
+        00_optional.qbk
     ;
 
 boostbook standalone

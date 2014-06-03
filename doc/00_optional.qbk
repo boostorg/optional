@@ -46,23 +46,39 @@ Distributed under the Boost Software License, Version 1.0.
 
 
 [section Introduction]
-This library can be used to represent 'optional' (or 'nullable') objects that can be safely passed by value:
+Class template `optional` is a wrapper for representing 'optional' (or 'nullable') objects who may not (yet) contain a valid value. Optional objects offer full value semantics; they are good for passing by value and usage inside STL containers. This is a header-only library.
 
-    optional<int> readInt(); // this function may return either an int or a not-an-int
-
-    if (optional<int> oi = readInt()) // did I get a real int
-      cout << "my int is: " << *oi;   // use my int
-    else
-      cout << "I have no int";
-  
+[section Problem]
+Suppose we want to read a parameter form a config file which represents some integral value, let's call it `"MaxValue"`. It is possible that this parameter is not specified; such situation is no error. It is valid to not specify the parameter and in that case the program is supposed to behave slightly different. Also suppose that any possible value of type `int` is a valid value for `"MaxValue"`, so we cannot jut use `-1` to represent the absence of the parameter in the config file.
 [endsect]
 
-[include motivation.qbk]
-[include development.qbk]
-[include reference.qbk]
-[include examples.qbk]
-[include special_cases.qbk]
-[include dependencies.qbk]
-[include acknowledgments.qbk]
+[section Solution]
+
+This is how you solve it with `boost::optional`:
+
+    #include <boost/optional.hpp>
+    
+    boost::optional<int> getConfigParam(std::string name);  // return either an int or a `not-an-int`
+
+    int main()
+    {
+      if (boost::optional<int> oi = getConfigParam("MaxValue")) // did I get a real int?
+        runWithMax(*oi);                                        // use my int
+      else
+        runWithNoMax();
+    }
+ 
+[endsect] 
+[endsect]
+
+[include 01_tutorial.qbk]
+[include 02_discussion.qbk]
+[include 03_development.qbk]
+[include 04_reference.qbk]
+[include 05_examples.qbk]
+[include 10_optional_references.qbk]
+[include 11_special_cases.qbk]
+[include 90_dependencies.qbk]
+[include 91_acknowledgments.qbk]
 
 
