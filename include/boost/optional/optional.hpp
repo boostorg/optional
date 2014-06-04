@@ -151,6 +151,7 @@ struct types_when_isnt_ref
   typedef T &      reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
   typedef T &&     rval_reference_type ;
+  typedef T &&     reference_type_of_temporary_wrapper;
 #ifdef BOOST_MOVE_OLD_RVALUE_REF_BINDING_RULES
   // GCC 4.4 has support for an early draft of rvalue references. The conforming version below
   // causes warnings about returning references to a temporary.
@@ -173,6 +174,7 @@ struct types_when_is_ref
   typedef raw_type&  reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
   typedef BOOST_DEDUCED_TYPENAME remove_const<raw_type>::type&& rval_reference_type ;
+  typedef raw_type&  reference_type_of_temporary_wrapper;
   static reference_type move(reference_type r) { return r; }
 #endif
   typedef raw_type*  pointer_const_type ;
@@ -227,6 +229,7 @@ class optional_base : public optional_tag
     typedef BOOST_DEDUCED_TYPENAME types::reference_const_type reference_const_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     typedef BOOST_DEDUCED_TYPENAME types::rval_reference_type  rval_reference_type ;
+    typedef BOOST_DEDUCED_TYPENAME types::reference_type_of_temporary_wrapper reference_type_of_temporary_wrapper ;
 #endif
     typedef BOOST_DEDUCED_TYPENAME types::pointer_type         pointer_type ;
     typedef BOOST_DEDUCED_TYPENAME types::pointer_const_type   pointer_const_type ;
@@ -725,6 +728,7 @@ class optional : public optional_detail::optional_base<T>
     typedef BOOST_DEDUCED_TYPENAME base::reference_const_type reference_const_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     typedef BOOST_DEDUCED_TYPENAME base::rval_reference_type  rval_reference_type ;
+    typedef BOOST_DEDUCED_TYPENAME base::reference_type_of_temporary_wrapper reference_type_of_temporary_wrapper ;
 #endif
     typedef BOOST_DEDUCED_TYPENAME base::pointer_type         pointer_type ;
     typedef BOOST_DEDUCED_TYPENAME base::pointer_const_type   pointer_const_type ;
@@ -961,7 +965,7 @@ class optional : public optional_detail::optional_base<T>
 #ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     reference_const_type operator *() const& { return this->get() ; }
     reference_type       operator *() &      { return this->get() ; }
-    rval_reference_type  operator *() &&     { return boost::move(this->get()) ; }
+    reference_type_of_temporary_wrapper  operator *() &&     { return boost::move(this->get()) ; }
 #else
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
@@ -984,7 +988,7 @@ class optional : public optional_detail::optional_base<T>
           throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
       }
       
-    rval_reference_type value() &&
+    reference_type_of_temporary_wrapper value() &&
       { 
         if (this->is_initialized())
           return boost::move(this->get()) ;

@@ -45,14 +45,13 @@ Distributed under the Boost Software License, Version 1.0.
 [def __GO_TO__ [$images/callouts/R.png]]
 
 
-[section Introduction]
+[heading Introduction]
 Class template `optional` is a wrapper for representing 'optional' (or 'nullable') objects who may not (yet) contain a valid value. Optional objects offer full value semantics; they are good for passing by value and usage inside STL containers. This is a header-only library.
 
-[section Problem]
+[heading Problem]
 Suppose we want to read a parameter form a config file which represents some integral value, let's call it `"MaxValue"`. It is possible that this parameter is not specified; such situation is no error. It is valid to not specify the parameter and in that case the program is supposed to behave slightly different. Also suppose that any possible value of type `int` is a valid value for `"MaxValue"`, so we cannot jut use `-1` to represent the absence of the parameter in the config file.
-[endsect]
 
-[section Solution]
+[heading Solution]
 
 This is how you solve it with `boost::optional`:
 
@@ -68,16 +67,21 @@ This is how you solve it with `boost::optional`:
         runWithNoMax();
     }
  
-[endsect] 
-[endsect]
 
-[include 01_tutorial.qbk]
-[include 02_discussion.qbk]
-[include 03_development.qbk]
-[include 04_reference.qbk]
-[include 05_examples.qbk]
-[include 10_optional_references.qbk]
-[include 11_special_cases.qbk]
+
+[include 01_quick_start.qbk]
+[section Tutorial]
+[include 12_motivation.qbk]
+[include 13_development.qbk]
+[include 14_optional_references.qbk]
+[include 15_in_place_factories.qbk]
+[include 16_optional_bool.qbk]
+[include 17_exception_safety.qbk]
+[include 18_type_requirements.qbk]
+[endsect]
+[section Reference]
+[include 20_reference.qbk]
+[endsect]
 [include 90_dependencies.qbk]
 [include 91_acknowledgments.qbk]
 

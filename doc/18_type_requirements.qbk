@@ -1,0 +1,10 @@
+﻿
+[section Type requirements]
+
+At the very minimum for `optional<T>` to work with a minimum interface it is required that `T` has a publicly accessible no-throw destructor. In that case you need to initialize the optional object with function `emplace()` or use [*InPlaceFactories].
+Additionally, if `T` is `Moveable`, `optional<T>` is also `Moveable` and can be easily initialized from an rvalue of type `T` and be passed by value.
+Additionally, if `T` is `Copyable`, `optional<T>` is also `Copyable` and can be easily initialized from an lvalue of type `T`.
+
+`T` [_is not] required to be __SGI_DEFAULT_CONSTRUCTIBLE__.
+
+[endsect]

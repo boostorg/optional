@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Optional">
-<link rel="next" href="boost_optional/tutorial.html" title="Tutorial">
+<link rel="next" href="boost_optional/quick_start.html" title="Quick Start">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,7 +17,7 @@
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_optional/tutorial.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_optional/quick_start.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
 <div class="chapter">
 <div class="titlepage"><div>
 <div><h2 class="title">
@@ -37,94 +37,67 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl class="toc">
-<dt><span class="section"><a href="index.html#optional.introduction">Introduction</a></span></dt>
+<dt><span class="section"><a href="boost_optional/quick_start.html">Quick Start</a></span></dt>
+<dt><span class="section"><a href="optional/tutorial.html">Tutorial</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="index.html#optional.introduction.problem">Problem</a></span></dt>
-<dt><span class="section"><a href="index.html#optional.introduction.solution">Solution</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/motivation.html">Motivation</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/design_overview.html">Design Overview</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/optional_references.html">Optional
+      references</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/rebinding_semantics_for_assignment_of_optional_references.html">Rebinding
+      semantics for assignment of optional references</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/in_place_factories.html">In-Place
+      Factories</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/a_note_about_optional_bool_.html">A
+      note about optional&lt;bool&gt;</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/exception_safety_guarantees.html">Exception
+      Safety Guarantees</a></span></dt>
+<dt><span class="section"><a href="boost_optional/tutorial/type_requirements.html">Type requirements</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="boost_optional/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="optional/reference.html">Reference</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_optional/tutorial.html#boost_optional.tutorial.optional_return_values">Optional
-      return values</a></span></dt>
-<dt><span class="section"><a href="boost_optional/tutorial.html#boost_optional.tutorial.optional_data_members">Optional
-      data members</a></span></dt>
-<dt><span class="section"><a href="boost_optional/tutorial.html#boost_optional.tutorial.bypassing_unnecessary_default_construction">Bypassing
-      unnecessary default construction</a></span></dt>
+<dt><span class="section"><a href="boost_optional/reference/synopsis.html">Synopsis</a></span></dt>
+<dt><span class="section"><a href="boost_optional/reference/detailed_semantics.html">Detailed
+      Semantics</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="boost_optional/discussion.html">Discussion</a></span></dt>
-<dt><span class="section"><a href="boost_optional/development.html">Development</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="boost_optional/development.html#boost_optional.development.the_models">The models</a></span></dt>
-<dt><span class="section"><a href="boost_optional/development.html#boost_optional.development.the_semantics">The semantics</a></span></dt>
-<dt><span class="section"><a href="boost_optional/development.html#boost_optional.development.the_interface">The Interface</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="boost_optional/synopsis.html">Synopsis</a></span></dt>
-<dt><span class="section"><a href="boost_optional/detailed_semantics.html">Detailed Semantics</a></span></dt>
-<dt><span class="section"><a href="boost_optional/examples.html">Examples</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="boost_optional/examples.html#boost_optional.examples.optional_return_values">Optional
-      return values</a></span></dt>
-<dt><span class="section"><a href="boost_optional/examples.html#boost_optional.examples.optional_local_variables">Optional
-      local variables</a></span></dt>
-<dt><span class="section"><a href="boost_optional/examples.html#boost_optional.examples.optional_data_members">Optional
-      data members</a></span></dt>
-<dt><span class="section"><a href="boost_optional/examples.html#boost_optional.examples.bypassing_expensive_unnecessary_default_construction">Bypassing
-      expensive unnecessary default construction</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="boost_optional/optional_references.html">Optional references</a></span></dt>
-<dt><span class="section"><a href="boost_optional/rebinding_semantics_for_assignment_of_optional_references.html">Rebinding
-    semantics for assignment of optional references</a></span></dt>
-<dt><span class="section"><a href="boost_optional/in_place_factories.html">In-Place Factories</a></span></dt>
-<dt><span class="section"><a href="boost_optional/a_note_about_optional_bool_.html">A note about
-    optional&lt;bool&gt;</a></span></dt>
-<dt><span class="section"><a href="boost_optional/exception_safety_guarantees.html">Exception Safety
-    Guarantees</a></span></dt>
-<dt><span class="section"><a href="boost_optional/type_requirements.html">Type requirements</a></span></dt>
 <dt><span class="section"><a href="boost_optional/dependencies_and_portability.html">Dependencies
     and Portability</a></span></dt>
-<dd><dl><dt><span class="section"><a href="boost_optional/dependencies_and_portability.html#boost_optional.dependencies_and_portability.optional_reference_binding">Optional
+<dd><dl><dt><span class="section"><a href="boost_optional/dependencies_and_portability/optional_reference_binding.html">Optional
       Reference Binding</a></span></dt></dl></dd>
 <dt><span class="section"><a href="boost_optional/acknowledgments.html">Acknowledgments</a></span></dt>
 </dl>
 </div>
-<div class="section">
-<div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="optional.introduction"></a><a class="link" href="index.html#optional.introduction" title="Introduction">Introduction</a>
-</h2></div></div></div>
-<div class="toc"><dl class="toc">
-<dt><span class="section"><a href="index.html#optional.introduction.problem">Problem</a></span></dt>
-<dt><span class="section"><a href="index.html#optional.introduction.solution">Solution</a></span></dt>
-</dl></div>
+<h3>
+<a name="optional.h0"></a>
+    <span class="phrase"><a name="optional.introduction"></a></span><a class="link" href="index.html#optional.introduction">Introduction</a>
+  </h3>
 <p>
-      Class template <code class="computeroutput"><span class="identifier">optional</span></code> is
-      a wrapper for representing 'optional' (or 'nullable') objects who may not (yet)
-      contain a valid value. Optional objects offer full value semantics; they are
-      good for passing by value and usage inside STL containers. This is a header-only
-      library.
-    </p>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="optional.introduction.problem"></a><a class="link" href="index.html#optional.introduction.problem" title="Problem">Problem</a>
-</h3></div></div></div>
+    Class template <code class="computeroutput"><span class="identifier">optional</span></code> is a
+    wrapper for representing 'optional' (or 'nullable') objects who may not (yet)
+    contain a valid value. Optional objects offer full value semantics; they are
+    good for passing by value and usage inside STL containers. This is a header-only
+    library.
+  </p>
+<h3>
+<a name="optional.h1"></a>
+    <span class="phrase"><a name="optional.problem"></a></span><a class="link" href="index.html#optional.problem">Problem</a>
+  </h3>
 <p>
-        Suppose we want to read a parameter form a config file which represents some
-        integral value, let's call it <code class="computeroutput"><span class="string">"MaxValue"</span></code>.
-        It is possible that this parameter is not specified; such situation is no
-        error. It is valid to not specify the parameter and in that case the program
-        is supposed to behave slightly different. Also suppose that any possible
-        value of type <code class="computeroutput"><span class="keyword">int</span></code> is a valid
-        value for <code class="computeroutput"><span class="string">"MaxValue"</span></code>,
-        so we cannot jut use <code class="computeroutput"><span class="special">-</span><span class="number">1</span></code>
-        to represent the absence of the parameter in the config file.
-      </p>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="optional.introduction.solution"></a><a class="link" href="index.html#optional.introduction.solution" title="Solution">Solution</a>
-</h3></div></div></div>
+    Suppose we want to read a parameter form a config file which represents some
+    integral value, let's call it <code class="computeroutput"><span class="string">"MaxValue"</span></code>.
+    It is possible that this parameter is not specified; such situation is no error.
+    It is valid to not specify the parameter and in that case the program is supposed
+    to behave slightly different. Also suppose that any possible value of type <code class="computeroutput"><span class="keyword">int</span></code> is a valid value for <code class="computeroutput"><span class="string">"MaxValue"</span></code>,
+    so we cannot jut use <code class="computeroutput"><span class="special">-</span><span class="number">1</span></code>
+    to represent the absence of the parameter in the config file.
+  </p>
+<h3>
+<a name="optional.h2"></a>
+    <span class="phrase"><a name="optional.solution"></a></span><a class="link" href="index.html#optional.solution">Solution</a>
+  </h3>
 <p>
-        This is how you solve it with <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code>:
-      </p>
+    This is how you solve it with <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code>:
+  </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">getConfigParam</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">);</span>  <span class="comment">// return either an int or a `not-an-int`</span>
@@ -138,13 +111,11 @@
 <span class="special">}</span>
 </pre>
 </div>
-</div>
-</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: June 03, 2014 at 14:35:30 GMT</small></p></td>
+<td align="left"><p><small>Last revised: June 04, 2014 at 16:06:37 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_optional/tutorial.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_optional/quick_start.html"><img src="../../../../doc/src/images/next.png" alt="Next"></a></div>
 </body>
 </html>

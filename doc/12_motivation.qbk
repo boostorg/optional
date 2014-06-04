@@ -9,7 +9,7 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section Discussion]
+[section Motivation]
 
 Consider these functions which should return a value but which might not have
 a value to return:

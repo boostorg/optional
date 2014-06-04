@@ -7,7 +7,7 @@
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Optional">
 <link rel="prev" href="synopsis.html" title="Synopsis">
-<link rel="next" href="examples.html" title="Examples">
+<link rel="next" href="dependencies_and_portability.html" title="Dependencies and Portability">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="synopsis.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="synopsis.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="dependencies_and_portability.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -606,7 +606,7 @@
           constructor called by the factory throws.
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Notes:</strong></span> See <a class="link" href="in_place_factories.html" title="In-Place Factories">In-Place
+          <span class="bold"><strong>Notes:</strong></span> See <a class="link" href="tutorial/in_place_factories.html" title="In-Place Factories">In-Place
           Factories</a>
         </li>
 <li class="listitem">
@@ -712,7 +712,7 @@
         </li>
 <li class="listitem">
           <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> was initialized, it is <span class="emphasis"><em>rebound</em></span>
-          to the new object. See <a class="link" href="rebinding_semantics_for_assignment_of_optional_references.html" title="Rebinding semantics for assignment of optional references">here</a>
+          to the new object. See <a class="link" href="tutorial/rebinding_semantics_for_assignment_of_optional_references.html" title="Rebinding semantics for assignment of optional references">here</a>
           for details on this behavior.
         </li>
 <li class="listitem">
@@ -872,7 +872,7 @@
 <li class="listitem">
           <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> was initialized and so is <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>,
           <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-          is <span class="emphasis"><em>rebound</em></span> to the new object. See <a class="link" href="rebinding_semantics_for_assignment_of_optional_references.html" title="Rebinding semantics for assignment of optional references">here</a>
+          is <span class="emphasis"><em>rebound</em></span> to the new object. See <a class="link" href="tutorial/rebinding_semantics_for_assignment_of_optional_references.html" title="Rebinding semantics for assignment of optional references">here</a>
           for details on this behavior.
         </li>
 <li class="listitem">
@@ -1147,7 +1147,7 @@
           constructor called by the factory throws.
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Notes:</strong></span> See <a class="link" href="in_place_factories.html" title="In-Place Factories">In-Place
+          <span class="bold"><strong>Notes:</strong></span> See <a class="link" href="tutorial/in_place_factories.html" title="In-Place Factories">In-Place
           Factories</a>
         </li>
 <li class="listitem">
@@ -1177,20 +1177,12 @@
         <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">reset</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-          <span class="bold"><strong>Deprecated:</strong></span> Same as <code class="computeroutput"><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">none_t</span> <span class="special">);</span></code>
+          <span class="bold"><strong>Deprecated:</strong></span> Same as <code class="computeroutput"><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">none_t</span> <span class="special">);</span></code>
         </li></ul></div>
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
 <a name="reference_optional_get"></a><div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
-        <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span> <span class="special">;</span></code>
-      </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span>
-        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">*();</span></code>
-      </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
         <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span></code>
       </p></blockquote></div>
@@ -1224,6 +1216,76 @@
           <span class="bold"><strong>Notes:</strong></span> The requirement is asserted via
           <code class="computeroutput"><span class="identifier">BOOST_ASSERT</span><span class="special">()</span></code>.
         </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">get</span><span class="special">()</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">inline</span> <span class="identifier">T</span>
+        <span class="keyword">const</span><span class="special">&amp;</span>
+        <span class="identifier">get</span> <span class="special">(</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">inline</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">get</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span>
+        <span class="special">&amp;)</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Returns:</strong></span> <span class="underline">The</span>
+          reference contained.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Nothing.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> The requirement is asserted via
+          <code class="computeroutput"><span class="identifier">BOOST_ASSERT</span><span class="special">()</span></code>.
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
+<a name="reference_optional_operator_asterisk"></a><div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
+        <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="special">&amp;;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code> <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="special">&amp;&amp;;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Returns:</strong></span> A reference to the contained
+          value
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Nothing.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> The requirement is asserted via
+          <code class="computeroutput"><span class="identifier">BOOST_ASSERT</span><span class="special">()</span></code>.
+          On compilers that do not support ref-qualifiers on member functions these
+          three overloads are replaced with the classical two: a <code class="computeroutput"><span class="keyword">const</span></code>
+          and non-<code class="computeroutput"><span class="keyword">const</span></code> member functions.
+        </li>
 <li class="listitem">
           <span class="bold"><strong>Example:</strong></span>
 <pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v</span> <span class="special">;</span>
@@ -1239,12 +1301,60 @@
 <p>
       <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
     </p>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span> <span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="special">&amp;</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span> <span class="special">&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="special">&amp;&amp;</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <span class="bold"><strong>Requires: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Returns:</strong></span> <span class="underline">The</span>
+          reference contained.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Throws:</strong></span> Nothing.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> The requirement is asserted via
+          <code class="computeroutput"><span class="identifier">BOOST_ASSERT</span><span class="special">()</span></code>.
+          On compilers that do not support ref-qualifiers on member functions these
+          three overloads are replaced with the classical two: a <code class="computeroutput"><span class="keyword">const</span></code>
+          and non-<code class="computeroutput"><span class="keyword">const</span></code> member functions.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v</span> <span class="special">;</span>
+<span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">vref</span> <span class="special">=</span> <span class="identifier">v</span> <span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span> <span class="identifier">opt</span> <span class="special">(</span> <span class="identifier">vref</span> <span class="special">);</span>
+<span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">vref2</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">opt</span><span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">vref2</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span>
+<span class="special">++</span> <span class="identifier">v</span> <span class="special">;</span>
+<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">opt</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span>
+</pre>
+        </li>
+</ul></div>
+<p>
+      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
+    </p>
 <a name="reference_optional_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span></code>
+        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span>
-        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">();</span></code>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span> <span class="special">&amp;</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;&amp;</span>
+        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -1256,6 +1366,12 @@
           <span class="bold"><strong>Throws:</strong></span> An instance of <code class="computeroutput"><span class="identifier">bad_optional_access</span></code>,
           if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
           is not initialized.
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
+          ref-qualifiers on member functions these three overloads are replaced with
+          the classical two: a <code class="computeroutput"><span class="keyword">const</span></code>
+          and non-<code class="computeroutput"><span class="keyword">const</span></code> member functions.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Example:</strong></span>
@@ -1276,7 +1392,11 @@
 </ul></div>
 <a name="reference_optional_value_or"></a><div class="blockquote"><blockquote class="blockquote"><p>
         <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_or</span><span class="special">(</span><span class="identifier">U</span> <span class="special">&amp;&amp;</span>
-        <span class="identifier">v</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">;</span></code>
+        <span class="identifier">v</span><span class="special">)</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">;</span></code>
+      </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+        <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_or</span><span class="special">(</span><span class="identifier">U</span> <span class="special">&amp;&amp;</span>
+        <span class="identifier">v</span><span class="special">)</span> <span class="special">&amp;&amp;</span> <span class="special">;</span></code>
       </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -1284,17 +1404,22 @@
           is CopyConstructible.
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
-          <span class="special">?</span> <span class="special">**</span><span class="keyword">this</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
+          <span class="bold"><strong>Returns:</strong></span> First overload: <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="special">**</span><span class="keyword">this</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
+          second overload: <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span>
+          <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">)</span> <span class="special">:</span>
+          <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
         </li>
 <li class="listitem">
           <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the selected
           constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Notes:</strong></span> On compilers without rvalue reference
-          support the type of <code class="computeroutput"><span class="identifier">v</span></code> becomes
-          <code class="computeroutput"><span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+          <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
+          ref-qualifiers on member functions these three overloads are replaced with
+          the classical two: a <code class="computeroutput"><span class="keyword">const</span></code>
+          and non-<code class="computeroutput"><span class="keyword">const</span></code> member functions.
+          On compilers without rvalue reference support the type of <code class="computeroutput"><span class="identifier">v</span></code> becomes <code class="computeroutput"><span class="identifier">U</span>
+          <span class="keyword">const</span><span class="special">&amp;</span></code>.
         </li>
 </ul></div>
 <p>
@@ -1345,60 +1470,6 @@
 <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">u</span> <span class="special">=</span> <span class="identifier">get_optional_value_or</span><span class="special">(</span><span class="identifier">opt</span><span class="special">,</span><span class="identifier">z</span><span class="special">);</span>
 <span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">u</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span>
 <span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">u</span> <span class="special">!=</span> <span class="identifier">z</span> <span class="special">)</span> <span class="special">;</span>
-</pre>
-        </li>
-</ul></div>
-<p>
-      <span class="inlinemediaobject"><img src="../images/space.png" alt="space"></span>
-    </p>
-<div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span> <span class="special">;</span></code>
-      </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">T</span> <span class="special">&amp;</span>
-        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*();</span></code>
-      </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">;</span></code>
-      </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span>
-        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">get</span><span class="special">()</span> <span class="special">;</span></code>
-      </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="keyword">inline</span> <span class="identifier">T</span>
-        <span class="keyword">const</span><span class="special">&amp;</span>
-        <span class="identifier">get</span> <span class="special">(</span>
-        <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="special">;</span></code>
-      </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
-        <code class="computeroutput"><span class="keyword">inline</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">get</span> <span class="special">(</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span>
-        <span class="special">&amp;)</span> <span class="special">;</span></code>
-      </p></blockquote></div>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-          <span class="bold"><strong>Requires: </strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized
-        </li>
-<li class="listitem">
-          <span class="bold"><strong>Returns:</strong></span> <span class="underline">The</span>
-          reference contained.
-        </li>
-<li class="listitem">
-          <span class="bold"><strong>Throws:</strong></span> Nothing.
-        </li>
-<li class="listitem">
-          <span class="bold"><strong>Notes:</strong></span> The requirement is asserted via
-          <code class="computeroutput"><span class="identifier">BOOST_ASSERT</span><span class="special">()</span></code>.
-        </li>
-<li class="listitem">
-          <span class="bold"><strong>Example:</strong></span>
-<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v</span> <span class="special">;</span>
-<span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">vref</span> <span class="special">=</span> <span class="identifier">v</span> <span class="special">;</span>
-<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;</span> <span class="identifier">opt</span> <span class="special">(</span> <span class="identifier">vref</span> <span class="special">);</span>
-<span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">vref2</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">opt</span><span class="special">;</span>
-<span class="identifier">assert</span> <span class="special">(</span> <span class="identifier">vref2</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span>
-<span class="special">++</span> <span class="identifier">v</span> <span class="special">;</span>
-<span class="identifier">assert</span> <span class="special">(</span> <span class="special">*</span><span class="identifier">opt</span> <span class="special">==</span> <span class="identifier">v</span> <span class="special">)</span> <span class="special">;</span>
 </pre>
         </li>
 </ul></div>
@@ -1898,7 +1969,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="synopsis.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="examples.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="synopsis.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="dependencies_and_portability.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
