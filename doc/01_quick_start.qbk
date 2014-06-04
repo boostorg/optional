@@ -127,6 +127,20 @@ The second line works already, this is the capability of Boost.Tuple library, bu
 It works because inside `boost::tie` a move-assignment from `T` is invoked on `optional<T>`, which internally calls a move-constructor of `T`.
 [/endsect]
 
+[heading Storage in containers]
+
+Suppose you want to ask users to choose some number (an `int`). One of the valid responses is to choose nothing, which is represented by an uninitialized `optional<int>`. You want to make a histogram showing how many times each choice was made. You can use an `std::map`:
+
+    std::map<boost::optional<int>, int> choices;
+  
+    for (int i = 0; i < LIMIT; ++i) {
+      boost::optional<int> choice = readChoice();
+      ++choices[choice];
+    }
+    
+This works because `optional<T>` is `LessThanComparable` whenever `T` is `LessThanComparable`. In this case the state of being uninitialized is treated as a yet another value of `T`, which is compared less than any value of `T`. So the set of values that type `optional<T>` can assume is {`boost::none`, -2147483648, -2147483647, ..., -1, 0, 1, ..., 2147483647} (assuming a 32-bit `int`).
+[/endsect]
+
 [endsect]
 
  

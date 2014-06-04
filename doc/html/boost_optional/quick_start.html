@@ -244,6 +244,36 @@
       from <code class="computeroutput"><span class="identifier">T</span></code> is invoked on <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>, which
       internally calls a move-constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
     </p>
+<h4>
+<a name="boost_optional.quick_start.h4"></a>
+      <span class="phrase"><a name="boost_optional.quick_start.storage_in_containers"></a></span><a class="link" href="quick_start.html#boost_optional.quick_start.storage_in_containers">Storage
+      in containers</a>
+    </h4>
+<p>
+      Suppose you want to ask users to choose some number (an <code class="computeroutput"><span class="keyword">int</span></code>).
+      One of the valid responses is to choose nothing, which is represented by an
+      uninitialized <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span></code>. You
+      want to make a histogram showing how many times each choice was made. You can
+      use an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span></code>:
+    </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">choices</span><span class="special">;</span>
+
+<span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">LIMIT</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">choice</span> <span class="special">=</span> <span class="identifier">readChoice</span><span class="special">();</span>
+  <span class="special">++</span><span class="identifier">choices</span><span class="special">[</span><span class="identifier">choice</span><span class="special">];</span>
+<span class="special">}</span>
+</pre>
+<p>
+      This works because <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+      is <code class="computeroutput"><span class="identifier">LessThanComparable</span></code> whenever
+      <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">LessThanComparable</span></code>.
+      In this case the state of being uninitialized is treated as a yet another value
+      of <code class="computeroutput"><span class="identifier">T</span></code>, which is compared less
+      than any value of <code class="computeroutput"><span class="identifier">T</span></code>. So the
+      set of values that type <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+      can assume is {<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code>, -2147483648, -2147483647, ..., -1,
+      0, 1, ..., 2147483647} (assuming a 32-bit <code class="computeroutput"><span class="keyword">int</span></code>).
+    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
