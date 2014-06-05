@@ -11,8 +11,22 @@
 
 [section Dependencies and Portability]
 
-The implementation uses `type_traits/alignment_of.hpp` and
-`type_traits/type_with_alignment.hpp`
+[section Dependencies]
+The implementation uses the following other Boost modules:
+
+# assert
+# config
+# core
+# detail
+# move
+# mpl
+# static_assert
+# throw_exception
+# type_traits
+# utility
+
+[endsect]
+
 
 [section Optional Reference Binding]
 

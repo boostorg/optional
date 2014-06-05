@@ -1,10 +1,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Chapter&#160;1.&#160;Boost.Optional</title>
+<title>Boost.Optional</title>
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Optional">
+<link rel="home" href="index.html" title="Boost.Optional">
 <link rel="next" href="boost_optional/quick_start.html" title="Quick Start">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -21,7 +21,7 @@
 <div class="chapter">
 <div class="titlepage"><div>
 <div><h2 class="title">
-<a name="optional"></a>Chapter&#160;1.&#160;Boost.Optional</h2></div>
+<a name="optional"></a>Boost.Optional</h2></div>
 <div><div class="author"><h3 class="author">
 <span class="firstname">Fernando Luis</span> <span class="surname">Cacciola Carballal</span>
 </h3></div></div>
@@ -37,10 +37,23 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl class="toc">
+<dt><span class="section"><a href="index.html#optional.introduction">Introduction</a></span></dt>
 <dt><span class="section"><a href="boost_optional/quick_start.html">Quick Start</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="boost_optional/quick_start.html#boost_optional.quick_start.optional_return_values">Optional
+      return values</a></span></dt>
+<dt><span class="section"><a href="boost_optional/quick_start/optional_automatic_variables.html">Optional
+      automatic variables</a></span></dt>
+<dt><span class="section"><a href="boost_optional/quick_start/optional_data_members.html">Optional
+      data members</a></span></dt>
+<dt><span class="section"><a href="boost_optional/quick_start/bypassing_unnecessary_default_construction.html">Bypassing
+      unnecessary default construction</a></span></dt>
+<dt><span class="section"><a href="boost_optional/quick_start/storage_in_containers.html">Storage
+      in containers</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="optional/tutorial.html">Tutorial</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_optional/tutorial/motivation.html">Motivation</a></span></dt>
+<dt><span class="section"><a href="optional/tutorial.html#boost_optional.tutorial.motivation">Motivation</a></span></dt>
 <dt><span class="section"><a href="boost_optional/tutorial/design_overview.html">Design Overview</a></span></dt>
 <dt><span class="section"><a href="boost_optional/tutorial/optional_references.html">Optional
       references</a></span></dt>
@@ -56,48 +69,51 @@
 </dl></dd>
 <dt><span class="section"><a href="optional/reference.html">Reference</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_optional/reference/synopsis.html">Synopsis</a></span></dt>
+<dt><span class="section"><a href="optional/reference.html#boost_optional.reference.synopsis">Synopsis</a></span></dt>
 <dt><span class="section"><a href="boost_optional/reference/detailed_semantics.html">Detailed
       Semantics</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="boost_optional/dependencies_and_portability.html">Dependencies
     and Portability</a></span></dt>
-<dd><dl><dt><span class="section"><a href="boost_optional/dependencies_and_portability/optional_reference_binding.html">Optional
-      Reference Binding</a></span></dt></dl></dd>
+<dd><dl>
+<dt><span class="section"><a href="boost_optional/dependencies_and_portability.html#boost_optional.dependencies_and_portability.dependencies">Dependencies</a></span></dt>
+<dt><span class="section"><a href="boost_optional/dependencies_and_portability/optional_reference_binding.html">Optional
+      Reference Binding</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="boost_optional/acknowledgments.html">Acknowledgments</a></span></dt>
 </dl>
 </div>
-<h3>
-<a name="optional.h0"></a>
-    <span class="phrase"><a name="optional.introduction"></a></span><a class="link" href="index.html#optional.introduction">Introduction</a>
-  </h3>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="optional.introduction"></a><a class="link" href="index.html#optional.introduction" title="Introduction">Introduction</a>
+</h2></div></div></div>
 <p>
-    Class template <code class="computeroutput"><span class="identifier">optional</span></code> is a
-    wrapper for representing 'optional' (or 'nullable') objects who may not (yet)
-    contain a valid value. Optional objects offer full value semantics; they are
-    good for passing by value and usage inside STL containers. This is a header-only
-    library.
-  </p>
-<h3>
-<a name="optional.h1"></a>
-    <span class="phrase"><a name="optional.problem"></a></span><a class="link" href="index.html#optional.problem">Problem</a>
-  </h3>
+      Class template <code class="computeroutput"><span class="identifier">optional</span></code> is
+      a wrapper for representing 'optional' (or 'nullable') objects who may not (yet)
+      contain a valid value. Optional objects offer full value semantics; they are
+      good for passing by value and usage inside STL containers. This is a header-only
+      library.
+    </p>
+<h4>
+<a name="optional.introduction.h0"></a>
+      <span class="phrase"><a name="optional.introduction.problem"></a></span><a class="link" href="index.html#optional.introduction.problem">Problem</a>
+    </h4>
 <p>
-    Suppose we want to read a parameter form a config file which represents some
-    integral value, let's call it <code class="computeroutput"><span class="string">"MaxValue"</span></code>.
-    It is possible that this parameter is not specified; such situation is no error.
-    It is valid to not specify the parameter and in that case the program is supposed
-    to behave slightly different. Also suppose that any possible value of type <code class="computeroutput"><span class="keyword">int</span></code> is a valid value for <code class="computeroutput"><span class="string">"MaxValue"</span></code>,
-    so we cannot jut use <code class="computeroutput"><span class="special">-</span><span class="number">1</span></code>
-    to represent the absence of the parameter in the config file.
-  </p>
-<h3>
-<a name="optional.h2"></a>
-    <span class="phrase"><a name="optional.solution"></a></span><a class="link" href="index.html#optional.solution">Solution</a>
-  </h3>
+      Suppose we want to read a parameter form a config file which represents some
+      integral value, let's call it <code class="computeroutput"><span class="string">"MaxValue"</span></code>.
+      It is possible that this parameter is not specified; such situation is no error.
+      It is valid to not specify the parameter and in that case the program is supposed
+      to behave slightly different. Also suppose that any possible value of type
+      <code class="computeroutput"><span class="keyword">int</span></code> is a valid value for <code class="computeroutput"><span class="string">"MaxValue"</span></code>, so we cannot jut use <code class="computeroutput"><span class="special">-</span><span class="number">1</span></code> to represent
+      the absence of the parameter in the config file.
+    </p>
+<h4>
+<a name="optional.introduction.h1"></a>
+      <span class="phrase"><a name="optional.introduction.solution"></a></span><a class="link" href="index.html#optional.introduction.solution">Solution</a>
+    </h4>
 <p>
-    This is how you solve it with <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code>:
-  </p>
+      This is how you solve it with <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code>:
+    </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">getConfigParam</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">);</span>  <span class="comment">// return either an int or a `not-an-int`</span>
@@ -111,8 +127,9 @@
 <span class="special">}</span>
 </pre>
 </div>
+</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: June 04, 2014 at 21:00:26 GMT</small></p></td>
+<td align="left"><p><small>Last revised: June 05, 2014 at 22:46:34 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
