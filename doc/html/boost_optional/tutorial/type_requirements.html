@@ -27,22 +27,73 @@
 <a name="boost_optional.tutorial.type_requirements"></a><a class="link" href="type_requirements.html" title="Type requirements">Type requirements</a>
 </h3></div></div></div>
 <p>
-        At the very minimum for <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-        to work with a minimum interface it is required that <code class="computeroutput"><span class="identifier">T</span></code>
-        has a publicly accessible no-throw destructor. In that case you need to initialize
-        the optional object with function <code class="computeroutput"><span class="identifier">emplace</span><span class="special">()</span></code> or use <span class="bold"><strong>InPlaceFactories</strong></span>.
-        Additionally, if <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">Moveable</span></code>, <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-        is also <code class="computeroutput"><span class="identifier">Moveable</span></code> and can
-        be easily initialized from an rvalue of type <code class="computeroutput"><span class="identifier">T</span></code>
-        and be passed by value. Additionally, if <code class="computeroutput"><span class="identifier">T</span></code>
-        is <code class="computeroutput"><span class="identifier">Copyable</span></code>, <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
-        also <code class="computeroutput"><span class="identifier">Copyable</span></code> and can be
-        easily initialized from an lvalue of type <code class="computeroutput"><span class="identifier">T</span></code>.
+        The very minimum requirement of <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+        is that <code class="computeroutput"><span class="identifier">T</span></code> is a complete type
+        and that it has a publicly accessible destructor. <code class="computeroutput"><span class="identifier">T</span></code>
+        doesn't even need to be constructible. You can use a very minimum interface:
+      </p>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">o</span><span class="special">;</span>     <span class="comment">// uninitialized</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">o</span> <span class="special">==</span> <span class="identifier">none</span><span class="special">);</span> <span class="comment">// check if initialized</span>
+<span class="identifier">assert</span><span class="special">(!</span><span class="identifier">o</span><span class="special">);</span>        <span class="comment">//</span>
+<span class="identifier">o</span><span class="special">.</span><span class="identifier">value</span><span class="special">();</span>         <span class="comment">// always throws</span>
+</pre>
+<p>
+        But this is practically useless. In order for <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+        to be able to do anything useful and offer all the spectrum of ways of accessing
+        the contained value, <code class="computeroutput"><span class="identifier">T</span></code> needs
+        to have at least one accessible constructor. In that case you need to initialize
+        the optional object with function <code class="computeroutput"><span class="identifier">emplace</span><span class="special">()</span></code>, or if your compiler does not support it,
+        resort to <a class="link" href="in_place_factories.html" title="In-Place Factories">In-Place
+        Factories</a>:
+      </p>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">o</span><span class="special">;</span>
+<span class="identifier">o</span><span class="special">.</span><span class="identifier">emplace</span><span class="special">(</span><span class="string">"T"</span><span class="special">,</span> <span class="string">"ctor"</span><span class="special">,</span> <span class="string">"params"</span><span class="special">);</span>
+</pre>
+<p>
+        If <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>,
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
+        also <code class="computeroutput"><span class="identifier">MoveConstructible</span></code> and
+        can be easily initialized from an rvalue of type <code class="computeroutput"><span class="identifier">T</span></code>
+        and be passed by value:
+      </p>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">o</span> <span class="special">=</span> <span class="identifier">make_T</span><span class="special">();</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;();</span>
+</pre>
+<p>
+        If <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">CopyConstructible</span></code>,
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
+        also <code class="computeroutput"><span class="identifier">CopyConstructible</span></code> and
+        can be easily initialized from an lvalue of type <code class="computeroutput"><span class="identifier">T</span></code>:
+      </p>
+<pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v</span> <span class="special">=</span> <span class="identifier">make_T</span><span class="special">();</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">o</span> <span class="special">=</span> <span class="identifier">v</span><span class="special">;</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">o</span><span class="special">;</span>
+</pre>
+<p>
+        If <code class="computeroutput"><span class="identifier">T</span></code> is not <code class="computeroutput"><span class="identifier">MoveAssignable</span></code>, it is still possible to
+        reset the value of <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+        using function <code class="computeroutput"><span class="identifier">emplace</span><span class="special">()</span></code>:
+      </p>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">o</span> <span class="special">=</span> <span class="identifier">make_T</span><span class="special">();</span>
+<span class="identifier">o</span><span class="special">.</span><span class="identifier">emplace</span><span class="special">(</span><span class="identifier">make_another_T</span><span class="special">());</span>
+</pre>
+<p>
+        If <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">Moveable</span></code>
+        (both <code class="computeroutput"><span class="identifier">MoveConstructible</span></code> and
+        <code class="computeroutput"><span class="identifier">MoveAssignable</span></code>) then <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
+        also <code class="computeroutput"><span class="identifier">Moveable</span></code> and additionally
+        can be constructed and assigned from an rvalue of type <code class="computeroutput"><span class="identifier">T</span></code>.
       </p>
 <p>
-        <code class="computeroutput"><span class="identifier">T</span></code> <span class="underline">is
-        not</span> required to be <a href="http://www.sgi.com/tech/stl/DefaultConstructible.html" target="_top">Default
-        Constructible</a>.
+        Similarly, if <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">Copyable</span></code> (both <code class="computeroutput"><span class="identifier">CopyConstructible</span></code>
+        and <code class="computeroutput"><span class="identifier">CopyAssignable</span></code>) then
+        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
+        also <code class="computeroutput"><span class="identifier">Copyable</span></code> and additionally
+        can be constructed and assigned from an lvalue of type <code class="computeroutput"><span class="identifier">T</span></code>.
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">T</span></code> <span class="emphasis"><em>is not</em></span>
+        required to be <a href="http://www.sgi.com/tech/stl/DefaultConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">DefaultConstructible</span></code></a>.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
