@@ -58,21 +58,6 @@ private:
     void operator=(Guard const&);
 };
 
-struct Thrower
-{
-    Thrower(bool throw_) { if (throw_) throw int(); }
-    
-private:
-    Thrower(Thrower const&);
-    Thrower(Thrower&&);
-};
-
-struct ThrowOnMove
-{
-    ThrowOnMove(ThrowOnMove&&) { throw int(); }
-    ThrowOnMove(ThrowOnMove const&) { throw int(); }
-    ThrowOnMove(int){}
-};
 
 void test_emplace()
 {
@@ -115,6 +100,44 @@ void test_emplace()
     BOOST_CHECK(7 == o->which_ctor);
 }
 
+
+#endif
+
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
+
+
+struct ThrowOnMove
+{
+    ThrowOnMove(ThrowOnMove&&) { throw int(); }
+    ThrowOnMove(ThrowOnMove const&) { throw int(); }
+    ThrowOnMove(int){}
+};
+
+
+void test_no_moves_on_emplacement()
+{
+    try {
+        optional<ThrowOnMove> o;
+        o.emplace(1);
+        BOOST_CHECK(o);
+    } 
+    catch (...) {
+        BOOST_CHECK(false);
+    }
+}
+#endif
+
+struct Thrower
+{
+    Thrower(bool throw_) { if (throw_) throw int(); }
+    
+private:
+    Thrower(Thrower const&);
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
+    Thrower(Thrower&&);
+#endif
+};
+
 void test_clear_on_throw()
 {
     optional<Thrower> ot;
@@ -133,20 +156,14 @@ void test_clear_on_throw()
     }
 }
 
-void test_no_moves_on_emplacement()
+void test_no_assignment_on_emplacement()
 {
-    try {
-        optional<ThrowOnMove> o;
-        o.emplace(1);
-        BOOST_CHECK(o);
-    } 
-    catch (...) {
-        BOOST_CHECK(false);
-    }
+    optional<const std::string> os;
+    BOOST_CHECK(!os);
+    os.emplace("wow");
+    BOOST_CHECK(os);
+    BOOST_CHECK(*os == "wow");
 }
-
-#endif
-
 
 int test_main( int, char* [] )
 {
@@ -154,9 +171,12 @@ int test_main( int, char* [] )
   {
 #if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_NO_CXX11_VARIADIC_TEMPLATES)
     test_emplace();
-    test_clear_on_throw();
+#endif
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
     test_no_moves_on_emplacement();
 #endif
+    test_clear_on_throw();
+    test_no_assignment_on_emplacement();
   }
   catch ( ... )
   {
