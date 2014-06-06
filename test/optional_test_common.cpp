@@ -37,7 +37,7 @@ void assertion_failed (char const * expr, char const * func, char const * file, 
 
 using boost::optional ;
 
-template<class T> inline void unused_variable ( T ) {}
+template<class T> inline void unused_variable ( const T& ) {}
 
 #ifdef BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
 using boost::swap ;

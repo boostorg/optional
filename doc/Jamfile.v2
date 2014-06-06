@@ -17,7 +17,7 @@ path-constant images : html ;
 
 xml optional
     :
-        optional.qbk
+        00_optional.qbk
     ;
 
 boostbook standalone
@@ -25,9 +25,11 @@ boostbook standalone
         optional
     :
         <xsl:param>boost.root=../../../..
-        <xsl:param>toc.max.depth=2
+        <xsl:param>chapter.autolabel=0
+        <xsl:param>chunk.section.depth=8
         <xsl:param>toc.section.depth=2
-        <xsl:param>chunk.section.depth=1
+        <xsl:param>toc.max.depth=2
+        <xsl:param>generate.section.toc.level=1
         <format>pdf:<xsl:param>img.src.path=$(images)/
         <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/optional/doc/html
     ;

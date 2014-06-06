@@ -23,7 +23,9 @@
 
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
+#include <boost/optional/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
@@ -149,7 +151,14 @@ struct types_when_isnt_ref
   typedef T &      reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
   typedef T &&     rval_reference_type ;
+  typedef T &&     reference_type_of_temporary_wrapper;
+#ifdef BOOST_MOVE_OLD_RVALUE_REF_BINDING_RULES
+  // GCC 4.4 has support for an early draft of rvalue references. The conforming version below
+  // causes warnings about returning references to a temporary.
+  static T&& move(T&& r) { return r; }
+#else
   static rval_reference_type move(reference_type r) { return boost::move(r); }
+#endif
 #endif
   typedef T const* pointer_const_type ;
   typedef T *      pointer_type ;
@@ -165,6 +174,7 @@ struct types_when_is_ref
   typedef raw_type&  reference_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
   typedef BOOST_DEDUCED_TYPENAME remove_const<raw_type>::type&& rval_reference_type ;
+  typedef raw_type&  reference_type_of_temporary_wrapper;
   static reference_type move(reference_type r) { return r; }
 #endif
   typedef raw_type*  pointer_const_type ;
@@ -219,6 +229,7 @@ class optional_base : public optional_tag
     typedef BOOST_DEDUCED_TYPENAME types::reference_const_type reference_const_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     typedef BOOST_DEDUCED_TYPENAME types::rval_reference_type  rval_reference_type ;
+    typedef BOOST_DEDUCED_TYPENAME types::reference_type_of_temporary_wrapper reference_type_of_temporary_wrapper ;
 #endif
     typedef BOOST_DEDUCED_TYPENAME types::pointer_type         pointer_type ;
     typedef BOOST_DEDUCED_TYPENAME types::pointer_const_type   pointer_const_type ;
@@ -433,11 +444,11 @@ class optional_base : public optional_tag
 
   public :
 
-    // Destroys the current value, if any, leaving this UNINITIALIZED
+    // **DEPPRECATED** Destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
     void reset() BOOST_NOEXCEPT { destroy(); }
 
-    // Replaces the current value -if any- with 'val'
+    // **DEPPRECATED** Replaces the current value -if any- with 'val'
     void reset ( argument_type val ) { assign(val); }
 
     // Returns a pointer to the value if this is initialized, otherwise,
@@ -452,14 +463,26 @@ class optional_base : public optional_tag
 
     void construct ( argument_type val )
      {
-       new (m_storage.address()) internal_type(val) ;
+       ::new (m_storage.address()) internal_type(val) ;
        m_initialized = true ;
      }
      
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     void construct ( rval_reference_type val )
      {
-       new (m_storage.address()) internal_type( types::move(val) ) ;
+       ::new (m_storage.address()) internal_type( types::move(val) ) ;
+       m_initialized = true ;
+     }
+#endif
+
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+    // Constructs in-place
+    // upon exception *this is always uninitialized
+    template<class... Args>
+    void emplace_assign ( Args&&... args )
+     {
+       destroy();
+       ::new (m_storage.address()) internal_type( boost::forward<Args>(args)... );
        m_initialized = true ;
      }
 #endif
@@ -499,6 +522,7 @@ class optional_base : public optional_tag
        destroy();
        construct(factory,tag);
      }
+
 #else
     // Constructs in-place using the given factory
     template<class Expr>
@@ -704,6 +728,7 @@ class optional : public optional_detail::optional_base<T>
     typedef BOOST_DEDUCED_TYPENAME base::reference_const_type reference_const_type ;
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES
     typedef BOOST_DEDUCED_TYPENAME base::rval_reference_type  rval_reference_type ;
+    typedef BOOST_DEDUCED_TYPENAME base::reference_type_of_temporary_wrapper reference_type_of_temporary_wrapper ;
 #endif
     typedef BOOST_DEDUCED_TYPENAME base::pointer_type         pointer_type ;
     typedef BOOST_DEDUCED_TYPENAME base::pointer_const_type   pointer_const_type ;
@@ -899,6 +924,16 @@ class optional : public optional_detail::optional_base<T>
         this->assign( none_ ) ;
         return *this ;
       }
+      
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_NO_CXX11_VARIADIC_TEMPLATES)
+    // Constructs in-place
+    // upon exception *this is always uninitialized
+    template<class... Args>
+    void emplace ( Args&&... args )
+     {
+       this->emplace_assign( boost::forward<Args>(args)... );
+     }
+#endif
 
     void swap( optional & arg )
 	  BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)
@@ -927,9 +962,74 @@ class optional : public optional_detail::optional_base<T>
     // Returns a reference to the value if this is initialized, otherwise,
     // the behaviour is UNDEFINED
     // No-throw
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+    reference_const_type operator *() const& { return this->get() ; }
+    reference_type       operator *() &      { return this->get() ; }
+    reference_type_of_temporary_wrapper  operator *() &&     { return boost::move(this->get()) ; }
+#else
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
+#endif
 
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+    reference_const_type value() const&
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+      
+    reference_type value() &
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+      
+    reference_type_of_temporary_wrapper value() &&
+      { 
+        if (this->is_initialized())
+          return boost::move(this->get()) ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+#else 
+    reference_const_type value() const
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+      
+    reference_type value()
+      { 
+        if (this->is_initialized())
+          return this->get() ;
+        else
+          throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
+      }
+#endif
+
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+    template <class U>
+    value_type value_or ( U&& v ) const&
+    { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
+    
+    template <class U>
+    value_type value_or ( U&& v ) && 
+    { return this->is_initialized() ? boost::move(get()) : static_cast<value_type>(boost::forward<U>(v)); }
+#elif !defined BOOST_NO_CXX11_RVALUE_REFERENCES
+    template <class U>
+    value_type value_or ( U&& v ) const 
+    { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
+#else
+    template <class U>
+    value_type value_or ( U const& v ) const { return this->is_initialized() ? get() : static_cast<value_type>(v); }
+#endif
+      
     bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
     
     BOOST_EXPLICIT_OPERATOR_BOOL()
