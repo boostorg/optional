@@ -35,12 +35,12 @@
       </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">Widget</span>
 <span class="special">{</span>
-  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Resource</span><span class="special">&gt;</span> <span class="identifier">resource_</span><span class="special">;</span>
+  <span class="keyword">mutable</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">Resource</span><span class="special">&gt;</span> <span class="identifier">resource_</span><span class="special">;</span>
 
 <span class="keyword">public</span><span class="special">:</span>
   <span class="identifier">Widget</span><span class="special">()</span> <span class="special">{}</span>
 
-  <span class="identifier">Resource</span><span class="special">&amp;</span> <span class="identifier">getResource</span><span class="special">()</span> <span class="comment">// not thread-safe</span>
+  <span class="keyword">const</span> <span class="identifier">Resource</span><span class="special">&amp;</span> <span class="identifier">getResource</span><span class="special">()</span> <span class="keyword">const</span> <span class="comment">// not thread-safe</span>
   <span class="special">{</span>
     <span class="keyword">if</span> <span class="special">(</span><span class="identifier">resource_</span> <span class="special">==</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span><span class="special">)</span>
         <span class="identifier">resource_</span><span class="special">.</span><span class="identifier">emplace</span><span class="special">(</span><span class="string">"resource"</span><span class="special">,</span> <span class="string">"arguments"</span><span class="special">);</span>

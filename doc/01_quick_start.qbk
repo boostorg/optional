@@ -88,12 +88,12 @@ Suppose we want to implement a ['lazy load] optimization. This is because we do 
 
     class Widget
     {
-      boost::optional<Resource> resource_;
+      mutable boost::optional<const Resource> resource_;
       
     public:
       Widget() {}
       
-      Resource& getResource() // not thread-safe
+      const Resource& getResource() const // not thread-safe
       {
         if (resource_ == boost::none)
             resource_.emplace("resource", "arguments");
