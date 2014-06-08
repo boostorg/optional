@@ -44,10 +44,10 @@
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tie</span><span class="special">(</span><span class="identifier">begin</span><span class="special">,</span> <span class="identifier">end</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">getPeriod</span><span class="special">();</span>
 </pre>
 <p>
-        The second line works already, this is the capability of Boost.Tuple library,
-        but the first line won't work. We could set some invented initial dates,
-        but it is confusing and may be an unacceptable cost, given that these values
-        will be overwritten in the next line anyway. This is where <code class="computeroutput"><span class="identifier">optional</span></code> can help:
+        The second line works already, this is the capability of <a href="../../../../../tuple/index.html" target="_top">Boost.Tuple</a>
+        library, but the first line won't work. We could set some invented initial
+        dates, but it is confusing and may be an unacceptable cost, given that these
+        values will be overwritten in the next line anyway. This is where <code class="computeroutput"><span class="identifier">optional</span></code> can help:
       </p>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">Date</span><span class="special">&gt;</span> <span class="identifier">begin</span><span class="special">,</span> <span class="identifier">end</span><span class="special">;</span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tie</span><span class="special">(</span><span class="identifier">begin</span><span class="special">,</span> <span class="identifier">end</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">getPeriod</span><span class="special">();</span>
