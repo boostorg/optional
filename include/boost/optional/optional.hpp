@@ -475,6 +475,7 @@ class optional_base : public optional_tag
      }
 #endif
 
+
 #if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_NO_CXX11_VARIADIC_TEMPLATES)
     // Constructs in-place
     // upon exception *this is always uninitialized
@@ -483,6 +484,30 @@ class optional_base : public optional_tag
      {
        destroy();
        ::new (m_storage.address()) internal_type( boost::forward<Args>(args)... );
+       m_initialized = true ;
+     }
+#elif (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
+    template<class Arg>
+    void emplace_assign ( Arg&& arg )
+     {
+       destroy();
+       ::new (m_storage.address()) internal_type( boost::forward<Arg>(arg) );
+       m_initialized = true ;
+     }
+#else
+    template<class Arg>
+    void emplace_assign ( const Arg& arg )
+     {
+       destroy();
+       ::new (m_storage.address()) internal_type( arg );
+       m_initialized = true ;
+     }
+     
+     template<class Arg>
+    void emplace_assign ( Arg& arg )
+     {
+       destroy();
+       ::new (m_storage.address()) internal_type( arg );
        m_initialized = true ;
      }
 #endif
@@ -932,6 +957,24 @@ class optional : public optional_detail::optional_base<T>
     void emplace ( Args&&... args )
      {
        this->emplace_assign( boost::forward<Args>(args)... );
+     }
+#elif (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
+    template<class Arg>
+    void emplace ( Arg&& arg )
+     {
+       this->emplace_assign( boost::forward<Arg>(arg) );
+     }
+#else
+    template<class Arg>
+    void emplace ( const Arg& arg )
+     {
+       this->emplace_assign( arg );
+     }
+     
+    template<class Arg>
+    void emplace ( Arg& arg )
+     {
+       this->emplace_assign( arg );
      }
 #endif
 

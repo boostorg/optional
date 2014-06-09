@@ -761,8 +761,16 @@ __SPACE__
  of type `T` with `std::forward<Args>(args)...`. 
 * [*Postconditions: ] `*this` is [_initialized].
 * [*Throws:] Whatever the selected `T`'s  constructor throws.
-* [*Notes:] `T` need not be `MoveConstructible` or `MoveAssignable`.
+* [*Notes:] `T` need not be `MoveConstructible` or `MoveAssignable`. On compilers that do not support variadic templates, the signature falls back to single-argument: `template<class Arg> void emplace(Arg&& arg)`. On compilers that do not support rvalue references, the signature falls back to two overloads: taking `const` and non-`const` lvalue reference. 
 * [*Exception Safety:] If an exception is thrown during the initialization of `T`, `*this` is ['uninitialized].
+* [*Example:]
+``
+T v;
+optional<const T> opt;
+opt.emplace(0);  // create in-place using ctor T(int)
+opt.emplace();   // destroy previous and default-construct another T
+opt.emplace(v);  // destroy and copy-construct in-place (no assignment called)
+``
 
 __SPACE__
 

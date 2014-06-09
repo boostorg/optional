@@ -43,14 +43,9 @@
 </pre>
 <p>
         This works because <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-        is <code class="computeroutput"><span class="identifier">LessThanComparable</span></code> whenever
-        <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">LessThanComparable</span></code>.
-        In this case the state of being uninitialized is treated as a yet another
-        value of <code class="computeroutput"><span class="identifier">T</span></code>, which is compared
-        less than any value of <code class="computeroutput"><span class="identifier">T</span></code>.
-        So the set of values that type <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-        can assume is {<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code>, -2147483648, -2147483647, ..., -1,
-        0, 1, ..., 2147483647} (assuming a 32-bit <code class="computeroutput"><span class="keyword">int</span></code>).
+        is <a href="http://www.sgi.com/tech/stl/LessThanComparable.html" target="_top"><code class="computeroutput"><span class="identifier">LessThanComparable</span></code></a> whenever <code class="computeroutput"><span class="identifier">T</span></code> is <a href="http://www.sgi.com/tech/stl/LessThanComparable.html" target="_top"><code class="computeroutput"><span class="identifier">LessThanComparable</span></code></a>. In this case
+        the state of being uninitialized is treated as a yet another value of <code class="computeroutput"><span class="identifier">T</span></code>, which is compared less than any value
+        of <code class="computeroutput"><span class="identifier">T</span></code>.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

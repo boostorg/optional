@@ -88,12 +88,12 @@ Suppose we want to implement a ['lazy load] optimization. This is because we do 
 
     class Widget
     {
-      boost::optional<Resource> resource_;
+      mutable boost::optional<const Resource> resource_;
       
     public:
       Widget() {}
       
-      Resource& getResource() // not thread-safe
+      const Resource& getResource() const // not thread-safe
       {
         if (resource_ == boost::none)
             resource_.emplace("resource", "arguments");
@@ -119,7 +119,7 @@ In other place we want to use the result of `getPeriod`, but want the two dates 
     Date begin, end; // Error: no default ctor!
     boost::tie(begin, end) = getPeriod();
     
-The second line works already, this is the capability of Boost.Tuple library, but the first line won't work. We could set some invented initial dates, but it is confusing and may be an unacceptable cost, given that these values will be overwritten in the next line anyway. This is where `optional` can help:
+The second line works already, this is the capability of __BOOST_TUPLE__ library, but the first line won't work. We could set some invented initial dates, but it is confusing and may be an unacceptable cost, given that these values will be overwritten in the next line anyway. This is where `optional` can help:
 
     boost::optional<Date> begin, end;
     boost::tie(begin, end) = getPeriod();
@@ -138,7 +138,7 @@ Suppose you want to ask users to choose some number (an `int`). One of the valid
       ++choices[choice];
     }
     
-This works because `optional<T>` is `LessThanComparable` whenever `T` is `LessThanComparable`. In this case the state of being uninitialized is treated as a yet another value of `T`, which is compared less than any value of `T`. So the set of values that type `optional<T>` can assume is {`boost::none`, -2147483648, -2147483647, ..., -1, 0, 1, ..., 2147483647} (assuming a 32-bit `int`).
+This works because `optional<T>` is __SGI_LESS_THAN_COMPARABLE__ whenever `T` is __SGI_LESS_THAN_COMPARABLE__. In this case the state of being uninitialized is treated as a yet another value of `T`, which is compared less than any value of `T`.
 [endsect]
 
 [endsect]

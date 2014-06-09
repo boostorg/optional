@@ -23,6 +23,7 @@ Distributed under the Boost Software License, Version 1.0.
 [/ Cited Boost resources ]
 
 [def __BOOST_VARIANT__ [@../../../variant/index.html Boost.Variant]]
+[def __BOOST_TUPLE__ [@../../../tuple/index.html Boost.Tuple]]
 [def __BOOST_TRIBOOL__ [@../../../../doc/html/tribool.html boost::tribool]]
 
 [def __OPTIONAL_POINTEE__ [@../../../utility/OptionalPointee.html OptionalPointee]]
@@ -36,7 +37,9 @@ Distributed under the Boost Software License, Version 1.0.
 [/ Other web resources ]
 
 [def __HASKELL__ [@http://www.haskell.org/ Haskell]]
-[def __SGI_DEFAULT_CONSTRUCTIBLE__ [@http://www.sgi.com/tech/stl/DefaultConstructible.html Default Constructible]]
+[def __SGI_DEFAULT_CONSTRUCTIBLE__ [@http://www.sgi.com/tech/stl/DefaultConstructible.html `DefaultConstructible`]]
+[def __SGI_LESS_THAN_COMPARABLE__ [@http://www.sgi.com/tech/stl/LessThanComparable.html `LessThanComparable`]]
+[def __SGI_EQUALITY_COMPARABLE__ [@http://www.sgi.com/tech/stl/EqualityComparable.html `EqualityComparable`]]
 
 
 [/ Icons ]
@@ -71,8 +74,10 @@ This is how you solve it with `boost::optional`:
 
 [include 01_quick_start.qbk]
 [section Tutorial]
-[include 12_motivation.qbk]
-[include 13_development.qbk]
+[include 10_motivation.qbk]
+[include 11_development.qbk]
+[include 12_when_to_use.qbk]
+[include 13_relational_operators.qbk]
 [include 14_optional_references.qbk]
 [include 15_in_place_factories.qbk]
 [include 16_optional_bool.qbk]
