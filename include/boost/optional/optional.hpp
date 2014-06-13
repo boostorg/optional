@@ -23,6 +23,7 @@
 
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
+#include <boost/core/explicit_operator_bool.hpp>
 #include <boost/optional/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/throw_exception.hpp>
@@ -49,7 +50,7 @@
 #include <boost/utility/addressof.hpp>
 #include <boost/utility/compare_pointees.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/utility/explicit_operator_bool.hpp>
+
 #include <boost/utility/in_place_factory.hpp>
 #include <boost/utility/swap.hpp>
 
@@ -1075,7 +1076,7 @@ class optional : public optional_detail::optional_base<T>
       
     bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
     
-    BOOST_EXPLICIT_OPERATOR_BOOL()
+    BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
 } ;
 
 #ifndef  BOOST_NO_CXX11_RVALUE_REFERENCES

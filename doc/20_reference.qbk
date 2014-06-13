@@ -85,7 +85,7 @@
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
 
-        explicit operator bool() const ; ``[link reference_optional_operator_bool __GO_TO__]``
+        explicit operator bool() const noexcept ; ``[link reference_optional_operator_bool __GO_TO__]``
 
         bool operator!() const noexcept ; ``[link reference_optional_operator_not __GO_TO__]``
 
@@ -989,10 +989,9 @@ __SPACE__
 
 [#reference_optional_operator_bool]
 
-[: `explicit optional<T>::operator bool() const ;`]
+[: `explicit optional<T>::operator bool() const noexcept ;`]
 
 * [*Returns:] `get_ptr() != 0`.
-* [*Throws:] Nothing.
 * [*Notes:] On compilers that do not support explicit conversion operators this falls back to safe-bool idiom.
 * [*Example:]
 ``
