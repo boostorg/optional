@@ -908,7 +908,7 @@ __SPACE__
 [: `template<class U> T optional<T>::value_or(U && v) const& ;`]
 [: `template<class U> T optional<T>::value_or(U && v) && ;`]
 
-* [*Requires:] `T` is CopyConstructible.
+* [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
 * [*Returns:] First overload: `bool(*this) ? **this : static_cast<T>(forward<U>(v))`. second overload: `bool(*this) ? std::move(**this) : static_cast<T>(forward<U>(v))`.
 * [*Throws:] Any exception thrown by the selected constructor of `T`.
 * [*Notes:] On compilers that do not support ref-qualifiers on member functions these three overloads are replaced with the classical two: a `const` and non-`const` member functions. On compilers without rvalue reference support the type of `v` becomes `U const&`.

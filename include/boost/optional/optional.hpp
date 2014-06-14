@@ -35,6 +35,7 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_lvalue_reference.hpp>
 #include <boost/type_traits/is_nothrow_move_assignable.hpp>
 #include <boost/type_traits/is_nothrow_move_constructible.hpp>
@@ -1060,18 +1061,31 @@ class optional : public optional_detail::optional_base<T>
 #ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     template <class U>
     value_type value_or ( U&& v ) const&
-    { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
+      { 
+        BOOST_STATIC_ASSERT(is_convertible<U&&, value_type>::value);
+        return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v));
+      }
     
     template <class U>
     value_type value_or ( U&& v ) && 
-    { return this->is_initialized() ? boost::move(get()) : static_cast<value_type>(boost::forward<U>(v)); }
+      { 
+        BOOST_STATIC_ASSERT(is_convertible<U&&, value_type>::value);
+        return this->is_initialized() ? boost::move(get()) : static_cast<value_type>(boost::forward<U>(v));
+      }
 #elif !defined BOOST_NO_CXX11_RVALUE_REFERENCES
     template <class U>
     value_type value_or ( U&& v ) const 
-    { return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v)); }
+      { 
+        BOOST_STATIC_ASSERT(is_convertible<U&&, value_type>::value);
+        return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v));
+      }
 #else
     template <class U>
-    value_type value_or ( U const& v ) const { return this->is_initialized() ? get() : static_cast<value_type>(v); }
+    value_type value_or ( U const& v ) const 
+      { 
+        BOOST_STATIC_ASSERT(is_convertible<U const&, value_type>::value);
+        return this->is_initialized() ? get() : static_cast<value_type>(v);
+      }
 #endif
       
     bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }

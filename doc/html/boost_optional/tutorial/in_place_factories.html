@@ -31,9 +31,9 @@
         One of the typical problems with wrappers and containers is that their interfaces
         usually provide an operation to initialize or assign the contained object
         as a copy of some other object. This not only requires the underlying type
-        to be <a href="../../../../../utility/CopyConstructible.html" target="_top">Copy Constructible</a>,
-        but also requires the existence of a fully constructed object, often temporary,
-        just to follow the copy from:
+        to be <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a>, but also requires
+        the existence of a fully constructed object, often temporary, just to follow
+        the copy from:
       </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span>
 <span class="special">{</span>
