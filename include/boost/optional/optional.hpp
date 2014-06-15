@@ -1062,28 +1062,28 @@ class optional : public optional_detail::optional_base<T>
     template <class U>
     value_type value_or ( U&& v ) const&
       { 
-        BOOST_STATIC_ASSERT(is_convertible<U&&, value_type>::value);
+        BOOST_STATIC_ASSERT((is_convertible<U&&, value_type>::value));
         return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v));
       }
     
     template <class U>
     value_type value_or ( U&& v ) && 
       { 
-        BOOST_STATIC_ASSERT(is_convertible<U&&, value_type>::value);
+        BOOST_STATIC_ASSERT((is_convertible<U&&, value_type>::value));
         return this->is_initialized() ? boost::move(get()) : static_cast<value_type>(boost::forward<U>(v));
       }
 #elif !defined BOOST_NO_CXX11_RVALUE_REFERENCES
     template <class U>
     value_type value_or ( U&& v ) const 
       { 
-        BOOST_STATIC_ASSERT(is_convertible<U&&, value_type>::value);
+        BOOST_STATIC_ASSERT((is_convertible<U&&, value_type>::value));
         return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v));
       }
 #else
     template <class U>
     value_type value_or ( U const& v ) const 
       { 
-        BOOST_STATIC_ASSERT(is_convertible<U const&, value_type>::value);
+        BOOST_STATIC_ASSERT((is_convertible<U const&, value_type>::value));
         return this->is_initialized() ? get() : static_cast<value_type>(v);
       }
 #endif
