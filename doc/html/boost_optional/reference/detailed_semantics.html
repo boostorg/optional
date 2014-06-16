@@ -1400,19 +1400,14 @@
           <span class="keyword">const</span><span class="special">&amp;</span>
           <span class="special">;</span></code>
         </p></blockquote></div>
-<div class="blockquote"><blockquote class="blockquote"><p>
-          <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_or</span><span class="special">(</span><span class="identifier">U</span> <span class="special">&amp;&amp;</span>
-          <span class="identifier">v</span><span class="special">)</span>
-          <span class="special">&amp;&amp;</span> <span class="special">;</span></code>
-        </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
-            is CopyConstructible.
+            is <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a> and <code class="computeroutput"><span class="identifier">U</span> <span class="special">&amp;&amp;</span></code>
+            is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> First overload: <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="special">**</span><span class="keyword">this</span>
-            <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>. second overload: <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">)</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="special">**</span><span class="keyword">this</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
@@ -1420,11 +1415,40 @@
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
-            ref-qualifiers on member functions these three overloads are replaced
-            with the classical two: a <code class="computeroutput"><span class="keyword">const</span></code>
-            and non-<code class="computeroutput"><span class="keyword">const</span></code> member functions.
+            ref-qualifiers on member functions this overload is replaced with the
+            <code class="computeroutput"><span class="keyword">const</span></code>-qualified member function.
             On compilers without rvalue reference support the type of <code class="computeroutput"><span class="identifier">v</span></code> becomes <code class="computeroutput"><span class="identifier">U</span>
             <span class="keyword">const</span><span class="special">&amp;</span></code>.
+          </li>
+</ul></div>
+<p>
+        <span class="inlinemediaobject"><img src="../../images/space.png" alt="space"></span>
+      </p>
+<a name="reference_optional_value_or_move"></a><div class="blockquote"><blockquote class="blockquote"><p>
+          <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value_or</span><span class="special">(</span><span class="identifier">U</span> <span class="special">&amp;&amp;</span>
+          <span class="identifier">v</span><span class="special">)</span>
+          <span class="special">&amp;&amp;</span> <span class="special">;</span></code>
+        </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+            is <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>
+            and <code class="computeroutput"><span class="identifier">U</span> <span class="special">&amp;&amp;</span></code>
+            is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
+          </li>
+<li class="listitem">
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">)</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
+          </li>
+<li class="listitem">
+            <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
+            selected constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
+          </li>
+<li class="listitem">
+            <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
+            ref-qualifiers on member functions this overload is replaced with the
+            classical non-<code class="computeroutput"><span class="keyword">const</span></code>-qualified
+            member function. On compilers without rvalue reference support the type
+            of <code class="computeroutput"><span class="identifier">v</span></code> becomes <code class="computeroutput"><span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
           </li>
 </ul></div>
 <p>
@@ -1572,14 +1596,12 @@
 <a name="reference_optional_operator_bool"></a><div class="blockquote"><blockquote class="blockquote"><p>
           <code class="computeroutput"><span class="keyword">explicit</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="keyword">operator</span>
           <span class="keyword">bool</span><span class="special">()</span>
-          <span class="keyword">const</span> <span class="special">;</span></code>
+          <span class="keyword">const</span> <span class="keyword">noexcept</span>
+          <span class="special">;</span></code>
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
             <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="identifier">get_ptr</span><span class="special">()</span> <span class="special">!=</span> <span class="number">0</span></code>.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Nothing.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> On compilers that do not support

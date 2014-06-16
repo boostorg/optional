@@ -26,8 +26,9 @@ Distributed under the Boost Software License, Version 1.0.
 [def __BOOST_TUPLE__ [@../../../tuple/index.html Boost.Tuple]]
 [def __BOOST_TRIBOOL__ [@../../../../doc/html/tribool.html boost::tribool]]
 
-[def __OPTIONAL_POINTEE__ [@../../../utility/OptionalPointee.html OptionalPointee]]
-[def __COPY_CONSTRUCTIBLE__ [@../../../utility/CopyConstructible.html Copy Constructible]]
+[def __OPTIONAL_POINTEE__ [@../../../utility/OptionalPointee.html `OptionalPointee`]]
+[def __COPY_CONSTRUCTIBLE__ [@../../../utility/CopyConstructible.html `CopyConstructible`]]
+[def __MOVE_CONSTRUCTIBLE__ `MoveConstructible`]
 [def __FUNCTION_EQUAL_POINTEES__ [@../../../utility/OptionalPointee.html#equal `equal_pointees()`]]
 [def __FUNCTION_LESS_POINTEES__ [@../../../utility/OptionalPointee.html#less `less_pointees()`]]
 

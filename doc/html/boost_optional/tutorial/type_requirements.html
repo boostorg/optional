@@ -60,10 +60,9 @@
 <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">p</span> <span class="special">=</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;();</span>
 </pre>
 <p>
-        If <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">CopyConstructible</span></code>,
-        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
-        also <code class="computeroutput"><span class="identifier">CopyConstructible</span></code> and
-        can be easily initialized from an lvalue of type <code class="computeroutput"><span class="identifier">T</span></code>:
+        If <code class="computeroutput"><span class="identifier">T</span></code> is <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a>, <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
+        also <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a>
+        and can be easily initialized from an lvalue of type <code class="computeroutput"><span class="identifier">T</span></code>:
       </p>
 <pre class="programlisting"><span class="identifier">T</span> <span class="identifier">v</span> <span class="special">=</span> <span class="identifier">make_T</span><span class="special">();</span>
 <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">o</span> <span class="special">=</span> <span class="identifier">v</span><span class="special">;</span>
@@ -85,10 +84,8 @@
         can be constructed and assigned from an rvalue of type <code class="computeroutput"><span class="identifier">T</span></code>.
       </p>
 <p>
-        Similarly, if <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">Copyable</span></code> (both <code class="computeroutput"><span class="identifier">CopyConstructible</span></code>
-        and <code class="computeroutput"><span class="identifier">CopyAssignable</span></code>) then
-        <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
-        also <code class="computeroutput"><span class="identifier">Copyable</span></code> and additionally
+        Similarly, if <code class="computeroutput"><span class="identifier">T</span></code> is <code class="computeroutput"><span class="identifier">Copyable</span></code> (both <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a> and <code class="computeroutput"><span class="identifier">CopyAssignable</span></code>) then <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+        is also <code class="computeroutput"><span class="identifier">Copyable</span></code> and additionally
         can be constructed and assigned from an lvalue of type <code class="computeroutput"><span class="identifier">T</span></code>.
       </p>
 <p>

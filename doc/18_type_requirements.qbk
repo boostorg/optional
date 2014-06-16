@@ -13,12 +13,12 @@ But this is practically useless. In order for `optional<T>` to be able to do any
     optional<T> o;
     o.emplace("T", "ctor", "params");
 
-If `T` is `MoveConstructible`, `optional<T>` is also `MoveConstructible` and can be easily initialized from an rvalue of type `T` and be passed by value:
+If `T` is __MOVE_CONSTRUCTIBLE__, `optional<T>` is also __MOVE_CONSTRUCTIBLE__ and can be easily initialized from an rvalue of type `T` and be passed by value:
 
     optional<T> o = make_T();
     optional<T> p = optional<T>();
     
-If `T` is `CopyConstructible`, `optional<T>` is also `CopyConstructible` and can be easily initialized from an lvalue of type `T`:
+If `T` is __COPY_CONSTRUCTIBLE__, `optional<T>` is also __COPY_CONSTRUCTIBLE__ and can be easily initialized from an lvalue of type `T`:
 
     T v = make_T();
     optional<T> o = v;
@@ -29,9 +29,9 @@ If `T` is not `MoveAssignable`, it is still possible to reset the value of `opti
     optional<const T> o = make_T();
     o.emplace(make_another_T());
 
-If `T` is `Moveable` (both `MoveConstructible` and `MoveAssignable`) then `optional<T>` is also `Moveable` and additionally can be constructed and assigned from an rvalue of type `T`.
+If `T` is `Moveable` (both __MOVE_CONSTRUCTIBLE__ and `MoveAssignable`) then `optional<T>` is also `Moveable` and additionally can be constructed and assigned from an rvalue of type `T`.
 
-Similarly, if `T` is `Copyable` (both `CopyConstructible` and `CopyAssignable`) then `optional<T>` is also `Copyable` and additionally can be constructed and assigned from an lvalue of type `T`.
+Similarly, if `T` is `Copyable` (both __COPY_CONSTRUCTIBLE__ and `CopyAssignable`) then `optional<T>` is also `Copyable` and additionally can be constructed and assigned from an lvalue of type `T`.
 
 `T` ['is not] required to be __SGI_DEFAULT_CONSTRUCTIBLE__.
 
