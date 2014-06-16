@@ -80,7 +80,7 @@
         T&&      value() && ; ``[link reference_optional_value __GO_TO__]``
         
         template<class U> T value_or( U && v ) const& ; ``[link reference_optional_value_or __GO_TO__]``
-        template<class U> T value_or( U && v ) && ; ``[link reference_optional_value_or __GO_TO__]``
+        template<class U> T value_or( U && v ) && ; ``[link reference_optional_value_or_move __GO_TO__]``
 
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
@@ -761,7 +761,7 @@ __SPACE__
  of type `T` with `std::forward<Args>(args)...`. 
 * [*Postconditions: ] `*this` is [_initialized].
 * [*Throws:] Whatever the selected `T`'s  constructor throws.
-* [*Notes:] `T` need not be `MoveConstructible` or `MoveAssignable`. On compilers that do not support variadic templates, the signature falls back to single-argument: `template<class Arg> void emplace(Arg&& arg)`. On compilers that do not support rvalue references, the signature falls back to two overloads: taking `const` and non-`const` lvalue reference. 
+* [*Notes:] `T` need not be __MOVE_CONSTRUCTIBLE__ or `MoveAssignable`. On compilers that do not support variadic templates, the signature falls back to single-argument: `template<class Arg> void emplace(Arg&& arg)`. On compilers that do not support rvalue references, the signature falls back to two overloads: taking `const` and non-`const` lvalue reference. 
 * [*Exception Safety:] If an exception is thrown during the initialization of `T`, `*this` is ['uninitialized].
 * [*Example:]
 ``
@@ -906,12 +906,22 @@ __SPACE__
 [#reference_optional_value_or]
 
 [: `template<class U> T optional<T>::value_or(U && v) const& ;`]
-[: `template<class U> T optional<T>::value_or(U && v) && ;`]
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
-* [*Returns:] First overload: `bool(*this) ? **this : static_cast<T>(forward<U>(v))`. second overload: `bool(*this) ? std::move(**this) : static_cast<T>(forward<U>(v))`.
+* [*Returns:] `bool(*this) ? **this : static_cast<T>(forward<U>(v))`.
 * [*Throws:] Any exception thrown by the selected constructor of `T`.
-* [*Notes:] On compilers that do not support ref-qualifiers on member functions these three overloads are replaced with the classical two: a `const` and non-`const` member functions. On compilers without rvalue reference support the type of `v` becomes `U const&`.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function. On compilers without rvalue reference support the type of `v` becomes `U const&`.
+
+__SPACE__
+
+[#reference_optional_value_or_move]
+
+[: `template<class U> T optional<T>::value_or(U && v) && ;`]
+
+* [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
+* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(forward<U>(v))`.
+* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the classical non-`const`-qualified member function. On compilers without rvalue reference support the type of `v` becomes `U const&`.
 
 __SPACE__
 
