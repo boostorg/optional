@@ -111,6 +111,20 @@
         This uses the <code class="computeroutput"><span class="identifier">atoi</span></code>-like approach
         to conversions: if <code class="computeroutput"><span class="identifier">text</span></code> does
         not represent an integral number just return <code class="computeroutput"><span class="number">0</span></code>.
+        Finally, you can provide a callback to be called when trying to access the
+        contained value fails:
+      </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">l</span> <span class="special">=</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">text</span><span class="special">).</span><span class="identifier">value_or_eval</span><span class="special">([]()</span> <span class="special">-&gt;</span> <span class="keyword">int</span> <span class="special">{</span>
+  <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"could not convert; using -1 instead"</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>
+<span class="special">});</span>
+</pre>
+<p>
+        This will call the provided callback and return whatever the callback returns.
+        The callback can have side effects: they will only be observed when the optional
+        object does not contain a value.
+      </p>
+<p>
         Now, let's consider how function <code class="computeroutput"><span class="identifier">convert</span></code>
         can be implemented.
       </p>

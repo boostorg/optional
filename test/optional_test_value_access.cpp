@@ -128,6 +128,73 @@ void test_function_value_or()
     BOOST_CHECK(FatToIntConverter::conversions == 1);
 }
 
+
+struct FunM
+{
+    int operator()() { return 5; }
+};
+
+struct FunC
+{
+    int operator()() const { return 6; }
+};
+
+int funP ()
+{
+    return 7;
+}
+
+int throw_()
+{
+    throw int();
+}
+
+void test_function_value_or_call()
+{
+    optional<int> o1 = 1;
+    optional<int> oN;
+    FunM funM;
+    FunC funC;
+    
+    BOOST_CHECK(o1.value_or_eval(funM) == 1);
+    BOOST_CHECK(oN.value_or_eval(funM) == 5);
+    BOOST_CHECK(o1.value_or_eval(FunM()) == 1);
+    BOOST_CHECK(oN.value_or_eval(FunM()) == 5);
+    
+    BOOST_CHECK(o1.value_or_eval(funC) == 1);
+    BOOST_CHECK(oN.value_or_eval(funC) == 6);
+    BOOST_CHECK(o1.value_or_eval(FunC()) == 1);
+    BOOST_CHECK(oN.value_or_eval(FunC()) == 6);
+    
+    BOOST_CHECK(o1.value_or_eval(funP) == 1);
+    BOOST_CHECK(oN.value_or_eval(funP) == 7);
+    
+#ifndef BOOST_NO_CXX11_LAMBDAS
+    BOOST_CHECK(o1.value_or_eval([](){return 8;}) == 1);
+    BOOST_CHECK(oN.value_or_eval([](){return 8;}) == 8);
+#endif
+
+    try
+    {
+      BOOST_CHECK(o1.value_or_eval(throw_) == 1);
+    }
+    catch(...)
+    {
+      BOOST_CHECK(false);
+    }
+    
+    try
+    {
+      BOOST_CHECK(oN.value_or_eval(throw_) == 1);
+      BOOST_CHECK(false);
+    }
+    catch(...)
+    {
+      BOOST_CHECK(true);
+    }
+}
+
+
 #ifndef BOOST_NO_CXX11_REF_QUALIFIERS
 struct MoveOnly
 {
@@ -144,15 +211,22 @@ optional<MoveOnly> makeMoveOnly()
     return MoveOnly(1);
 }
 
+MoveOnly moveOnlyDefault()
+{
+    return MoveOnly(1);
+}
+
 // compile-time test
 void test_move_only_getters()
 {
     MoveOnly m1 = *makeMoveOnly();
     MoveOnly m2 = makeMoveOnly().value();
     MoveOnly m3 = makeMoveOnly().value_or(MoveOnly(1));
+    MoveOnly m4 = makeMoveOnly().value_or_eval(moveOnlyDefault);
     unused_variable(m1);
     unused_variable(m2);
     unused_variable(m3);
+    unused_variable(m4);
 }
 
 #endif
@@ -163,6 +237,7 @@ int test_main( int, char* [] )
   {
     test_function_value();
     test_function_value_or();
+    test_function_value_or_call();
   }
   catch ( ... )
   {
