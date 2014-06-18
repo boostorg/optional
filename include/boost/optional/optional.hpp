@@ -35,7 +35,6 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_lvalue_reference.hpp>
 #include <boost/type_traits/is_nothrow_move_assignable.hpp>
 #include <boost/type_traits/is_nothrow_move_constructible.hpp>
@@ -51,7 +50,6 @@
 #include <boost/utility/addressof.hpp>
 #include <boost/utility/compare_pointees.hpp>
 #include <boost/utility/enable_if.hpp>
-
 #include <boost/utility/in_place_factory.hpp>
 #include <boost/utility/swap.hpp>
 
@@ -114,6 +112,27 @@ class typed_in_place_factory_base ;
 template<class T> void swap ( optional<T>& x, optional<T>& y );
 
 namespace optional_detail {
+
+// converts type U to type T using only implicit conversions/constructors
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    template <typename TT, typename UU>
+    TT convert(UU && u)
+    {
+        return forward<UU>(u);
+    }
+#else
+    template <typename TT, typename UU>
+    TT convert(const UU& u)
+    {
+        return u;
+    }
+    
+    template <typename TT, typename UU>
+    TT convert(UU& u)
+    {
+        return u;
+    }
+#endif
 
 // This local class is used instead of that in "aligned_storage.hpp"
 // because I've found the 'official' class to ICE BCB5.5
@@ -1010,7 +1029,7 @@ class optional : public optional_detail::optional_base<T>
 #ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     reference_const_type operator *() const& { return this->get() ; }
     reference_type       operator *() &      { return this->get() ; }
-    reference_type_of_temporary_wrapper  operator *() &&     { return boost::move(this->get()) ; }
+    value_type  operator *() &&     { return boost::move(this->get()) ; }
 #else
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
@@ -1033,7 +1052,7 @@ class optional : public optional_detail::optional_base<T>
           throw_exception(bad_optional_access("Attempted to access the value of an uninitialized optional object."));
       }
       
-    reference_type_of_temporary_wrapper value() &&
+    value_type value() &&
       { 
         if (this->is_initialized())
           return boost::move(this->get()) ;
@@ -1058,33 +1077,51 @@ class optional : public optional_detail::optional_base<T>
       }
 #endif
 
+
 #ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     template <class U>
     value_type value_or ( U&& v ) const&
       { 
-        BOOST_STATIC_ASSERT((is_convertible<U&&, value_type>::value));
-        return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v));
+        return this->is_initialized() ? get() : optional_detail::convert<value_type>(boost::forward<U>(v));
       }
     
     template <class U>
     value_type value_or ( U&& v ) && 
       { 
-        BOOST_STATIC_ASSERT((is_convertible<U&&, value_type>::value));
-        return this->is_initialized() ? boost::move(get()) : static_cast<value_type>(boost::forward<U>(v));
+        return this->is_initialized() ? boost::move(get()) : optional_detail::convert<value_type>(boost::forward<U>(v));
       }
 #elif !defined BOOST_NO_CXX11_RVALUE_REFERENCES
     template <class U>
     value_type value_or ( U&& v ) const 
       { 
-        BOOST_STATIC_ASSERT((is_convertible<U&&, value_type>::value));
-        return this->is_initialized() ? get() : static_cast<value_type>(boost::forward<U>(v));
+        return this->is_initialized() ? get() : optional_detail::convert<value_type>(boost::forward<U>(v));
       }
 #else
     template <class U>
     value_type value_or ( U const& v ) const 
       { 
-        BOOST_STATIC_ASSERT((is_convertible<U const&, value_type>::value));
-        return this->is_initialized() ? get() : static_cast<value_type>(v);
+        return this->is_initialized() ? get() : optional_detail::convert<value_type>(v);
+      }
+#endif
+
+
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+    template <typename F>
+    value_type value_or_eval ( F f ) const&
+      {
+        return this->is_initialized() ? get() : optional_detail::convert<value_type>(f());
+      }
+      
+    template <typename F>
+    value_type value_or_eval ( F f ) &&
+      {
+        return this->is_initialized() ? boost::move(get()) : optional_detail::convert<value_type>(f());
+      }
+#else
+    template <typename F>
+    value_type value_or_eval ( F f ) const
+      {
+        return this->is_initialized() ? get() : optional_detail::convert<value_type>(f());
       }
 #endif
       

@@ -9,7 +9,7 @@
 ]
 
 
-[section Acknowledgments]
+[section Acknowledgements]
 
 [heading Pre-formal review]
 
@@ -55,6 +55,8 @@ Rob Stewart, and others.
 with the proper semantics.
 * Mat Marcus shown the virtues of a value-oriented interface, influencing
 the current design, and contributed the idea of "none".
+* Vladimir Batov's design of Boost.Convert library motivated the development
+of value accessors for `optional`: functions `value`, `value_or`, `value_or_eval`.
 
 [endsect]
 

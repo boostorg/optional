@@ -48,7 +48,16 @@ This version throws an exception upon an attempt to access a non-existent contai
 
     int k = convert(text).value_or(0);
     
-This uses the `atoi`-like approach to conversions: if `text` does not represent an integral number just return `0`. Now, let's consider how function `convert` can be implemented.
+This uses the `atoi`-like approach to conversions: if `text` does not represent an integral number just return `0`. Finally, you can provide a callback to be called when trying to access the contained value fails:
+
+    int l = convert(text).value_or_eval([]() -> int { 
+      cout << "could not convert; using -1 instead" << endl; 
+      return -1;
+    });
+
+This will call the provided callback and return whatever the callback returns. The callback can have side effects: they will only be observed when the optional object does not contain a value.
+
+Now, let's consider how function `convert` can be implemented.
 
     boost::optionl<int> convert(const std::string& text)
     {  

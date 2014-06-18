@@ -73,14 +73,17 @@
 
         T const& operator *() const& ; ``[link reference_optional_operator_asterisk __GO_TO__]``
         T&       operator *() &; ``[link reference_optional_operator_asterisk __GO_TO__]``
-        T&&      operator *() &&; ``[link reference_optional_operator_asterisk __GO_TO__]``
+        T        operator *() &&; ``[link reference_optional_operator_asterisk_move __GO_TO__]``
         
         T const& value() const& ; ``[link reference_optional_value __GO_TO__]``
         T&       value() & ; ``[link reference_optional_value __GO_TO__]``
-        T&&      value() && ; ``[link reference_optional_value __GO_TO__]``
+        T        value() && ; ``[link reference_optional_value_move __GO_TO__]``
         
         template<class U> T value_or( U && v ) const& ; ``[link reference_optional_value_or __GO_TO__]``
         template<class U> T value_or( U && v ) && ; ``[link reference_optional_value_or_move __GO_TO__]``
+        
+        template<class F> T value_or_eval( F f ) const& ; ``[link reference_optional_value_or_call __GO_TO__]``
+        template<class F> T value_or_eval( F f ) && ; ``[link reference_optional_value_or_call_move __GO_TO__]``
 
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
@@ -442,7 +445,7 @@ __SPACE__
 
 * [*Effect:] Move-constructs an `optional`.
 * [*Postconditions:] If `rhs` is initialized, `*this` is initialized and its
-value is move constructed from `*rhs`; else `*this` is
+value is move-constructed from `*rhs`; else `*this` is
 uninitialized.
 * [*Throws:] Whatever `T::T( U&& )` throws.
 * [*Notes: ] `T::T( U&& )` is called if `rhs` is initialized, which requires a
@@ -837,12 +840,11 @@ __SPACE__
 
 [: `T const& optional<T` ['(not a ref)]`>::operator*() const& ;`]
 [: `T&       optional<T` ['(not a ref)]`>::operator*() &;`]
-[: `T&&      optional<T` ['(not a ref)]`>::operator*() &&;`]
 
 * [*Requires:] `*this` is initialized
 * [*Returns:] A reference to the contained value
 * [*Throws:] Nothing.
-* [*Notes:] The requirement is asserted via `BOOST_ASSERT()`. On compilers that do not support ref-qualifiers on member functions these three overloads are replaced with the classical two: a `const` and non-`const` member functions.
+* [*Notes:] The requirement is asserted via `BOOST_ASSERT()`. On compilers that do not support ref-qualifiers on member functions these two overloads are replaced with the classical two: a `const` and non-`const` member functions.
 * [*Example:]
 ``
 T v ;
@@ -853,6 +855,17 @@ T w ;
 *opt = w ;
 assert ( *opt == w ) ;
 ``
+
+__SPACE__
+
+[#reference_optional_operator_asterisk_move]
+
+[: `T optional<T` ['(not a ref)]`>::operator*() &&;`]
+
+* [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `*this` is initialized.
+* [*Returns:] A move-constructed copy the contained value.
+* [*Throws:] Whatever the `T`'s constructor selected for the move throws.
+* [*Notes:] The requirement is asserted via `BOOST_ASSERT()`. On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
 
@@ -881,11 +894,10 @@ __SPACE__
 
 [: `T const& optional<T>::value() const& ;`]
 [: `T&       optional<T>::value() & ;`]
-[: `T&&      optional<T>::value() && ;`]
 
 * [*Returns:] A reference to the contained value, if `*this` is initialized.
 * [*Throws:] An instance of `bad_optional_access`, if `*this` is not initialized.
-* [*Notes:] On compilers that do not support ref-qualifiers on member functions these three overloads are replaced with the classical two: a `const` and non-`const` member functions.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions these two overloads are replaced with the classical two: a `const` and non-`const` member functions.
 * [*Example:]
 ``
 T v ;
@@ -900,6 +912,18 @@ catch(bad_optional_access&) {
   assert ( true );
 }
 ``
+
+__SPACE__
+
+[#reference_optional_value_move]
+
+[: `T      optional<T>::value() && ;`]
+
+* [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__.
+* [*Returns:] A move-constructed copy of the contained value, if `*this` is initialized.
+* [*Throws:] An instance of `bad_optional_access`, if `*this` is not initialized.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is not present.
+
 __SPACE__
 
 
@@ -908,7 +932,7 @@ __SPACE__
 [: `template<class U> T optional<T>::value_or(U && v) const& ;`]
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
-* [*Returns:] `bool(*this) ? **this : static_cast<T>(forward<U>(v))`.
+* [*Returns:] `bool(*this) ? **this : static_cast<T>(std::forward<U>(v))`.
 * [*Throws:] Any exception thrown by the selected constructor of `T`.
 * [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function. On compilers without rvalue reference support the type of `v` becomes `U const&`.
 
@@ -919,9 +943,48 @@ __SPACE__
 [: `template<class U> T optional<T>::value_or(U && v) && ;`]
 
 * [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
-* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(forward<U>(v))`.
+* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(std::forward<U>(v))`.
 * [*Throws:] Any exception thrown by the selected constructor of `T`.
-* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the classical non-`const`-qualified member function. On compilers without rvalue reference support the type of `v` becomes `U const&`.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is not present.
+
+__SPACE__
+
+[#reference_optional_value_or_call]
+
+[: `template<class F> T optional<T>::value_or_eval(F f) const& ;`]
+
+* [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `F` models a __SGI_GENERATOR__ whose result type is convertible to `T`.
+* [*Returns:] `bool(*this) ? **this : static_cast<T>(f())`.
+* [*Throws:] Any exception thrown by the selected constructor of `T` or by `f`.
+* [*Notes:] Function `f` is only evaluated if `bool(*this) == false`. On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function.
+* [*Example:]
+``
+int complain_and_0()
+{
+  clog << "no value returned, using default" << endl;
+  return 0;
+}
+
+optional<int> o1 = 1;
+optional<int> oN = none;
+
+int i = o1.value_or_eval(complain_and_0); // fun not called
+assert (i == 1);
+
+int j = oN.value_or_eval(complain_and_0); // fun called
+assert (i == 0);
+``
+
+__SPACE__
+
+[#reference_optional_value_or_call_move]
+
+[: `template<class F> T optional<T>::value_or_eval(F f) && ;`]
+
+* [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `F` models a __SGI_GENERATOR__ whose result type is convertible to `T`.
+* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(f())`.
+* [*Throws:] Any exception thrown by the selected constructor of `T` or by `f`.
+* [*Notes:] Function `f` is only evaluated if `bool(*this) == false`. On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
 
