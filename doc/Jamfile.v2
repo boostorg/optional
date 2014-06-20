@@ -24,7 +24,8 @@ boostbook standalone
     :
         optional
     :
-        <xsl:param>boost.root=../../../..
+        <format>html:<xsl:param>boost.root=../../../..
+        <format>html:<xsl:param>boost.libraries=../../../../libs/libraries.htm
         <xsl:param>chapter.autolabel=0
         <xsl:param>chunk.section.depth=8
         <xsl:param>toc.section.depth=2
@@ -32,6 +33,7 @@ boostbook standalone
         <xsl:param>generate.section.toc.level=1
         <format>pdf:<xsl:param>img.src.path=$(images)/
         <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/optional/doc/html
+        <format>docbook:<auto-index-internal>on
     ;
 
 
