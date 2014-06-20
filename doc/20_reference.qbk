@@ -326,7 +326,7 @@ __SPACE__
 value is another reference to the same object referenced by `*rhs`; else
 `*this` is uninitialized.
 * [*Throws:] Nothing.
-* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will reefer to the
+* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will refer to the
 same object (they alias).
 * [*Example:]
 ``
@@ -360,7 +360,8 @@ __SPACE__
 * [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
 its value is move constructed from `rhs`; else `*this` is uninitialized.
 * [*Throws:] Whatever `T::T( T&& )` throws.
-* [*Notes:] If `rhs` is initialized, `T::T( T && )` is called. The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value`.
+* [*Remarks:] The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value`.
+* [*Notes:] If `rhs` is initialized, `T::T( T && )` is called.
 * [*Exception Safety:] Exceptions can only be thrown during
 `T::T( T&& );` in that case, `rhs` remains initialized and the value of `*rhs` is determined by exception safety of `T::T(T&&)`.
 * [*Example:]
@@ -390,7 +391,7 @@ __SPACE__
 value is another reference to the same object referenced by `*rhs`; else
 `*this` is uninitialized.
 * [*Throws:] Nothing.
-* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will reefer to the
+* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will refer to the
 same object (they alias).
 * [*Example:]
 ``
@@ -663,11 +664,12 @@ __SPACE__
 * [*Effect:] Move-assigns another `optional` to an `optional`.
 * [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
 its value is moved from `*rhs`, `rhs` remains initialized; else `*this` is uninitialized.
-* [*Throws:] Whatever `T::operator( T&& )` or  `T::T( T && )` throws.
+* [*Throws:] Whatever `T::operator( T&& )` or `T::T( T && )` throws.
+* [*Remarks:] The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
 * [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
 ['move assignment operator] is used. If `*this` is initially initialized but `rhs` is
 uninitialized, `T`'s [destructor] is called. If `*this` is initially uninitialized
-but `rhs` is initialized, `T`'s ['move constructor] is called. The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
+but `rhs` is initialized, `T`'s ['move constructor] is called.
 * [*Exception Safety:] In the event of an exception, the initialization state of
 `*this` is unchanged and its value unspecified as far as optional is concerned
 (it is up to `T`'s `operator=()`). If `*this` is initially uninitialized and
@@ -932,8 +934,7 @@ __SPACE__
 [: `template<class U> T optional<T>::value_or(U && v) const& ;`]
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
-* [*Returns:] `bool(*this) ? **this : static_cast<T>(std::forward<U>(v))`.
-* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Effects:] `if (*this) return **this; else return std::forward<U>(v);`.
 * [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function. On compilers without rvalue reference support the type of `v` becomes `U const&`.
 
 __SPACE__
@@ -943,8 +944,7 @@ __SPACE__
 [: `template<class U> T optional<T>::value_or(U && v) && ;`]
 
 * [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
-* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(std::forward<U>(v))`.
-* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Effects:] `if (*this) return std::move(**this); else return std::forward<U>(v);`.
 * [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
@@ -954,9 +954,8 @@ __SPACE__
 [: `template<class F> T optional<T>::value_or_eval(F f) const& ;`]
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `F` models a __SGI_GENERATOR__ whose result type is convertible to `T`.
-* [*Returns:] `bool(*this) ? **this : static_cast<T>(f())`.
-* [*Throws:] Any exception thrown by the selected constructor of `T` or by `f`.
-* [*Notes:] Function `f` is only evaluated if `bool(*this) == false`. On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function.
+* [*Effects:] `if (*this) return **this; else return f();`.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function.
 * [*Example:]
 ``
 int complain_and_0()
@@ -982,9 +981,8 @@ __SPACE__
 [: `template<class F> T optional<T>::value_or_eval(F f) && ;`]
 
 * [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `F` models a __SGI_GENERATOR__ whose result type is convertible to `T`.
-* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(f())`.
-* [*Throws:] Any exception thrown by the selected constructor of `T` or by `f`.
-* [*Notes:] Function `f` is only evaluated if `bool(*this) == false`. On compilers that do not support ref-qualifiers on member functions this overload is not present.
+* [*Effects:] `if (*this) return std::move(**this); else return f();`.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
 

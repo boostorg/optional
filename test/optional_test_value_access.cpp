@@ -149,7 +149,7 @@ int throw_()
     throw int();
 }
 
-void test_function_value_or_call()
+void test_function_value_or_eval()
 {
     optional<int> o1 = 1;
     optional<int> oN;
@@ -237,7 +237,7 @@ int test_main( int, char* [] )
   {
     test_function_value();
     test_function_value_or();
-    test_function_value_or_call();
+    test_function_value_or_eval();
   }
   catch ( ... )
   {

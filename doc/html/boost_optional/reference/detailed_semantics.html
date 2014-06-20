@@ -352,7 +352,7 @@
             <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
             is initialized, both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
             and <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
-            will reefer to the same object (they alias).
+            will refer to the same object (they alias).
           </li>
 <li class="listitem">
             <span class="bold"><strong>Example:</strong></span>
@@ -403,11 +403,12 @@
             throws.
           </li>
 <li class="listitem">
+            <span class="bold"><strong>Remarks:</strong></span> The expression inside <code class="computeroutput"><span class="keyword">noexcept</span></code> is equivalent to <code class="computeroutput"><span class="identifier">is_nothrow_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>.
+          </li>
+<li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
             is initialized, <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">T</span> <span class="special">&amp;&amp;</span>
-            <span class="special">)</span></code> is called. The expression inside
-            <code class="computeroutput"><span class="keyword">noexcept</span></code> is equivalent to
-            <code class="computeroutput"><span class="identifier">is_nothrow_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>.
+            <span class="special">)</span></code> is called.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Exception Safety:</strong></span> Exceptions can only
@@ -461,7 +462,7 @@
             <span class="bold"><strong>Notes:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
             is initialized, both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
             and <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
-            will reefer to the same object (they alias).
+            will refer to the same object (they alias).
           </li>
 <li class="listitem">
             <span class="bold"><strong>Example:</strong></span>
@@ -915,16 +916,17 @@
             <span class="special">)</span></code> throws.
           </li>
 <li class="listitem">
+            <span class="bold"><strong>Remarks:</strong></span> The expression inside <code class="computeroutput"><span class="keyword">noexcept</span></code> is equivalent to <code class="computeroutput"><span class="identifier">is_nothrow_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&amp;&amp;</span>
+            <span class="identifier">is_nothrow_move_assignable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>.
+          </li>
+<li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> If both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and <code class="computeroutput"><span class="identifier">rhs</span></code>
             are initially initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
             <span class="emphasis"><em>move assignment operator</em></span> is used. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
             is initially initialized but <code class="computeroutput"><span class="identifier">rhs</span></code>
             is uninitialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
             [destructor] is called. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initially uninitialized but <code class="computeroutput"><span class="identifier">rhs</span></code> is initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>move constructor</em></span> is called. The expression inside
-            <code class="computeroutput"><span class="keyword">noexcept</span></code> is equivalent to
-            <code class="computeroutput"><span class="identifier">is_nothrow_move_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span>
-            <span class="special">&amp;&amp;</span> <span class="identifier">is_nothrow_move_assignable</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span></code>.
+            <span class="emphasis"><em>move constructor</em></span> is called.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Exception Safety:</strong></span> In the event of an
@@ -1455,11 +1457,8 @@
             is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="special">**</span><span class="keyword">this</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
-            selected constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
+            <span class="bold"><strong>Effects:</strong></span> <code class="computeroutput"><span class="keyword">if</span>
+            <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="special">**</span><span class="keyword">this</span><span class="special">;</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">);</span></code>.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
@@ -1485,11 +1484,9 @@
             is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">)</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">))</span></code>.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
-            selected constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
+            <span class="bold"><strong>Effects:</strong></span> <code class="computeroutput"><span class="keyword">if</span>
+            <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">);</span> <span class="keyword">else</span> <span class="keyword">return</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">);</span></code>.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
@@ -1509,16 +1506,11 @@
             is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="special">**</span><span class="keyword">this</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">f</span><span class="special">())</span></code>.
+            <span class="bold"><strong>Effects:</strong></span> <code class="computeroutput"><span class="keyword">if</span>
+            <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="special">**</span><span class="keyword">this</span><span class="special">;</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">f</span><span class="special">();</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
-            selected constructor of <code class="computeroutput"><span class="identifier">T</span></code>
-            or by <code class="computeroutput"><span class="identifier">f</span></code>.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Notes:</strong></span> Function <code class="computeroutput"><span class="identifier">f</span></code>
-            is only evaluated if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">false</span></code>. On compilers that do not support
+            <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
             ref-qualifiers on member functions this overload is replaced with the
             <code class="computeroutput"><span class="keyword">const</span></code>-qualified member function.
           </li>
@@ -1555,16 +1547,12 @@
             whose result type is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">)</span> <span class="special">:</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">f</span><span class="special">())</span></code>.
+            <span class="bold"><strong>Effects:</strong></span> <code class="computeroutput"><span class="keyword">if</span>
+            <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">);</span> <span class="keyword">else</span> <span class="keyword">return</span>
+            <span class="identifier">f</span><span class="special">();</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
-            selected constructor of <code class="computeroutput"><span class="identifier">T</span></code>
-            or by <code class="computeroutput"><span class="identifier">f</span></code>.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Notes:</strong></span> Function <code class="computeroutput"><span class="identifier">f</span></code>
-            is only evaluated if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">false</span></code>. On compilers that do not support
+            <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
             ref-qualifiers on member functions this overload is not present.
           </li>
 </ul></div>
