@@ -804,36 +804,48 @@
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Effect:</strong></span> Assigns another <code class="computeroutput"><span class="identifier">optional</span></code> to an <code class="computeroutput"><span class="identifier">optional</span></code>.
+            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+            is <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a> and <code class="computeroutput"><span class="identifier">CopyAssignable</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
-            is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initialized and its value is a <span class="emphasis"><em>copy</em></span> of the value
-            of <code class="computeroutput"><span class="identifier">rhs</span></code>; else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is uninitialized.
+            <span class="bold"><strong>Effects:</strong></span>
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem">
+                  If <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
+                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code> no effect, otherwise
+                </li>
+<li class="listitem">
+                  if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
+                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code>, destroys the contained value
+                  by calling <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>, otherwise
+                </li>
+<li class="listitem">
+                  if <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
+                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>, initializes the contained value
+                  as if direct-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                  with <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>,
+                  otherwise
+                </li>
+<li class="listitem">
+                  (if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
+                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>) assigns <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code> to the contained value.
+                </li>
+</ul></div>
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="keyword">operator</span><span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;)</span></code>
-            or <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code>
-            throws.
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>;
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Notes:</strong></span> If both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and <code class="computeroutput"><span class="identifier">rhs</span></code>
-            are initially initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>assignment operator</em></span> is used. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initially initialized but <code class="computeroutput"><span class="identifier">rhs</span></code> is uninitialized, <code class="computeroutput"><span class="identifier">T</span></code>'s [destructor] is called. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initially uninitialized but <code class="computeroutput"><span class="identifier">rhs</span></code>
-            is initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>copy constructor</em></span> is called.
+            <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Exception Safety:</strong></span> In the event of an
-            exception, the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is unchanged and its value unspecified
-            as far as optional is concerned (it is up to <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>).
-            If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initially uninitialized and <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>copy constructor</em></span> fails, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is left properly uninitialized.
+            <span class="bold"><strong>Exception Safety:</strong></span> If any exception is
+            thrown, the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and <code class="computeroutput"><span class="identifier">rhs</span></code>
+            remains unchanged. If an exception is thrown during the call to <code class="computeroutput"><span class="identifier">T</span></code>'s copy constructor, no effect. If
+            an exception is thrown during the call to <code class="computeroutput"><span class="identifier">T</span></code>'s
+            copy assignment, the state of its contained value is as defined by the
+            exception safety guarantee of <code class="computeroutput"><span class="identifier">T</span></code>'s
+            copy assignment.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Example:</strong></span>
@@ -932,6 +944,9 @@
 </ul></div>
           </li>
 <li class="listitem">
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>;
+          </li>
+<li class="listitem">
             <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span></code>.
           </li>
 <li class="listitem">
@@ -941,7 +956,7 @@
 <li class="listitem">
             <span class="bold"><strong>Exception Safety:</strong></span> If any exception is
             thrown, the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and <code class="computeroutput"><span class="identifier">rhs</span></code>
-            remain unchanged. If an exception is thrown during the call to <code class="computeroutput"><span class="identifier">T</span></code>'s move constructor, the state of
+            remains unchanged. If an exception is thrown during the call to <code class="computeroutput"><span class="identifier">T</span></code>'s move constructor, the state of
             <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
             is determined by the exception safety guarantee of <code class="computeroutput"><span class="identifier">T</span></code>'s
             move constructor. If an exception is thrown during the call to T's move-assignment,

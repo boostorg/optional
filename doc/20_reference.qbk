@@ -600,18 +600,17 @@ __SPACE__
 
 [: `optional& optional<T` ['(not a ref)]`>::operator= ( optional const& rhs ) ;`]
 
-* [*Effect:] Assigns another `optional` to an `optional`.
-* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
-its value is a ['copy] of the value of `rhs`; else `*this` is uninitialized.
-* [*Throws:] Whatever `T::operator( T const&)` or  `T::T( T const& )` throws.
-* [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
-['assignment operator] is used. If `*this` is initially initialized but `rhs` is
-uninitialized, `T`'s [destructor] is called. If `*this` is initially uninitialized
-but `rhs` is initialized, `T`'s ['copy constructor] is called.
-* [*Exception Safety:] In the event of an exception, the initialization state of
-`*this` is unchanged and its value unspecified as far as optional is concerned
-(it is up to `T`'s `operator=()`). If `*this` is initially uninitialized and
-`T`'s ['copy constructor] fails, `*this` is left properly uninitialized.
+* [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `CopyAssignable`.
+* [*Effects:]
+  * If `!*this && !rhs` no effect, otherwise
+  * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
+  * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `*rhs`, otherwise
+  * (if `bool(*this) && bool(rhs)`) assigns `*rhs` to the contained value.
+* [*Returns:] `*this`;
+* [*Postconditions:] `bool(rhs) == bool(*this)`. 
+* [*Exception Safety:] If any exception is thrown, the initialization state of `*this` and `rhs` remains unchanged.
+If an exception is thrown during the call to `T`'s copy constructor, no effect.
+If an exception is thrown during the call to `T`'s copy assignment, the state of its contained value is as defined by the exception safety guarantee of `T`'s copy assignment.
 * [*Example:]
 ``
 T v;
@@ -667,9 +666,10 @@ __SPACE__
   * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
   * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`, otherwise
   * (if `bool(*this) && bool(rhs)`) assigns `std::move(*rhs)` to the contained value.
+* [*Returns:] `*this`;
 * [*Postconditions:] `bool(rhs) == bool(*this)`. 
 * [*Remarks:] The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
-* [*Exception Safety:] If any exception is thrown, the initialization state of `*this` and `rhs` remain unchanged. If an exception is
+* [*Exception Safety:] If any exception is thrown, the initialization state of `*this` and `rhs` remains unchanged. If an exception is
 thrown during the call to `T`'s move constructor, the state of `*rhs` is determined by the exception safety guarantee
 of `T`'s move constructor. If an exception is thrown during the call to T's move-assignment, the state of `**this` and `*rhs` is determined by the exception safety guarantee of T's move assignment.
 * [*Example:]
