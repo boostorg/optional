@@ -17,18 +17,18 @@
 Let's write and use a converter function that converts an a `std::string` to an `int`. It is possible that for a given string (e.g. `"cat"`) there exist no value of type `int` capable of representing the conversion result. We do not consider such situation an error. We expect that the converter can be used only to check if the conversion is possible. A natural signature for this function can be:
 
     #include <boost/optional.hpp>
-    boost::optionl<int> convert(const std::string& text);
+    boost::optional<int> convert(const std::string& text);
 
 All necessary functionality can be included with one header `<boost/optional.hpp>`. The above function signature means that the function can either return a value of type `int` or a flag indicating that no value of `int` is available. This does not indicate an error. It is like one additional value of `int`. This is how we can use our function:
 
     const std::string& text = /*... */;
-    boost::optionl<int> oi = convert(text); // move-construct
-    if (oi)                                 // contextual conversion to bool
-      int i = *oi;                          // operator*
+    boost::optional<int> oi = convert(text); // move-construct
+    if (oi)                                  // contextual conversion to bool
+      int i = *oi;                           // operator*
     
 In order to test if `optional` contains a value, we use the contextual conversion to type `bool`. Because of this we can combine the initialization of the optional object and the test into one instruction:
 
-    if (boost::optionl<int> oi = convert(text))
+    if (boost::optional<int> oi = convert(text))
       int i = *oi;
 
 We extract the contained value with `operator*` (and with `operator->` where it makes sense). An attempt to extract the contained value of an uninitialized optional object is an ['undefined behaviour] (UB). This implementation guards the call with `BOOST_ASSERT`. Therefore you should be sure that the contained value is there before extracting. For instance, the following code is reasonably UB-safe:
@@ -50,16 +50,19 @@ This version throws an exception upon an attempt to access a non-existent contai
     
 This uses the `atoi`-like approach to conversions: if `text` does not represent an integral number just return `0`. Finally, you can provide a callback to be called when trying to access the contained value fails:
 
-    int l = convert(text).value_or_eval([]() -> int { 
-      cout << "could not convert; using -1 instead" << endl; 
+    int fallback_to_default()
+    {
+      cerr << "could not convert; using -1 instead" << endl; 
       return -1;
-    });
+    }
+    
+    int l = convert(text).value_or_eval(fallback_to_default);
 
 This will call the provided callback and return whatever the callback returns. The callback can have side effects: they will only be observed when the optional object does not contain a value.
 
 Now, let's consider how function `convert` can be implemented.
 
-    boost::optionl<int> convert(const std::string& text)
+    boost::optional<int> convert(const std::string& text)
     {  
       std::stringstream s(text);
       int i;
@@ -77,9 +80,9 @@ Observe the two return statements. `return i` uses the converting constructor th
 
 We could write function `convert` in a slightly different manner, so that it has a single `return`-statement:
 
-    boost::optionl<int> convert(const std::string& text)
+    boost::optional<int> convert(const std::string& text)
     {
-      boost::optionl<int> ans;
+      boost::optional<int> ans;
       std::stringstream s(text);
       int i;
       if ((s >> i) && s.get() == std::char_traits<char>::eof())

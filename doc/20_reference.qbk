@@ -326,7 +326,7 @@ __SPACE__
 value is another reference to the same object referenced by `*rhs`; else
 `*this` is uninitialized.
 * [*Throws:] Nothing.
-* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will reefer to the
+* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will refer to the
 same object (they alias).
 * [*Example:]
 ``
@@ -360,7 +360,8 @@ __SPACE__
 * [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
 its value is move constructed from `rhs`; else `*this` is uninitialized.
 * [*Throws:] Whatever `T::T( T&& )` throws.
-* [*Notes:] If `rhs` is initialized, `T::T( T && )` is called. The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value`.
+* [*Remarks:] The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value`.
+* [*Notes:] If `rhs` is initialized, `T::T( T && )` is called.
 * [*Exception Safety:] Exceptions can only be thrown during
 `T::T( T&& );` in that case, `rhs` remains initialized and the value of `*rhs` is determined by exception safety of `T::T(T&&)`.
 * [*Example:]
@@ -390,7 +391,7 @@ __SPACE__
 value is another reference to the same object referenced by `*rhs`; else
 `*this` is uninitialized.
 * [*Throws:] Nothing.
-* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will reefer to the
+* [*Notes:] If `rhs` is initialized, both `*this` and `*rhs` will refer to the
 same object (they alias).
 * [*Example:]
 ``
@@ -599,18 +600,17 @@ __SPACE__
 
 [: `optional& optional<T` ['(not a ref)]`>::operator= ( optional const& rhs ) ;`]
 
-* [*Effect:] Assigns another `optional` to an `optional`.
-* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
-its value is a ['copy] of the value of `rhs`; else `*this` is uninitialized.
-* [*Throws:] Whatever `T::operator( T const&)` or  `T::T( T const& )` throws.
-* [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
-['assignment operator] is used. If `*this` is initially initialized but `rhs` is
-uninitialized, `T`'s [destructor] is called. If `*this` is initially uninitialized
-but `rhs` is initialized, `T`'s ['copy constructor] is called.
-* [*Exception Safety:] In the event of an exception, the initialization state of
-`*this` is unchanged and its value unspecified as far as optional is concerned
-(it is up to `T`'s `operator=()`). If `*this` is initially uninitialized and
-`T`'s ['copy constructor] fails, `*this` is left properly uninitialized.
+* [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `CopyAssignable`.
+* [*Effects:]
+  * If `!*this && !rhs` no effect, otherwise
+  * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
+  * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `*rhs`, otherwise
+  * (if `bool(*this) && bool(rhs)`) assigns `*rhs` to the contained value.
+* [*Returns:] `*this`;
+* [*Postconditions:] `bool(rhs) == bool(*this)`. 
+* [*Exception Safety:] If any exception is thrown, the initialization state of `*this` and `rhs` remains unchanged.
+If an exception is thrown during the call to `T`'s copy constructor, no effect.
+If an exception is thrown during the call to `T`'s copy assignment, the state of its contained value is as defined by the exception safety guarantee of `T`'s copy assignment.
 * [*Example:]
 ``
 T v;
@@ -660,18 +660,18 @@ __SPACE__
 
 [: `optional& optional<T` ['(not a ref)]`>::operator= ( optional&& rhs ) noexcept(`['see below]`);`]
 
-* [*Effect:] Move-assigns another `optional` to an `optional`.
-* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
-its value is moved from `*rhs`, `rhs` remains initialized; else `*this` is uninitialized.
-* [*Throws:] Whatever `T::operator( T&& )` or  `T::T( T && )` throws.
-* [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
-['move assignment operator] is used. If `*this` is initially initialized but `rhs` is
-uninitialized, `T`'s [destructor] is called. If `*this` is initially uninitialized
-but `rhs` is initialized, `T`'s ['move constructor] is called. The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
-* [*Exception Safety:] In the event of an exception, the initialization state of
-`*this` is unchanged and its value unspecified as far as optional is concerned
-(it is up to `T`'s `operator=()`). If `*this` is initially uninitialized and
-`T`'s ['move constructor] fails, `*this` is left properly uninitialized.
+* [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `MoveAssignable`.
+* [*Effects:]
+  * If `!*this && !rhs` no effect, otherwise
+  * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
+  * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`, otherwise
+  * (if `bool(*this) && bool(rhs)`) assigns `std::move(*rhs)` to the contained value.
+* [*Returns:] `*this`;
+* [*Postconditions:] `bool(rhs) == bool(*this)`. 
+* [*Remarks:] The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
+* [*Exception Safety:] If any exception is thrown, the initialization state of `*this` and `rhs` remains unchanged. If an exception is
+thrown during the call to `T`'s move constructor, the state of `*rhs` is determined by the exception safety guarantee
+of `T`'s move constructor. If an exception is thrown during the call to T's move-assignment, the state of `**this` and `*rhs` is determined by the exception safety guarantee of T's move assignment.
 * [*Example:]
 ``
 optional<T> opt(T(2)) ;
@@ -749,6 +749,8 @@ optional<T> opt0(v);
 optional<U> opt1;
 
 opt1 = std::move(opt0) ;
+assert ( opt0 );
+assert ( opt1 ) 
 assert ( *opt1 == static_cast<U>(v) ) ;
 ``
 
@@ -932,8 +934,7 @@ __SPACE__
 [: `template<class U> T optional<T>::value_or(U && v) const& ;`]
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
-* [*Returns:] `bool(*this) ? **this : static_cast<T>(std::forward<U>(v))`.
-* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Effects:] `if (*this) return **this; else return std::forward<U>(v);`.
 * [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function. On compilers without rvalue reference support the type of `v` becomes `U const&`.
 
 __SPACE__
@@ -943,8 +944,7 @@ __SPACE__
 [: `template<class U> T optional<T>::value_or(U && v) && ;`]
 
 * [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `U &&` is convertible to `T`.
-* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(std::forward<U>(v))`.
-* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Effects:] `if (*this) return std::move(**this); else return std::forward<U>(v);`.
 * [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
@@ -954,9 +954,8 @@ __SPACE__
 [: `template<class F> T optional<T>::value_or_eval(F f) const& ;`]
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `F` models a __SGI_GENERATOR__ whose result type is convertible to `T`.
-* [*Returns:] `bool(*this) ? **this : static_cast<T>(f())`.
-* [*Throws:] Any exception thrown by the selected constructor of `T` or by `f`.
-* [*Notes:] Function `f` is only evaluated if `bool(*this) == false`. On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function.
+* [*Effects:] `if (*this) return **this; else return f();`.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is replaced with the `const`-qualified member function.
 * [*Example:]
 ``
 int complain_and_0()
@@ -982,9 +981,8 @@ __SPACE__
 [: `template<class F> T optional<T>::value_or_eval(F f) && ;`]
 
 * [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `F` models a __SGI_GENERATOR__ whose result type is convertible to `T`.
-* [*Returns:] `bool(*this) ? std::move(**this) : static_cast<T>(f())`.
-* [*Throws:] Any exception thrown by the selected constructor of `T` or by `f`.
-* [*Notes:] Function `f` is only evaluated if `bool(*this) == false`. On compilers that do not support ref-qualifiers on member functions this overload is not present.
+* [*Effects:] `if (*this) return std::move(**this); else return f();`.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
 
@@ -1146,38 +1144,28 @@ __SPACE__
 
 [: `bool operator == ( optional<T> const& x, optional<T> const& y );`]
 
-* [*Requires:] `T` shall meet requirements of `EqualityComparable`.
+* [*Requires:] `T` shall meet requirements of __SGI_EQUALITY_COMPARABLE__.
 * [*Returns:] If both `x` and `y` are initialized, `(*x == *y)`. If only
 `x` or `y` is initialized, `false`. If both are uninitialized, `true`.
-* [*Throws:] Nothing.
 * [*Notes:] Pointers have shallow relational operators while `optional` has
-deep relational operators. Do not use `operator ==` directly in generic
+deep relational operators. Do not use `operator==` directly in generic
 code which expect to be given either an `optional<T>` or a pointer; use
 __FUNCTION_EQUAL_POINTEES__ instead
 * [*Example:]
 ``
-T x(12);
-T y(12);
-T z(21);
-optional<T> def0 ;
-optional<T> def1 ;
-optional<T> optX(x);
-optional<T> optY(y);
-optional<T> optZ(z);
+optional<T> oN, oN_;
+optional<T> o1(T(1)), o1_(T(1));
+optional<T> o2(T(2));
 
-// Identity always hold
-assert ( def0 == def0 );
-assert ( optX == optX );
+assert ( oN == oN );  // Identity implies equality
+assert ( o1 == o1 );  //
 
-// Both uninitialized compare equal
-assert ( def0 == def1 );
+assert ( oN == oN_ ); // Both uninitialized compare equal
 
-// Only one initialized compare unequal.
-assert ( def0 != optX );
+assert ( oN != o1 );  // Initialized unequal to initialized.
 
-// Both initialized compare as (*lhs == *rhs)
-assert ( optX == optY ) ;
-assert ( optX != optZ ) ;
+assert ( o1 == o1_ ); // Both initialized compare as (*lhs == *rhs)
+assert ( o1 != o2 );  //
 ``
 
 __SPACE__
@@ -1186,35 +1174,29 @@ __SPACE__
 
 [: `bool operator < ( optional<T> const& x, optional<T> const& y );`]
 
-* [*Requires:] `T` shall meet requirements of `LessThanComparable`.
-* [*Returns:] If `y` is not initialized, `false`. If `y` is initialized
-and `x` is not initialized, `true`. If both `x` and `y` are initialized,
-`(*x < *y)`.
-* [*Throws:] Nothing.
+* [*Requires:] Expression `*x < *y` shall be well-formed and its result shall be convertible to `bool`.
+* [*Returns:] `(!y) ? false : (!x) ? true : *x < *y`.
 * [*Notes:] Pointers have shallow relational operators while `optional` has
-deep relational operators. Do not use `operator <` directly in generic code
-which expect to be given either an `optional<T>` or a pointer; use __FUNCTION_LESS_POINTEES__ instead.
+deep relational operators. Do not use `operator<` directly in generic code
+which expect to be given either an `optional<T>` or a pointer; use __FUNCTION_LESS_POINTEES__ instead. `T` need not be __SGI_LESS_THAN_COMPARABLE__. Only single `operator<` is required. Other relational operations are defined in terms of this one. If `T`'s `operator<` satisfies the axioms of __SGI_LESS_THAN_COMPARABLE__ (transitivity, antisymmetry and irreflexivity), `optinal<T>` is __SGI_LESS_THAN_COMPARABLE__.
 * [*Example:]
 ``
-T x(12);
-T y(34);
-optional<T> def ;
-optional<T> optX(x);
-optional<T> optY(y);
+optional<T> oN, oN_;
+optional<T> o0(T(0));
+optional<T> o1(T(1));
 
-// Identity always hold
-assert ( !(def < def) );
-assert ( optX == optX );
+assert ( !(oN < oN) );  // Identity implies equivalence
+assert ( !(o1 < o1) );
 
-// Both uninitialized compare equal
-assert ( def0 == def1 );
+assert ( !(oN < oN_) ); // Two uninitialized are equivalent
+assert ( !(oN_ < oN) );
 
-// Only one initialized compare unequal.
-assert ( def0 != optX );
+assert ( oN < o0 );     // Uninitialized is less than initialized
+assert ( !(o0 < oN) );
 
-// Both initialized compare as (*lhs == *rhs)
-assert ( optX == optY ) ;
-assert ( optX != optZ ) ;
+assert ( o1 < o2 ) ;    // Two initialized compare as (*lhs < *rhs)
+assert ( !(o2 < o1) ) ;
+assert ( !(o2 < o2) ) ;
 ``
 
 __SPACE__
@@ -1224,7 +1206,6 @@ __SPACE__
 [: `bool operator != ( optional<T> const& x, optional<T> const& y );`]
 
 * [*Returns: ] `!( x == y );`
-* [*Throws:] Nothing.
 
 __SPACE__
 
@@ -1233,7 +1214,6 @@ __SPACE__
 [: `bool operator > ( optional<T> const& x, optional<T> const& y );`]
 
 * [*Returns: ] `( y < x );`
-* [*Throws:] Nothing.
 
 __SPACE__
 
@@ -1242,7 +1222,6 @@ __SPACE__
 [: `bool operator <= ( optional<T> const& x, optional<T> const& y );`]
 
 * [*Returns: ] `!( y < x );`
-* [*Throws:] Nothing.
 
 __SPACE__
 
@@ -1250,15 +1229,17 @@ __SPACE__
 
 [: `bool operator >= ( optional<T> const& x, optional<T> const& y );`]
 
-* [*Returns: ] `!( x<y );`
-* [*Throws:] Nothing.
+* [*Returns: ] `!( x < y );`
+
+__SPACE__
 
 [#reference_operator_compare_equal_optional_none]
 
 [: `bool operator == ( optional<T> const& x, none_t ) noexcept;`]
+[: `bool operator == ( none_t, optional<T> const& x ) noexcept;`]
 
 * [*Returns:] `!x`.
-* [*Notes:] `T` need not meet requirements of `EqualityComparable`.
+* [*Notes:] `T` need not meet requirements of __SGI_EQUALITY_COMPARABLE__.
 
 
 __SPACE__
@@ -1266,6 +1247,7 @@ __SPACE__
 [#reference_operator_compare_not_equal_optional_none]
 
 [: `bool operator != ( optional<T> const& x, none_t ) noexcept;`]
+[: `bool operator != ( none_t, optional<T> const& x ) noexcept;`]
 
 * [*Returns: ] `!( x == y );`
 
@@ -1276,19 +1258,15 @@ __SPACE__
 
 [: `void swap ( optional<T>& x, optional<T>& y ) ;`]
 
-* [*Effect:] If both `x` and `y` are initialized, calls `swap(*x,*y)`
-using `std::swap`. If only one is initialized, say `x`, calls:
-`y.reset(*x); x.reset();` If none is initialized, does nothing.
+* [*Requires:] Lvalues of type `T` shall be swappable and `T` shall be __MOVE_CONSTRUCTIBLE__.
+* [*Effects:]
+  * If `!*this && !rhs`, no effect, otherwise
+  * if `bool(*this) && !rhs`, initializes the contained value of `rhs` as if direct-initializing an object of type `T` with the expression `std::move(*(*this))`, followed by `val->T::~T()`, `*this` does not contain a value and `rhs` contains a value, otherwise
+  * if `!*this && bool(rhs)`, initializes the contained value of `*this` as if direct-initializing an object of type `T` with the expression `std::move(*rhs)`, followed by `rhs.val->T::~T()`, `*this` contains a value and `rhs` does not contain a value, otherwise
+  * (if `bool(*this) && bool(rhs)`) calls `swap(*(*this), *rhs)`.
 * [*Postconditions:] The states of `x` and `y` interchanged.
 * [*Throws:] If both are initialized, whatever `swap(T&,T&)` throws. If only
 one is initialized, whatever `T::T ( T&& )` throws.
-* [*Notes:] If both are initialized, `swap(T&,T&)` is used unqualified but
-with `std::swap` introduced in scope.
-If only one is initialized, `T::~T()` and `T::T( T&& )` is called.
-* [*Exception Safety:] If both are initialized, this operation has the
-exception safety guarantees of `swap(T&,T&)`.
-If only one is initialized, it has the same basic guarantee as
-`optional<T>::operator= ( T&& )`.
 * [*Example:]
 ``
 T x(12);

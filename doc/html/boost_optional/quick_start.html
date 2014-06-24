@@ -53,7 +53,7 @@
         is possible. A natural signature for this function can be:
       </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">optionl</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">convert</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">);</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">convert</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">);</span>
 </pre>
 <p>
         All necessary functionality can be included with one header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">optional</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>.
@@ -65,16 +65,16 @@
         can use our function:
       </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span> <span class="special">=</span> <span class="comment">/*... */</span><span class="special">;</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">optionl</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">oi</span> <span class="special">=</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">text</span><span class="special">);</span> <span class="comment">// move-construct</span>
-<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oi</span><span class="special">)</span>                                 <span class="comment">// contextual conversion to bool</span>
-  <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">oi</span><span class="special">;</span>                          <span class="comment">// operator*</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">oi</span> <span class="special">=</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">text</span><span class="special">);</span> <span class="comment">// move-construct</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">oi</span><span class="special">)</span>                                  <span class="comment">// contextual conversion to bool</span>
+  <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">oi</span><span class="special">;</span>                           <span class="comment">// operator*</span>
 </pre>
 <p>
         In order to test if <code class="computeroutput"><span class="identifier">optional</span></code>
         contains a value, we use the contextual conversion to type <code class="computeroutput"><span class="keyword">bool</span></code>. Because of this we can combine the initialization
         of the optional object and the test into one instruction:
       </p>
-<pre class="programlisting"><span class="keyword">if</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optionl</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">oi</span> <span class="special">=</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">text</span><span class="special">))</span>
+<pre class="programlisting"><span class="keyword">if</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">oi</span> <span class="special">=</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">text</span><span class="special">))</span>
   <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">oi</span><span class="special">;</span>
 </pre>
 <p>
@@ -114,10 +114,13 @@
         Finally, you can provide a callback to be called when trying to access the
         contained value fails:
       </p>
-<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">l</span> <span class="special">=</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">text</span><span class="special">).</span><span class="identifier">value_or_eval</span><span class="special">([]()</span> <span class="special">-&gt;</span> <span class="keyword">int</span> <span class="special">{</span>
-  <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"could not convert; using -1 instead"</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">fallback_to_default</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="identifier">cerr</span> <span class="special">&lt;&lt;</span> <span class="string">"could not convert; using -1 instead"</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
   <span class="keyword">return</span> <span class="special">-</span><span class="number">1</span><span class="special">;</span>
-<span class="special">});</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">l</span> <span class="special">=</span> <span class="identifier">convert</span><span class="special">(</span><span class="identifier">text</span><span class="special">).</span><span class="identifier">value_or_eval</span><span class="special">(</span><span class="identifier">fallback_to_default</span><span class="special">);</span>
 </pre>
 <p>
         This will call the provided callback and return whatever the callback returns.
@@ -128,7 +131,7 @@
         Now, let's consider how function <code class="computeroutput"><span class="identifier">convert</span></code>
         can be implemented.
       </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optionl</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">convert</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">)</span>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">convert</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">)</span>
 <span class="special">{</span>
   <span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span> <span class="identifier">s</span><span class="special">(</span><span class="identifier">text</span><span class="special">);</span>
   <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
