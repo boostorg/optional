@@ -19,8 +19,9 @@ namespace boost {
 class bad_optional_access : public std::logic_error
 {
 public:
-  explicit bad_optional_access(const std::string& what_arg) : std::logic_error(what_arg) {}
-  explicit bad_optional_access(const char* what_arg) : std::logic_error(what_arg) {}
+  bad_optional_access()
+    : std::logic_error("Attempted to access the value of an uninitialized optional object.")
+    {}
 };
 
 } // namespace boost

@@ -1337,33 +1337,37 @@
           <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
           <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="special">&amp;&amp;;</span></code>
         </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+          <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span></code>
+          <span class="emphasis"><em>(not a ref)</em></span><code class="computeroutput"><span class="special">&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">&amp;&amp;;</span></code>
+        </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
-            is <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>
-            and <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initialized.
+            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> contains a value.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> A move-constructed copy the
-            contained value.
+            <span class="bold"><strong>Effects:</strong></span> Equivalent to <code class="computeroutput"><span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">val</span><span class="special">);</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Whatever the <code class="computeroutput"><span class="identifier">T</span></code>'s
-            constructor selected for the move throws.
+            <span class="bold"><strong>Remarks:</strong></span> If <code class="computeroutput"><span class="identifier">T</span></code>
+            is not <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>,
+            the program is ill-formed.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> The requirement is asserted via
             <code class="computeroutput"><span class="identifier">BOOST_ASSERT</span><span class="special">()</span></code>.
-            On compilers that do not support ref-qualifiers on member functions this
-            overload is not present.
+            On GCC compiler the second overload is not present, as this compiler
+            incorrectly implements binding of references to const prvalues. On compilers
+            that do not support ref-qualifiers on member functions both these overloads
+            are not present.
           </li>
 </ul></div>
 <p>
         <span class="inlinemediaobject"><img src="../../images/space.png" alt="space"></span>
       </p>
 <div class="blockquote"><blockquote class="blockquote"><p>
-          <code class="computeroutput"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">;</span></code>
+          <code class="computeroutput"><span class="identifier">T</span> <span class="special">&amp;</span>
+          <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">;</span></code>
         </p></blockquote></div>
 <div class="blockquote"><blockquote class="blockquote"><p>
           <code class="computeroutput"><span class="identifier">T</span> <span class="special">&amp;</span>
@@ -1372,6 +1376,11 @@
 <div class="blockquote"><blockquote class="blockquote"><p>
           <code class="computeroutput"><span class="identifier">T</span> <span class="special">&amp;</span>
           <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="special">&amp;&amp;</span> <span class="special">;</span></code>
+        </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+          <code class="computeroutput"><span class="identifier">T</span> <span class="special">&amp;</span>
+          <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">&amp;&amp;</span>
+          <span class="special">;</span></code>
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -1387,9 +1396,11 @@
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> The requirement is asserted via
             <code class="computeroutput"><span class="identifier">BOOST_ASSERT</span><span class="special">()</span></code>.
-            On compilers that do not support ref-qualifiers on member functions these
-            three overloads are replaced with the classical two: a <code class="computeroutput"><span class="keyword">const</span></code> and non-<code class="computeroutput"><span class="keyword">const</span></code>
-            member functions.
+            On GCC compiler the fourth overload is not present, as this compiler
+            incorrectly implements binding of references to const prvalues. On compilers
+            that do not support ref-qualifiers on member functions these four overloads
+            are replaced with the classical two: a <code class="computeroutput"><span class="keyword">const</span></code>
+            and non-<code class="computeroutput"><span class="keyword">const</span></code> member functions.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Example:</strong></span>
@@ -1415,13 +1426,7 @@
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> A reference to the contained
-            value, if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initialized.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> An instance of <code class="computeroutput"><span class="identifier">bad_optional_access</span></code>, if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is not initialized.
+            <span class="bold"><strong>Effects:</strong></span> Equivalent to <code class="computeroutput"><span class="keyword">return</span> <span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="special">*</span><span class="identifier">val</span> <span class="special">:</span> <span class="keyword">throw</span> <span class="identifier">bad_optional_access</span><span class="special">();</span></code>.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
@@ -1452,22 +1457,24 @@
           <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span> <span class="special">&amp;&amp;</span>
           <span class="special">;</span></code>
         </p></blockquote></div>
+<div class="blockquote"><blockquote class="blockquote"><p>
+          <code class="computeroutput"><span class="identifier">T</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">()</span> <span class="keyword">const</span><span class="special">&amp;&amp;</span> <span class="special">;</span></code>
+        </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
-            is <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>.
+            <span class="bold"><strong>Effects:</strong></span> Equivalent to <code class="computeroutput"><span class="keyword">return</span> <span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">val</span><span class="special">)</span> <span class="special">:</span> <span class="keyword">throw</span>
+            <span class="identifier">bad_optional_access</span><span class="special">();</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Returns:</strong></span> A move-constructed copy of
-            the contained value, if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized.
+            <span class="bold"><strong>Remarks:</strong></span> If <code class="computeroutput"><span class="identifier">T</span></code>
+            is not <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>,
+            the program is ill-formed.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> An instance of <code class="computeroutput"><span class="identifier">bad_optional_access</span></code>, if <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is not initialized.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
-            ref-qualifiers on member functions this overload is not present.
+            <span class="bold"><strong>Notes:</strong></span> On GCC compiler the second overload
+            is not present, as this compiler incorrectly implements binding of references
+            to const prvalues. On compilers that do not support ref-qualifiers on
+            member functions both these overloads are not present.
           </li>
 </ul></div>
 <p>
@@ -1481,13 +1488,14 @@
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
-            is <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a> and <code class="computeroutput"><span class="identifier">U</span> <span class="special">&amp;&amp;</span></code>
-            is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
+            <span class="bold"><strong>Effects:</strong></span> Equivalent to <code class="computeroutput"><span class="keyword">if</span> <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="special">**</span><span class="keyword">this</span><span class="special">;</span> <span class="keyword">else</span> <span class="keyword">return</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">);</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Effects:</strong></span> <code class="computeroutput"><span class="keyword">if</span>
-            <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="special">**</span><span class="keyword">this</span><span class="special">;</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">);</span></code>.
+            <span class="bold"><strong>Remarks:</strong></span> If <code class="computeroutput"><span class="identifier">T</span></code>
+            is not <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a> or <code class="computeroutput"><span class="identifier">U</span> <span class="special">&amp;&amp;</span></code>
+            is not convertible to <code class="computeroutput"><span class="identifier">T</span></code>,
+            the program is ill-formed.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
@@ -1507,15 +1515,14 @@
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
-            is <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>
-            and <code class="computeroutput"><span class="identifier">U</span> <span class="special">&amp;&amp;</span></code>
-            is convertible to <code class="computeroutput"><span class="identifier">T</span></code>.
+            <span class="bold"><strong>Effects:</strong></span> Equivalent to <code class="computeroutput"><span class="keyword">if</span> <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">);</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">);</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Effects:</strong></span> <code class="computeroutput"><span class="keyword">if</span>
-            <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">);</span> <span class="keyword">else</span> <span class="keyword">return</span>
-            <span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">v</span><span class="special">);</span></code>.
+            <span class="bold"><strong>Remarks:</strong></span> If <code class="computeroutput"><span class="identifier">T</span></code>
+            is not <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>
+            or <code class="computeroutput"><span class="identifier">U</span> <span class="special">&amp;&amp;</span></code>
+            is not convertible to <code class="computeroutput"><span class="identifier">T</span></code>,
+            the program is ill-formed.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Notes:</strong></span> On compilers that do not support
