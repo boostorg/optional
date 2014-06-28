@@ -291,7 +291,7 @@ void test_uninitialized_access( T const* )
   {
     // This should throw because 'def' is uninitialized
     T const& n = def.get() ;
-    unused_variable(n);
+    boost::ignore_unused(n);
     passed = true ;
   }
   catch (...) {}
@@ -302,7 +302,7 @@ void test_uninitialized_access( T const* )
   {
     // This should throw because 'def' is uninitialized
     T const& n = *def ;
-    unused_variable(n);
+    boost::ignore_unused(n);
     passed = true ;
   }
   catch (...) {}
@@ -312,7 +312,7 @@ void test_uninitialized_access( T const* )
   try
   {
     T v(5) ;
-    unused_variable(v);
+    boost::ignore_unused(v);
     // This should throw because 'def' is uninitialized
     *def = v ;
     passed = true ;
@@ -325,7 +325,7 @@ void test_uninitialized_access( T const* )
   {
     // This should throw because 'def' is uninitialized
     T v = *(def.operator->()) ;
-    unused_variable(v);
+    boost::ignore_unused(v);
     passed = true ;
   }
   catch (...) {}

@@ -85,7 +85,7 @@ void test_function_value_for()
   {
     T& v = o0.value();
     BOOST_CHECK(false);
-    unused_variable(v);
+    boost::ignore_unused(v);
   }
   catch(boost::bad_optional_access const&)
   {
@@ -194,6 +194,19 @@ void test_function_value_or_eval()
     }
 }
 
+const optional<std::string> makeConstOptVal()
+{
+    return std::string("something");
+}
+
+void test_const_move()
+{
+    std::string s5 = *makeConstOptVal();
+    std::string s6 = makeConstOptVal().value();
+    boost::ignore_unused(s5);
+    boost::ignore_unused(s6);
+}
+
 
 #ifndef BOOST_NO_CXX11_REF_QUALIFIERS
 struct MoveOnly
@@ -223,13 +236,13 @@ void test_move_only_getters()
     MoveOnly m2 = makeMoveOnly().value();
     MoveOnly m3 = makeMoveOnly().value_or(MoveOnly(1));
     MoveOnly m4 = makeMoveOnly().value_or_eval(moveOnlyDefault);
-    unused_variable(m1);
-    unused_variable(m2);
-    unused_variable(m3);
-    unused_variable(m4);
+    boost::ignore_unused(m1);
+    boost::ignore_unused(m2);
+    boost::ignore_unused(m3);
+    boost::ignore_unused(m4);
 }
 
-#endif
+#endif // !defined BOOST_NO_CXX11_REF_QUALIFIERS
 
 int test_main( int, char* [] )
 {
@@ -238,6 +251,7 @@ int test_main( int, char* [] )
     test_function_value();
     test_function_value_or();
     test_function_value_or_eval();
+    test_const_move();
   }
   catch ( ... )
   {
