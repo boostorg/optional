@@ -1005,12 +1005,9 @@ class optional : public optional_detail::optional_base<T>
     // the behaviour is UNDEFINED
     // No-throw
 #ifndef BOOST_NO_CXX11_REF_QUALIFIERS
-    reference_const_type operator *() const&  { return this->get() ; }
-    reference_type       operator *() &       { return this->get() ; }
-    value_type           operator *() &&      { return boost::move(this->get()) ; }
-#ifdef BOOST_CLANG 
-    value_type           operator *() const&& { return boost::move(this->get()) ; }
-#endif
+    reference_const_type operator *() const& { return this->get() ; }
+    reference_type       operator *() &      { return this->get() ; }
+    reference_type_of_temporary_wrapper operator *() && { return boost::move(this->get()) ; }
 #else
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
@@ -1033,22 +1030,13 @@ class optional : public optional_detail::optional_base<T>
           throw_exception(bad_optional_access());
       }
       
-    value_type value() &&
+    reference_type_of_temporary_wrapper value() &&
       { 
         if (this->is_initialized())
           return boost::move(this->get()) ;
         else
           throw_exception(bad_optional_access());
       }
-#ifdef BOOST_CLANG      
-    value_type value() const&&
-      { 
-        if (this->is_initialized())
-          return boost::move(this->get()) ;
-        else
-          throw_exception(bad_optional_access());
-      }
-#endif
 
 #else 
     reference_const_type value() const

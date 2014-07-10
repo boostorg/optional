@@ -73,13 +73,11 @@
 
         T const& operator *() const& ; ``[link reference_optional_operator_asterisk __GO_TO__]``
         T&       operator *() & ; ``[link reference_optional_operator_asterisk __GO_TO__]``
-        T        operator *() && ; ``[link reference_optional_operator_asterisk_move __GO_TO__]``
-        T        operator *() const&& ; ``[link reference_optional_operator_asterisk_move __GO_TO__]``
+        T&&      operator *() && ; ``[link reference_optional_operator_asterisk_move __GO_TO__]``
         
         T const& value() const& ; ``[link reference_optional_value __GO_TO__]``
         T&       value() & ; ``[link reference_optional_value __GO_TO__]``
-        T        value() && ; ``[link reference_optional_value_move __GO_TO__]``
-        T        value() const&& ; ``[link reference_optional_value_move __GO_TO__]``
+        T&&      value() && ; ``[link reference_optional_value_move __GO_TO__]``
         
         template<class U> T value_or( U && v ) const& ; ``[link reference_optional_value_or __GO_TO__]``
         template<class U> T value_or( U && v ) && ; ``[link reference_optional_value_or_move __GO_TO__]``
@@ -864,25 +862,22 @@ __SPACE__
 
 [#reference_optional_operator_asterisk_move]
 
-[: `T optional<T` ['(not a ref)]`>::operator*() &&;`]
-[: `T optional<T` ['(not a ref)]`>::operator*() const&&;`]
+[: `T&& optional<T` ['(not a ref)]`>::operator*() &&;`]
 
 * [*Requires:] `*this` contains a value.
 * [*Effects:] Equivalent to `return std::move(*val);`.
-* [*Remarks:] If `T` is not __MOVE_CONSTRUCTIBLE__, the program is ill-formed.
-* [*Notes:] The requirement is asserted via `BOOST_ASSERT()`. On GCC compiler the second overload is not present, as this compiler incorrectly implements binding of references to const prvalues. On compilers that do not support ref-qualifiers on member functions both these overloads are not present.
+* [*Notes:] The requirement is asserted via `BOOST_ASSERT()`. On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
 
 [: `T & optional<T&>::operator*() const& ;`]
 [: `T & optional<T&>::operator*() & ;`]
 [: `T & optional<T&>::operator*() && ;`]
-[: `T & optional<T&>::operator*() const&& ;`]
 
 * [*Requires: ] `*this` is initialized
 * [*Returns:] [_The] reference contained.
 * [*Throws:] Nothing.
-* [*Notes:] The requirement is asserted via `BOOST_ASSERT()`. On GCC compiler the fourth overload is not present, as this compiler incorrectly implements binding of references to const prvalues. On compilers that do not support ref-qualifiers on member functions these four overloads are replaced with the classical two: a `const` and non-`const` member functions.
+* [*Notes:] The requirement is asserted via `BOOST_ASSERT()`. On compilers that do not support ref-qualifiers on member functions these three overloads are replaced with the classical two: a `const` and non-`const` member functions.
 * [*Example:]
 ``
 T v ;
@@ -922,12 +917,10 @@ __SPACE__
 
 [#reference_optional_value_move]
 
-[: `T optional<T>::value() && ;`]
-[: `T optional<T>::value() const&& ;`]
+[: `T&& optional<T>::value() && ;`]
 
 * [*Effects:] Equivalent to `return bool(*this) ? std::move(*val) : throw bad_optional_access();`.
-* [*Remarks:] If `T` is not __MOVE_CONSTRUCTIBLE__, the program is ill-formed.
-* [*Notes:] On GCC compiler the second overload is not present, as this compiler incorrectly implements binding of references to const prvalues. On compilers that do not support ref-qualifiers on member functions both these overloads are not present.
+* [*Notes:] On compilers that do not support ref-qualifiers on member functions this overload is not present.
 
 __SPACE__
 
