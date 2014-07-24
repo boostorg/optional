@@ -50,7 +50,7 @@ operator>>(std::basic_istream<CharType, CharTrait>& in, optional<T>& v)
   }
   else
   {
-	  // unset failbit, because extraction succeeded...
+    // unset failbit, because extraction succeeded...
     in.clear(before & ~std::ios::failbit);
     // but there is no value
     v.reset();
