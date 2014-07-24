@@ -28,13 +28,10 @@ inline
 std::basic_ostream<CharType, CharTrait>&
 operator<<(std::basic_ostream<CharType, CharTrait>& out, optional<T> const& v)
 {
-  if ( out.good() )
+  if (v && out.good())
   {
-    if ( !v )
-         out << "--" ;
-    else out << ' ' << *v ;
+    out << *v;
   }
-
   return out;
 }
 
@@ -43,34 +40,24 @@ inline
 std::basic_istream<CharType, CharTrait>&
 operator>>(std::basic_istream<CharType, CharTrait>& in, optional<T>& v)
 {
-  if (in.good())
+  if (!in.good())
+    return in;
+  std::ios::iostate before = in.rdstate();
+  T t;
+  if (in >> t)
   {
-    int d = in.get();
-    if (d == ' ')
-    {
-      T x;
-      in >> x;
-      v = x;
-    }
-    else
-    {
-      if (d == '-')
-      {
-        d = in.get();
-
-        if (d == '-')
-        {
-          v = none;
-          return in;
-        }
-      }
-
-      in.setstate( std::ios::failbit );
-    }
+	  v = t;
   }
-
+  else
+  {
+    // unset failbit, because extraction succeeded...
+    in.clear(before & ~std::ios::failbit);
+    // but there is no value
+    v.reset();
+  }
   return in;
 }
+
 
 } // namespace boost
 
