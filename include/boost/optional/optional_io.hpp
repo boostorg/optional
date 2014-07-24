@@ -28,13 +28,10 @@ inline
 std::basic_ostream<CharType, CharTrait>&
 operator<<(std::basic_ostream<CharType, CharTrait>& out, optional<T> const& v)
 {
-  if ( out.good() )
+  if (v && out.good())
   {
-    if ( !v )
-         out << "--" ;
-    else out << ' ' << *v ;
+    out << *v;
   }
-
   return out;
 }
 
