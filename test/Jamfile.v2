@@ -43,5 +43,7 @@ import testing ;
     [ compile-fail optional_test_ref_fail_assign_from_Urefref.cpp ]
     [ compile-fail optional_test_fail_explicit_convert_in_value_or.cpp ]
     [ compile-fail optional_test_fail_explicit_convert_in_value_or_call.cpp ]
+    [ run optional_test_COMPILER_CONVERSION_BUGS1.cpp ]
+    [ compile-fail optional_test_COMPILER_CONVERSION_BUGS2.cpp ]
   ;
 }
