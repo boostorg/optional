@@ -54,7 +54,7 @@ Distributed under the Boost Software License, Version 1.0.
 Class template `optional` is a wrapper for representing 'optional' (or 'nullable') objects who may not (yet) contain a valid value. Optional objects offer full value semantics; they are good for passing by value and usage inside STL containers. This is a header-only library.
 
 [heading Problem]
-Suppose we want to read a parameter form a config file which represents some integral value, let's call it `"MaxValue"`. It is possible that this parameter is not specified; such situation is no error. It is valid to not specify the parameter and in that case the program is supposed to behave slightly different. Also suppose that any possible value of type `int` is a valid value for `"MaxValue"`, so we cannot jut use `-1` to represent the absence of the parameter in the config file.
+Suppose we want to read a parameter form a config file which represents some integral value, let's call it `"MaxValue"`. It is possible that this parameter is not specified; such situation is no error. It is valid to not specify the parameter and in that case the program is supposed to behave slightly differently. Also, suppose that any possible value of type `int` is a valid value for `"MaxValue"`, so we cannot jut use `-1` to represent the absence of the parameter in the config file.
 
 [heading Solution]
 

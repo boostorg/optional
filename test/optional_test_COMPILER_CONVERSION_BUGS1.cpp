@@ -1,7 +1,9 @@
 struct A
 {
   A(int) {}
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
   A(A &&) {}
+#endif
 };
 
 struct B
