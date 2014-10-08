@@ -9,7 +9,7 @@ Type `optional<T>` is __SGI_EQUALITY_COMPARABLE__ whenever `T` is __SGI_EQUALITY
     
     assert(oN != o0);
     assert(o1 != oN);
-    assert(o2 != o1);
+    assert(o0 != o1);
     assert(oN == oN);
     assert(o0 == o0);
     
@@ -17,7 +17,7 @@ The converting constructor from `T` as well as from `boost::none` implies the ex
 
     assert(oN != 0);
     assert(o1 != boost::none);
-    assert(o2 != 1);
+    assert(o0 != 1);
     assert(oN == boost::none);
     assert(o0 == 0);
     
