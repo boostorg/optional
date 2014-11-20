@@ -1,7 +1,7 @@
 ﻿
 [section Relational operators]
 
-Type `optional<T>` is __SGI_EQUALITY_COMPARABLE__ whenever `T` is __SGI_EQUALITY_COMPARABLE__. Two optional objects containing a value compare in the same as their contained values. The uninitialized state of `optional<T>` is treated as a distinct value, equal to itself, and unequal to any value of type `T`:
+Type `optional<T>` is __SGI_EQUALITY_COMPARABLE__ whenever `T` is __SGI_EQUALITY_COMPARABLE__. Two optional objects containing a value compare in the same way as their contained values. The uninitialized state of `optional<T>` is treated as a distinct value, equal to itself, and unequal to any value of type `T`:
 
     boost::optional<int> oN = boost::none;
     boost::optional<int> o0 = 0;
