@@ -61,8 +61,8 @@ void test2( Opt o, Opt buff )
   s << o << " " << markv ;
   s >> buff >> mark ;
 
-  BOOST_ASSERT( buff == o ) ;
-  BOOST_ASSERT( mark == markv ) ;
+  BOOST_CHECK( buff == o ) ;
+  BOOST_CHECK( mark == markv ) ;
 }
 
 
@@ -75,12 +75,32 @@ void test( T v, T w )
   test2( optional<T>  () , make_optional(w));
 }
 
-void
-test()
+
+template <class T>
+void subtest_tag_none_reversibility_with_optional(optional<T> ov)
 {
-    stringstream s ;
-    s << boost::none;
-    BOOST_ASSERT(s.str() == "--");
+  stringstream s;
+  s << boost::none;
+  s >> ov;
+  BOOST_CHECK(!ov);
+}
+
+template <class T>
+void subtest_tag_none_equivalence_with_optional()
+{
+  stringstream s, r;
+  optional<T> ov;
+  s << boost::none;
+  r << ov;
+  BOOST_CHECK(s.str() == r.str());
+}
+
+template <class T>
+void test_tag_none(T v)
+{
+  subtest_tag_none_reversibility_with_optional(optional<T>(v));
+  subtest_tag_none_reversibility_with_optional(optional<T>());
+  subtest_tag_none_equivalence_with_optional<T>();
 }
 
 
@@ -90,7 +110,8 @@ int test_main( int, char* [] )
   {
     test(1,2);
     test(string("hello"),string("buffer"));
-    test();
+    test_tag_none(10);
+    test_tag_none(string("text"));
   }
   catch ( ... )
   {

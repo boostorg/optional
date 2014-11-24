@@ -28,8 +28,12 @@ inline
 std::basic_ostream<CharType, CharTrait>&
 operator<<(std::basic_ostream<CharType, CharTrait>& out, none_t const&)
 {
+  if (out.good())
+  {
     out << "--";
-    return out;
+  }
+   
+  return out;
 }
 
 template<class CharType, class CharTrait, class T>
@@ -37,9 +41,9 @@ inline
 std::basic_ostream<CharType, CharTrait>&
 operator<<(std::basic_ostream<CharType, CharTrait>& out, optional<T> const& v)
 {
-  if ( out.good() )
+  if (out.good())
   {
-    if ( !v )
+    if (!v)
          out << "--" ;
     else out << ' ' << *v ;
   }
