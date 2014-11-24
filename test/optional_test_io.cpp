@@ -75,12 +75,22 @@ void test( T v, T w )
   test2( optional<T>  () , make_optional(w));
 }
 
+void
+test()
+{
+    stringstream s ;
+    s << boost::none;
+    BOOST_ASSERT(s.str() == "--");
+}
+
+
 int test_main( int, char* [] )
 {
   try
   {
     test(1,2);
     test(string("hello"),string("buffer"));
+    test();
   }
   catch ( ... )
   {

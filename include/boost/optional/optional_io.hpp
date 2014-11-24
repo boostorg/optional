@@ -23,6 +23,15 @@
 namespace boost
 {
 
+template<class CharType, class CharTrait>
+inline
+std::basic_ostream<CharType, CharTrait>&
+operator<<(std::basic_ostream<CharType, CharTrait>& out, none_t const&)
+{
+    out << "--";
+    return out;
+}
+
 template<class CharType, class CharTrait, class T>
 inline
 std::basic_ostream<CharType, CharTrait>&
