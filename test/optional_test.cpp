@@ -906,41 +906,6 @@ void test_no_implicit_conversions()
   test_no_implicit_conversions_impl(p);
 }
 
-struct A {} ;
-void test_conversions1()
-{
-  TRACE( std::endl << BOOST_CURRENT_FUNCTION );
-
-#ifndef BOOST_OPTIONAL_NO_CONVERTING_COPY_CTOR
-  char c = 20 ;
-  optional<char> opt0(c);
-  optional<int> opt1(opt0);
-  BOOST_CHECK(*opt1 == static_cast<int>(c));
-#endif
-
-#ifndef BOOST_OPTIONAL_NO_CONVERTING_ASSIGNMENT
-  float f = 21.22f ;
-  double d = f ;
-  optional<float> opt2(f) ;
-  optional<double> opt3 ;
-  opt3 = opt2 ;
-  BOOST_CHECK(*opt3 == d);
-#endif
-}
-
-void test_conversions2()
-{
-  TRACE( std::endl << BOOST_CURRENT_FUNCTION );
-
-  char c = 20 ;
-  optional<int> opt(c);
-  BOOST_CHECK( get(opt) == static_cast<int>(c));
-
-  float f = 21.22f ;
-  optional<double> opt1;
-  opt1 = f ;
-  BOOST_CHECK(*get(&opt1) == static_cast<double>(f));
-}
 
 
 namespace optional_swap_test
@@ -1307,8 +1272,6 @@ int test_main( int, char* [] )
     test_with_class_type();
     test_with_builtin_types();
     test_no_implicit_conversions();
-    test_conversions1();
-    test_conversions2();
     test_swap_tweaking();
     test_custom_addressof_operator();
   }

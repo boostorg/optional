@@ -17,8 +17,10 @@ import testing ;
 {
   test-suite optional :
     [ run optional_test.cpp ]
+    [ run optional_test_conversions_from_U.cpp ]
     [ run optional_test_tie.cpp ]
     [ run optional_test_ref.cpp ]
+    [ run optional_test_ref_portable_minimum.cpp ]
     [ run optional_test_inplace.cpp ]
     [ run optional_test_io.cpp ]
     [ run optional_test_move.cpp ]
