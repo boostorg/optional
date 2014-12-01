@@ -343,46 +343,6 @@ void test_optional_ref_to_movables()
     BOOST_CHECK(orm2->val == 4);
 }
 
-// these 4 classes have different noexcept signatures in move operations
-struct NothrowBoth {
-  NothrowBoth(NothrowBoth&&) BOOST_NOEXCEPT_IF(true) {};
-  void operator=(NothrowBoth&&) BOOST_NOEXCEPT_IF(true) {};
-};
-struct NothrowCtor {
-  NothrowCtor(NothrowCtor&&) BOOST_NOEXCEPT_IF(true) {};
-  void operator=(NothrowCtor&&) BOOST_NOEXCEPT_IF(false) {};
-};
-struct NothrowAssign {
-  NothrowAssign(NothrowAssign&&) BOOST_NOEXCEPT_IF(false) {};
-  void operator=(NothrowAssign&&) BOOST_NOEXCEPT_IF(true) {};
-};
-struct NothrowNone {
-  NothrowNone(NothrowNone&&) BOOST_NOEXCEPT_IF(false) {};
-  void operator=(NothrowNone&&) BOOST_NOEXCEPT_IF(false) {};
-};
-
-#ifndef BOOST_NO_NOEXCEPT
-
-void test_noexcept() // this is a compile-time test
-{
-    BOOST_STATIC_ASSERT(::boost::is_nothrow_move_constructible<optional<NothrowBoth> >::value);
-    BOOST_STATIC_ASSERT(::boost::is_nothrow_move_assignable<optional<NothrowBoth> >::value);
-    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowBoth>()));
-    
-    BOOST_STATIC_ASSERT(::boost::is_nothrow_move_constructible<optional<NothrowCtor> >::value);
-    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<optional<NothrowCtor> >::value);
-    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowCtor>()));
-    
-    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_constructible<optional<NothrowAssign> >::value);
-    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<optional<NothrowAssign> >::value);
-    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowAssign>()));
-    
-    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_constructible<optional<NothrowNone> >::value);
-    BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<optional<NothrowNone> >::value);
-    BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowNone>()));
-}
-#endif // !defned BOOST_NO_NOEXCEPT
-
 #endif
 
 int test_main( int, char* [] )

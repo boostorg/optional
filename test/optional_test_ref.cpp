@@ -278,51 +278,12 @@ void test_relops( T const* )
   BOOST_CHECK ( opt1 >= opt0 ) ;
 }
 
-template<class T>
-void test_none( T const* )
-{
-  TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
-
-  using boost::none ;
-
-  T a(1234);
-
-  optional<T&> def0 ;
-  optional<T&> def1(none) ;
-  optional<T&> non_def(a) ;
-
-  BOOST_CHECK ( def0    == none ) ;
-  BOOST_CHECK ( non_def != none ) ;
-  BOOST_CHECK ( !def1           ) ;
-
-  non_def = none ;
-  BOOST_CHECK ( !non_def ) ;
-}
-
-template<class T>
-void test_arrow( T const* )
-{
-  TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
-
-  T a(1234);
-
-  optional<T&>        oa(a) ;
-  optional<T&> const coa(a) ;
-  
-  BOOST_CHECK ( coa->V() == 1234 ) ;
-  
-  oa->V() = 4321 ;
-  
-  BOOST_CHECK ( a.V() = 4321 ) ;
-}
-
 void test_with_builtin_types()
 {
   TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
 
   test_basics( ARG(double) );
   test_relops( ARG(double) ) ;
-  test_none  ( ARG(double) ) ;
 }
 
 void test_with_class_type()
@@ -331,8 +292,6 @@ void test_with_class_type()
 
   test_basics( ARG(X) );
   test_relops( ARG(X) ) ;
-  test_none  ( ARG(X) ) ;
-  test_arrow ( ARG(X) ) ;
 
   BOOST_CHECK ( X::count == 0 ) ;
 }
