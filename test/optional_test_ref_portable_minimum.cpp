@@ -28,6 +28,7 @@ struct ScopeGuard // no copy/move ctor/assign
   int val_;
   explicit ScopeGuard(int v) : val_(v) {}
   int& val() { return val_; }
+  const int& val() const { return val_; }
   
 private:
   ScopeGuard(ScopeGuard const&);
@@ -37,6 +38,7 @@ private:
 struct Abstract
 {
   virtual int& val() = 0;
+  virtual const int& val() const = 0;
   virtual ~Abstract() {}
   Abstract(){}
   
@@ -50,6 +52,7 @@ struct Impl : Abstract
   int val_;
   Impl(int v) : val_(v) {}
   int& val() { return val_; }
+  const int& val() const { return val_; }
 };
 
 template <typename T>
@@ -80,6 +83,11 @@ int& val(int& i) { return i; }
 int& val(Abstract& a) { return a.val(); }
 int& val(ScopeGuard& g) { return g.val(); }
 
+bool operator==(const Abstract& l, const Abstract& r) { return l.val() == r.val(); }
+bool operator==(const ScopeGuard& l, const ScopeGuard& r) { return l.val() == r.val(); }
+
+bool operator<(const Abstract& l, const Abstract& r) { return l.val() < r.val(); }
+bool operator<(const ScopeGuard& l, const ScopeGuard& r) { return l.val() < r.val(); }
 // end testable classes
 
 template <typename T>
@@ -222,6 +230,193 @@ void test_rebinding_assignment_semantics()
   BOOST_TEST_EQ(val(v), 2);
 }
 
+template <typename T>
+void test_equality()
+{
+  typename concrete_type_of<T>::type v1(1), v2(2), v2_(2), v3(3);
+  optional<T&> o1(v1), o2(v2), o2_(v2_), o3(v3), o3_(v3), oN, oN_;
+  // o2 and o2_ point to different objects; o3 and o3_ point to the same object
+  
+  BOOST_TEST(oN  == oN);
+  BOOST_TEST(oN  == oN_);
+  BOOST_TEST(oN_ == oN);
+  BOOST_TEST(o1  == o1);
+  BOOST_TEST(o2  == o2);
+  BOOST_TEST(o2  == o2_);
+  BOOST_TEST(o2_ == o2);
+  BOOST_TEST(o3  == o3);
+  BOOST_TEST(o3  == o3_);
+  BOOST_TEST(!(oN == o1));
+  BOOST_TEST(!(o1 == oN));
+  BOOST_TEST(!(o2 == o1));
+  BOOST_TEST(!(o2 == oN));
+  
+  BOOST_TEST(!(oN  != oN));
+  BOOST_TEST(!(oN  != oN_));
+  BOOST_TEST(!(oN_ != oN));
+  BOOST_TEST(!(o1  != o1));
+  BOOST_TEST(!(o2  != o2));
+  BOOST_TEST(!(o2  != o2_));
+  BOOST_TEST(!(o2_ != o2));
+  BOOST_TEST(!(o3  != o3));
+  BOOST_TEST(!(o3  != o3_));
+  BOOST_TEST( (oN  != o1));
+  BOOST_TEST( (o1  != oN));
+  BOOST_TEST( (o2  != o1));
+  BOOST_TEST( (o2  != oN));
+}
+
+template <typename T>
+void test_order()
+{
+  typename concrete_type_of<T>::type v1(1), v2(2), v2_(2), v3(3);
+  optional<T&> o1(v1), o2(v2), o2_(v2_), o3(v3), o3_(v3), oN, oN_;
+  // o2 and o2_ point to different objects; o3 and o3_ point to the same object
+  
+  BOOST_TEST(!(oN  < oN));
+  BOOST_TEST(!(oN  < oN_));
+  BOOST_TEST(!(oN_ < oN));
+  BOOST_TEST(!(o1  < o1));
+  BOOST_TEST(!(o2  < o2));
+  BOOST_TEST(!(o2  < o2_));
+  BOOST_TEST(!(o2_ < o2));
+  BOOST_TEST(!(o3  < o3));
+  BOOST_TEST(!(o3  < o3_));
+  
+  BOOST_TEST( (oN  <= oN));
+  BOOST_TEST( (oN  <= oN_));
+  BOOST_TEST( (oN_ <= oN));
+  BOOST_TEST( (o1  <= o1));
+  BOOST_TEST( (o2  <= o2));
+  BOOST_TEST( (o2  <= o2_));
+  BOOST_TEST( (o2_ <= o2));
+  BOOST_TEST( (o3  <= o3));
+  BOOST_TEST( (o3  <= o3_));
+  
+  BOOST_TEST(!(oN  > oN));
+  BOOST_TEST(!(oN  > oN_));
+  BOOST_TEST(!(oN_ > oN));
+  BOOST_TEST(!(o1  > o1));
+  BOOST_TEST(!(o2  > o2));
+  BOOST_TEST(!(o2  > o2_));
+  BOOST_TEST(!(o2_ > o2));
+  BOOST_TEST(!(o3  > o3));
+  BOOST_TEST(!(o3  > o3_));
+  
+  BOOST_TEST( (oN  >= oN));
+  BOOST_TEST( (oN  >= oN_));
+  BOOST_TEST( (oN_ >= oN));
+  BOOST_TEST( (o1  >= o1));
+  BOOST_TEST( (o2  >= o2));
+  BOOST_TEST( (o2  >= o2_));
+  BOOST_TEST( (o2_ >= o2));
+  BOOST_TEST( (o3  >= o3));
+  BOOST_TEST( (o3  >= o3_));
+  
+  BOOST_TEST( (oN  < o1));
+  BOOST_TEST( (oN_ < o1));
+  BOOST_TEST( (oN  < o2));
+  BOOST_TEST( (oN_ < o2));
+  BOOST_TEST( (oN  < o2_));
+  BOOST_TEST( (oN_ < o2_));
+  BOOST_TEST( (oN  < o3));
+  BOOST_TEST( (oN_ < o3));
+  BOOST_TEST( (oN  < o3_));
+  BOOST_TEST( (oN_ < o3_));
+  BOOST_TEST( (o1  < o2));
+  BOOST_TEST( (o1  < o2_));
+  BOOST_TEST( (o1  < o3));
+  BOOST_TEST( (o1  < o3_));
+  BOOST_TEST( (o2  < o3));
+  BOOST_TEST( (o2_ < o3));
+  BOOST_TEST( (o2  < o3_));
+  BOOST_TEST( (o2_ < o3_));
+  
+  BOOST_TEST( (oN  <= o1));
+  BOOST_TEST( (oN_ <= o1));
+  BOOST_TEST( (oN  <= o2));
+  BOOST_TEST( (oN_ <= o2));
+  BOOST_TEST( (oN  <= o2_));
+  BOOST_TEST( (oN_ <= o2_));
+  BOOST_TEST( (oN  <= o3));
+  BOOST_TEST( (oN_ <= o3));
+  BOOST_TEST( (oN  <= o3_));
+  BOOST_TEST( (oN_ <= o3_));
+  BOOST_TEST( (o1  <= o2));
+  BOOST_TEST( (o1  <= o2_));
+  BOOST_TEST( (o1  <= o3));
+  BOOST_TEST( (o1  <= o3_));
+  BOOST_TEST( (o2  <= o3));
+  BOOST_TEST( (o2_ <= o3));
+  BOOST_TEST( (o2  <= o3_));
+  BOOST_TEST( (o2_ <= o3_));
+  
+  BOOST_TEST(!(oN  > o1));
+  BOOST_TEST(!(oN_ > o1));
+  BOOST_TEST(!(oN  > o2));
+  BOOST_TEST(!(oN_ > o2));
+  BOOST_TEST(!(oN  > o2_));
+  BOOST_TEST(!(oN_ > o2_));
+  BOOST_TEST(!(oN  > o3));
+  BOOST_TEST(!(oN_ > o3));
+  BOOST_TEST(!(oN  > o3_));
+  BOOST_TEST(!(oN_ > o3_));
+  BOOST_TEST(!(o1  > o2));
+  BOOST_TEST(!(o1  > o2_));
+  BOOST_TEST(!(o1  > o3));
+  BOOST_TEST(!(o1  > o3_));
+  BOOST_TEST(!(o2  > o3));
+  BOOST_TEST(!(o2_ > o3));
+  BOOST_TEST(!(o2  > o3_));
+  BOOST_TEST(!(o2_ > o3_));
+  
+  BOOST_TEST(!(oN  >= o1));
+  BOOST_TEST(!(oN_ >= o1));
+  BOOST_TEST(!(oN  >= o2));
+  BOOST_TEST(!(oN_ >= o2));
+  BOOST_TEST(!(oN  >= o2_));
+  BOOST_TEST(!(oN_ >= o2_));
+  BOOST_TEST(!(oN  >= o3));
+  BOOST_TEST(!(oN_ >= o3));
+  BOOST_TEST(!(oN  >= o3_));
+  BOOST_TEST(!(oN_ >= o3_));
+  BOOST_TEST(!(o1  >= o2));
+  BOOST_TEST(!(o1  >= o2_));
+  BOOST_TEST(!(o1  >= o3));
+  BOOST_TEST(!(o1  >= o3_));
+  BOOST_TEST(!(o2  >= o3));
+  BOOST_TEST(!(o2_ >= o3));
+  BOOST_TEST(!(o2  >= o3_));
+  BOOST_TEST(!(o2_ >= o3_));
+  
+  BOOST_TEST(!(o1  < oN));
+  BOOST_TEST(!(o1  < oN_));
+  BOOST_TEST(!(o2  < oN));
+  BOOST_TEST(!(o2  < oN_));
+  BOOST_TEST(!(o2_ < oN));
+  BOOST_TEST(!(o2_ < oN_));
+  BOOST_TEST(!(o3  < oN));
+  BOOST_TEST(!(o3  < oN_));
+  BOOST_TEST(!(o3_ < oN));
+  BOOST_TEST(!(o3_ < oN_));
+  BOOST_TEST(!(o2  < oN));
+  BOOST_TEST(!(o2_ < oN_));
+  BOOST_TEST(!(o3  < oN));
+  BOOST_TEST(!(o3_ < oN_));
+  BOOST_TEST(!(o3  < oN));
+  BOOST_TEST(!(o3  < oN_));
+  BOOST_TEST(!(o3_ < oN));
+  BOOST_TEST(!(o3_ < oN_));
+}
+
+template <typename T>
+void test_swap()
+{
+  typename concrete_type_of<T>::type v1(1), v2(2);
+  optional<T&> o1(v1), o1_(v1), o2(v2), o2_(v2), oN, oN_;
+  
+  // swap(o1, o1); DOESN'T WORK
+}
 
 template <typename T>
 void test_optional_ref()
@@ -232,6 +427,9 @@ void test_optional_ref()
   test_rebinding_assignment_semantics<T>();
   test_clearing_the_value<T>();
   test_arrow<T>();
+  test_equality<T>();
+  test_order<T>();
+  test_swap<T>();
 }
 
 int main()

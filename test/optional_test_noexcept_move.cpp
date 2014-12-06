@@ -41,6 +41,7 @@ struct NothrowNone {
   void operator=(NothrowNone&&) BOOST_NOEXCEPT_IF(false) {};
 };
 
+#if 0 // these also test type_traits, which are wrong
 void test_noexcept_as_defined() // this is a compile-time test
 {
   BOOST_STATIC_ASSERT(::boost::is_nothrow_move_constructible<NothrowBoth>::value);
@@ -56,7 +57,7 @@ void test_noexcept_as_defined() // this is a compile-time test
   BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<NothrowNone>::value);
 }
 
-void test_noexcept_on_optional() // this is a compile-time test
+void test_noexcept_on_optional_with_type_traits() // this is a compile-time test
 {
   BOOST_STATIC_ASSERT(::boost::is_nothrow_move_constructible<optional<NothrowBoth> >::value);
   BOOST_STATIC_ASSERT(::boost::is_nothrow_move_assignable<optional<NothrowBoth> >::value);
@@ -73,6 +74,35 @@ void test_noexcept_on_optional() // this is a compile-time test
   BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_constructible<optional<NothrowNone> >::value);
   BOOST_STATIC_ASSERT(!::boost::is_nothrow_move_assignable<optional<NothrowNone> >::value);
   BOOST_STATIC_ASSERT(BOOST_NOEXCEPT_EXPR(optional<NothrowNone>()));
+}
+#endif
+
+void test_noexcept_optional_with_operator() // compile-time test
+{
+  typedef optional<NothrowBoth>   ONx2;
+  typedef optional<NothrowCtor>   ONxC;
+  typedef optional<NothrowAssign> ONxA;
+  typedef optional<NothrowNone>   ONx0;
+  ONx2 onx2;
+  ONxC onxC;
+  ONxA onxA;
+  ONx0 onx0;
+  
+  BOOST_STATIC_ASSERT( BOOST_NOEXCEPT_EXPR( ONx2() ));
+  BOOST_STATIC_ASSERT( BOOST_NOEXCEPT_EXPR( ONx2(boost::move(onx2)) ));
+  BOOST_STATIC_ASSERT( BOOST_NOEXCEPT_EXPR( onx2 = ONx2() )); 
+  
+  BOOST_STATIC_ASSERT( BOOST_NOEXCEPT_EXPR( ONxC() ));
+  BOOST_STATIC_ASSERT( BOOST_NOEXCEPT_EXPR( ONxC(boost::move(onxC)) ));
+  BOOST_STATIC_ASSERT(!BOOST_NOEXCEPT_EXPR( onxC = ONxC() ));
+  
+  BOOST_STATIC_ASSERT( BOOST_NOEXCEPT_EXPR( ONxA() ));
+  BOOST_STATIC_ASSERT(!BOOST_NOEXCEPT_EXPR( ONxA(boost::move(onxA)) ));
+  BOOST_STATIC_ASSERT(!BOOST_NOEXCEPT_EXPR( onxA = ONxA() ));
+  
+  BOOST_STATIC_ASSERT( BOOST_NOEXCEPT_EXPR( ONx0() ));
+  BOOST_STATIC_ASSERT(!BOOST_NOEXCEPT_EXPR( ONx0(boost::move(onx0)) ));
+  BOOST_STATIC_ASSERT(!BOOST_NOEXCEPT_EXPR( onx0 = ONx0() ));
 }
 
 #endif // !defned BOOST_NO_NOEXCEPT
