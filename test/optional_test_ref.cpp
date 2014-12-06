@@ -219,71 +219,12 @@ void test_basics( T const* )
   check_ref_uninitialized(ob);
 }
 
-//
-// This verifies relational operators.
-//
-template<class T>
-void test_relops( T const* )
-{
-  TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
-
-  reset_throw_on_copy( ARG(T) ) ;
-
-  T v0(18);
-  T v1(19);
-  T v2(19);
-
-  optional<T&> def0 ;
-  optional<T&> def1 ;
-  optional<T&> opt0(v0);
-  optional<T&> opt1(v1);
-  optional<T&> opt2(v2);
-
-  // Check identity
-  BOOST_CHECK ( def0 == def0 ) ;
-  BOOST_CHECK ( opt0 == opt0 ) ;
-  BOOST_CHECK ( !(def0 != def0) ) ;
-  BOOST_CHECK ( !(opt0 != opt0) ) ;
-
-  // Check when both are uininitalized.
-  BOOST_CHECK (   def0 == def1  ) ; // both uninitialized compare equal
-  BOOST_CHECK ( !(def0 <  def1) ) ; // uninitialized is never less    than uninitialized
-  BOOST_CHECK ( !(def0 >  def1) ) ; // uninitialized is never greater than uninitialized
-  BOOST_CHECK ( !(def0 != def1) ) ;
-  BOOST_CHECK (   def0 <= def1  ) ;
-  BOOST_CHECK (   def0 >= def1  ) ;
-
-  // Check when only lhs is uninitialized.
-  BOOST_CHECK (   def0 != opt0  ) ; // uninitialized is never equal to initialized
-  BOOST_CHECK ( !(def0 == opt0) ) ;
-  BOOST_CHECK (   def0 <  opt0  ) ; // uninitialized is always less than initialized
-  BOOST_CHECK ( !(def0 >  opt0) ) ;
-  BOOST_CHECK (   def0 <= opt0  ) ;
-  BOOST_CHECK ( !(def0 >= opt0) ) ;
-
-  // Check when only rhs is uninitialized.
-  BOOST_CHECK (   opt0 != def0  ) ; // initialized is never equal to uninitialized
-  BOOST_CHECK ( !(opt0 == def0) ) ;
-  BOOST_CHECK ( !(opt0 <  def0) ) ; // initialized is never less than uninitialized
-  BOOST_CHECK (   opt0 >  def0  ) ;
-  BOOST_CHECK ( !(opt0 <= def0) ) ;
-  BOOST_CHECK (   opt0 >= opt0  ) ;
-
-  // If both are initialized, values are compared
-  BOOST_CHECK ( opt0 != opt1 ) ;
-  BOOST_CHECK ( opt1 == opt2 ) ;
-  BOOST_CHECK ( opt0 <  opt1 ) ;
-  BOOST_CHECK ( opt1 >  opt0 ) ;
-  BOOST_CHECK ( opt1 <= opt2 ) ;
-  BOOST_CHECK ( opt1 >= opt0 ) ;
-}
 
 void test_with_builtin_types()
 {
   TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
 
   test_basics( ARG(double) );
-  test_relops( ARG(double) ) ;
 }
 
 void test_with_class_type()
@@ -291,7 +232,6 @@ void test_with_class_type()
   TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
 
   test_basics( ARG(X) );
-  test_relops( ARG(X) ) ;
 
   BOOST_CHECK ( X::count == 0 ) ;
 }
