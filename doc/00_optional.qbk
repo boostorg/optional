@@ -85,6 +85,7 @@ This is how you solve it with `boost::optional`:
 [include 16_optional_bool.qbk]
 [include 17_exception_safety.qbk]
 [include 18_type_requirements.qbk]
+[include 19_on_performance.qbk]
 [endsect]
 [section Reference]
 [include 20_reference.qbk]
