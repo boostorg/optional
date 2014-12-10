@@ -67,6 +67,12 @@ struct concrete_type_of<Abstract>
   typedef Impl type;
 };
 
+template <>
+struct concrete_type_of<const Abstract>
+{
+  typedef const Impl type;
+};
+
 template <typename T>
 struct has_arrow
 {
@@ -83,6 +89,10 @@ int& val(int& i) { return i; }
 int& val(Abstract& a) { return a.val(); }
 int& val(ScopeGuard& g) { return g.val(); }
 
+const int& val(const int& i) { return i; }
+const int& val(const Abstract& a) { return a.val(); }
+const int& val(const ScopeGuard& g) { return g.val(); }
+
 bool operator==(const Abstract& l, const Abstract& r) { return l.val() == r.val(); }
 bool operator==(const ScopeGuard& l, const ScopeGuard& r) { return l.val() == r.val(); }
 
@@ -92,17 +102,66 @@ bool operator<(const ScopeGuard& l, const ScopeGuard& r) { return l.val() < r.va
 
 template <typename T>
 typename boost::enable_if< has_arrow<T> >::type
+test_arrow_const()
+{
+  const typename concrete_type_of<T>::type v(2);
+  optional<const T&> o(v);
+  BOOST_TEST(o);
+  BOOST_TEST_EQ(o->val(), 2);
+  BOOST_TEST(boost::addressof(o->val()) == boost::addressof(v.val()));
+}
+
+template <typename T>
+typename boost::disable_if< has_arrow<T> >::type
+test_arrow_const()
+{
+}
+
+template <typename T>
+typename boost::enable_if< has_arrow<T> >::type
+test_arrow_noconst_const()
+{
+  typename concrete_type_of<T>::type v(2);
+  optional<const T&> o(v);
+  BOOST_TEST(o);
+  BOOST_TEST_EQ(o->val(), 2);
+  BOOST_TEST(boost::addressof(o->val()) == boost::addressof(v.val()));
+  
+  v.val() = 1;
+  BOOST_TEST(o);
+  BOOST_TEST_EQ(o->val(), 1);
+  BOOST_TEST_EQ(v.val(), 1);
+  BOOST_TEST(boost::addressof(o->val()) == boost::addressof(v.val()));
+}
+
+template <typename T>
+typename boost::disable_if< has_arrow<T> >::type
+test_arrow_noconst_const()
+{
+}
+
+template <typename T>
+typename boost::enable_if< has_arrow<T> >::type
 test_arrow()
 {
   typename concrete_type_of<T>::type v(2);
   optional<T&> o(v);
   BOOST_TEST(o);
   BOOST_TEST_EQ(o->val(), 2);
+  BOOST_TEST(boost::addressof(o->val()) == boost::addressof(v.val()));
+  
+  v.val() = 1;
+  BOOST_TEST(o);
+  BOOST_TEST_EQ(o->val(), 1);
+  BOOST_TEST_EQ(v.val(), 1);
+  BOOST_TEST(boost::addressof(o->val()) == boost::addressof(v.val()));
   
   o->val() = 3;
   BOOST_TEST(o);
   BOOST_TEST_EQ(o->val(), 3);
   BOOST_TEST_EQ(v.val(), 3);
+  BOOST_TEST(boost::addressof(o->val()) == boost::addressof(v.val()));
+  
 }
 
 template <typename T>
@@ -125,6 +184,38 @@ void test_not_containing_value_for()
   BOOST_TEST(o1 == none);
   BOOST_TEST(o2 == none);
   BOOST_TEST(o3 == none);
+}
+
+template <typename T>
+void test_direct_init_for_const()
+{
+  const typename concrete_type_of<T>::type v(2);
+  optional<const T&> o(v);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(o != none);
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST_EQ(val(*o), val(v));
+  BOOST_TEST_EQ(val(*o), 2);
+}
+
+template <typename T>
+void test_direct_init_for_noconst_const()
+{
+  typename concrete_type_of<T>::type v(2);
+  optional<const T&> o(v);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(o != none);
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST_EQ(val(*o), val(v));
+  BOOST_TEST_EQ(val(*o), 2);
+   
+  val(v) = 9;
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST_EQ(val(*o), val(v));
+  BOOST_TEST_EQ(val(*o), 9);
+  BOOST_TEST_EQ(val(v), 9);
 }
 
 template <typename T>
@@ -174,6 +265,40 @@ void test_clearing_the_value()
 }
 
 template <typename T>
+void test_copy_assignment_for_const()
+{
+  const typename concrete_type_of<T>::type v(2);
+  optional<const T&> o;
+  o = optional<const T&>(v);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(o != none);
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(val(*o) == val(v));
+  BOOST_TEST(val(*o) == 2);
+}
+
+template <typename T>
+void test_copy_assignment_for_noconst_const()
+{
+  typename concrete_type_of<T>::type v(2);
+  optional<const T&> o;
+  o = optional<const T&>(v);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(o != none);
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(val(*o) == val(v));
+  BOOST_TEST(val(*o) == 2);
+  
+  val(v) = 9;
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST_EQ(val(*o), val(v));
+  BOOST_TEST_EQ(val(*o), 9);
+  BOOST_TEST_EQ(val(v), 9);
+}
+
+template <typename T>
 void test_copy_assignment_for()
 {
   typename concrete_type_of<T>::type v(2);
@@ -197,6 +322,54 @@ void test_copy_assignment_for()
   BOOST_TEST_EQ(val(*o), val(v));
   BOOST_TEST_EQ(val(*o), 7);
   BOOST_TEST_EQ(val(v), 7);
+}
+
+template <typename T>
+void test_rebinding_assignment_semantics_const()
+{
+  const typename concrete_type_of<T>::type v(2), w(7);
+  optional<const T&> o(v);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST_EQ(val(*o), val(v));
+  BOOST_TEST_EQ(val(*o), 2);
+  
+  o = optional<const T&>(w);
+  BOOST_TEST_EQ(val(v), 2);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(boost::addressof(*o) != boost::addressof(v));
+  BOOST_TEST_NE(val(*o), val(v));
+  BOOST_TEST_NE(val(*o), 2);
+  
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(w));
+  BOOST_TEST_EQ(val(*o), val(w));
+  BOOST_TEST_EQ(val(*o), 7);
+}
+
+template <typename T>
+void test_rebinding_assignment_semantics_noconst_const()
+{
+  typename concrete_type_of<T>::type v(2), w(7);
+  optional<const T&> o(v);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST_EQ(val(*o), val(v));
+  BOOST_TEST_EQ(val(*o), 2);
+  
+  o = optional<const T&>(w);
+  BOOST_TEST_EQ(val(v), 2);
+  
+  BOOST_TEST(o);
+  BOOST_TEST(boost::addressof(*o) != boost::addressof(v));
+  BOOST_TEST_NE(val(*o), val(v));
+  BOOST_TEST_NE(val(*o), 2);
+  
+  BOOST_TEST(boost::addressof(*o) == boost::addressof(w));
+  BOOST_TEST_EQ(val(*o), val(w));
+  BOOST_TEST_EQ(val(*o), 7);
 }
 
 template <typename T>
@@ -432,11 +605,33 @@ void test_optional_ref()
   test_swap<T>();
 }
 
+template <typename T>
+void test_optional_const_ref()
+{
+  test_not_containing_value_for<const T>();
+  test_direct_init_for_const<T>();
+  test_direct_init_for_noconst_const<T>();
+  test_copy_assignment_for_const<T>();
+  test_copy_assignment_for_noconst_const<T>();
+  test_rebinding_assignment_semantics_const<T>();
+  test_rebinding_assignment_semantics_noconst_const<T>();
+  test_clearing_the_value<const T>();
+  test_arrow_const<T>();
+  test_arrow_noconst_const<T>();
+  test_equality<const T>();
+  test_order<const T>();
+  //test_swap<T>();
+}
+
 int main()
 {
   test_optional_ref<int>();
   test_optional_ref<ScopeGuard>();
   //test_optional_ref<Abstract>();
+  
+  test_optional_const_ref<int>();
+  test_optional_const_ref<ScopeGuard>();
+  //test_optional_const_ref<Abstract>();
   
   return boost::report_errors();
 }
