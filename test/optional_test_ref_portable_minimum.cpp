@@ -23,6 +23,38 @@
 using boost::optional;
 using boost::none;
 
+struct CountingClass
+{
+  static int count;
+  static int assign_count;
+  CountingClass() { ++count; }
+  CountingClass(const CountingClass&) { ++count; }
+  CountingClass& operator=(const CountingClass&) { ++assign_count; return *this; }
+  ~CountingClass() { ++count; }
+};
+
+int CountingClass::count = 0;
+int CountingClass::assign_count = 0;
+
+void test_no_object_creation()
+{
+  BOOST_TEST_EQ(0, CountingClass::count);
+  BOOST_TEST_EQ(0, CountingClass::assign_count);
+  {
+    CountingClass v1, v2;
+    optional<CountingClass&> oA(v1);
+    optional<CountingClass&> oB;
+    optional<CountingClass&> oC = oA;
+    oB = oA;
+    *oB = v2;
+    oC = none;
+    oC = optional<CountingClass&>(v2);
+    oB = none;
+    oA = oB;
+  }
+  BOOST_TEST_EQ(4, CountingClass::count);
+  BOOST_TEST_EQ(1, CountingClass::assign_count);
+}
 
 template <typename T>
 typename boost::enable_if< has_arrow<T> >::type
