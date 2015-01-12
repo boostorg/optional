@@ -91,6 +91,7 @@ This is how you solve it with `boost::optional`:
 [include 20_reference.qbk]
 [endsect]
 [include 90_dependencies.qbk]
-[include 91_acknowledgments.qbk]
+[include 91_relnotes.qbk]
+[include 92_acknowledgments.qbk]
 
 
