@@ -37,6 +37,11 @@ struct counting_oracle
   static int equals_count;
   
   friend bool operator==(const counting_oracle& lhs, const counting_oracle& rhs) { ++equals_count; return lhs.val == rhs.val; }
+  
+  static void clear_count()
+  {
+    dtor_count = default_ctor_count = val_ctor_count = copy_ctor_count = copy_assign_count = equals_count = 0;
+  }
 };
 
 int counting_oracle::dtor_count = 0;
@@ -46,23 +51,12 @@ int counting_oracle::copy_ctor_count = 0;
 int counting_oracle::copy_assign_count = 0;
 int counting_oracle::equals_count = 0;
 
-int count_copy_ctors_on_copy() // checks if we have copy elision
-{
-  counting_oracle::copy_ctor_count = 0;
-  
-  counting_oracle c(1);
-  counting_oracle c2(c);
-  int ans = counting_oracle::copy_ctor_count;
-  counting_oracle::copy_ctor_count = 0;
-  counting_oracle::val_ctor_count = 0;
-  return ans;
-}
-
 // Test boost::tie() interoperability.
 int main()
-{
-  int copy_factor = count_copy_ctors_on_copy();
+{  
   const std::pair<counting_oracle, counting_oracle> pair(1, 2);
+  counting_oracle::clear_count();
+  
   boost::optional<counting_oracle> o1, o2;
   boost::tie(o1, o2) = pair;
   
@@ -70,7 +64,7 @@ int main()
   BOOST_TEST(o2);
   BOOST_TEST(*o1 == counting_oracle(1));
   BOOST_TEST(*o2 == counting_oracle(2));
-  BOOST_TEST_EQ(2 * copy_factor, counting_oracle::copy_ctor_count);
+  BOOST_TEST_EQ(2, counting_oracle::copy_ctor_count);
   BOOST_TEST_EQ(0, counting_oracle::copy_assign_count);
   BOOST_TEST_EQ(0, counting_oracle::default_ctor_count);
 
