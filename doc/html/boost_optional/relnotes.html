@@ -31,12 +31,23 @@
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_58"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_58">Boost
       Release 1.58</a>
     </h4>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
           <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none_t</span></code> is no longer convertible from
           literal <code class="computeroutput"><span class="number">0</span></code>. This avoids a bug
           where <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">rational</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&gt;</span> <span class="identifier">oi</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span></code> would
           initialize an optional object with no contained value.
-        </li></ul></div>
+        </li>
+<li class="listitem">
+          Improved the trick that prevents streaming out <code class="computeroutput"><span class="identifier">optional</span></code>
+          without header <code class="computeroutput"><span class="identifier">optional_io</span><span class="special">.</span><span class="identifier">hpp</span></code>
+          by using safe-bool idiom. This addresses <a href="https://svn.boost.org/trac/boost/ticket/10825" target="_top">Trac
+          #10825</a>
+        </li>
+<li class="listitem">
+          IOStream operators are now mentioned in documentation.
+        </li>
+</ul></div>
 <h4>
 <a name="boost_optional.relnotes.h1"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_57"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_57">Boost
@@ -105,7 +116,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014 Andrzej Krzemie&#324;ski<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014, 2015 Andrzej Krzemie&#324;ski<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

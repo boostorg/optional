@@ -14,6 +14,8 @@
 [heading Boost Release 1.58]
 
 * `boost::none_t` is no longer convertible from literal `0`. This avoids a bug where `optional<rational<int>> oi = 0;` would initialize an optional object with no contained value.
+* Improved the trick that prevents streaming out `optional` without header `optional_io.hpp` by using safe-bool idiom. This addresses [@https://svn.boost.org/trac/boost/ticket/10825 Trac #10825]
+* IOStream operators are now mentioned in documentation.
 
 
 [heading Boost Release 1.57]
