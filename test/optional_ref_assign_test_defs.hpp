@@ -22,6 +22,7 @@
 
 using boost::optional;
 using boost::none;
+using boost::addressof;
 
 template <typename T>
 void test_copy_assignment_for_const()
@@ -32,7 +33,7 @@ void test_copy_assignment_for_const()
   
   BOOST_TEST(o);
   BOOST_TEST(o != none);
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST(val(*o) == val(v));
   BOOST_TEST(val(*o) == 2);
 }
@@ -46,12 +47,12 @@ void test_copy_assignment_for_noconst_const()
   
   BOOST_TEST(o);
   BOOST_TEST(o != none);
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST(val(*o) == val(v));
   BOOST_TEST(val(*o) == 2);
   
   val(v) = 9;
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST_EQ(val(*o), val(v));
   BOOST_TEST_EQ(val(*o), 9);
   BOOST_TEST_EQ(val(v), 9);
@@ -66,18 +67,18 @@ void test_copy_assignment_for()
   
   BOOST_TEST(o);
   BOOST_TEST(o != none);
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST(val(*o) == val(v));
   BOOST_TEST(val(*o) == 2);
   
   val(v) = 9;
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST_EQ(val(*o), val(v));
   BOOST_TEST_EQ(val(*o), 9);
   BOOST_TEST_EQ(val(v), 9);
   
   val(*o) = 7;
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST_EQ(val(*o), val(v));
   BOOST_TEST_EQ(val(*o), 7);
   BOOST_TEST_EQ(val(v), 7);
@@ -90,7 +91,7 @@ void test_rebinding_assignment_semantics_const()
   optional<const T&> o(v);
   
   BOOST_TEST(o);
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST_EQ(val(*o), val(v));
   BOOST_TEST_EQ(val(*o), 2);
   
@@ -98,11 +99,11 @@ void test_rebinding_assignment_semantics_const()
   BOOST_TEST_EQ(val(v), 2);
   
   BOOST_TEST(o);
-  BOOST_TEST(boost::addressof(*o) != boost::addressof(v));
+  BOOST_TEST(addressof(*o) != addressof(v));
   BOOST_TEST_NE(val(*o), val(v));
   BOOST_TEST_NE(val(*o), 2);
   
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(w));
+  BOOST_TEST(addressof(*o) == addressof(w));
   BOOST_TEST_EQ(val(*o), val(w));
   BOOST_TEST_EQ(val(*o), 7);
 }
@@ -114,7 +115,7 @@ void test_rebinding_assignment_semantics_noconst_const()
   optional<const T&> o(v);
   
   BOOST_TEST(o);
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST_EQ(val(*o), val(v));
   BOOST_TEST_EQ(val(*o), 2);
   
@@ -122,11 +123,11 @@ void test_rebinding_assignment_semantics_noconst_const()
   BOOST_TEST_EQ(val(v), 2);
   
   BOOST_TEST(o);
-  BOOST_TEST(boost::addressof(*o) != boost::addressof(v));
+  BOOST_TEST(addressof(*o) != addressof(v));
   BOOST_TEST_NE(val(*o), val(v));
   BOOST_TEST_NE(val(*o), 2);
   
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(w));
+  BOOST_TEST(addressof(*o) == addressof(w));
   BOOST_TEST_EQ(val(*o), val(w));
   BOOST_TEST_EQ(val(*o), 7);
 }
@@ -138,7 +139,7 @@ void test_rebinding_assignment_semantics()
   optional<T&> o(v);
   
   BOOST_TEST(o);
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(v));
+  BOOST_TEST(addressof(*o) == addressof(v));
   BOOST_TEST_EQ(val(*o), val(v));
   BOOST_TEST_EQ(val(*o), 2);
   
@@ -146,20 +147,50 @@ void test_rebinding_assignment_semantics()
   BOOST_TEST_EQ(val(v), 2);
   
   BOOST_TEST(o);
-  BOOST_TEST(boost::addressof(*o) != boost::addressof(v));
+  BOOST_TEST(addressof(*o) != addressof(v));
   BOOST_TEST_NE(val(*o), val(v));
   BOOST_TEST_NE(val(*o), 2);
   
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(w));
+  BOOST_TEST(addressof(*o) == addressof(w));
   BOOST_TEST_EQ(val(*o), val(w));
   BOOST_TEST_EQ(val(*o), 7);
   
   val(*o) = 8;
-  BOOST_TEST(boost::addressof(*o) == boost::addressof(w));
+  BOOST_TEST(addressof(*o) == addressof(w));
   BOOST_TEST_EQ(val(*o), val(w));
   BOOST_TEST_EQ(val(*o), 8);
   BOOST_TEST_EQ(val(w), 8);
   BOOST_TEST_EQ(val(v), 2);
+}
+
+template <typename T>
+void test_converting_assignment()
+{
+  typename concrete_type_of<T>::type v1(1), v2(2), v3(3);
+  optional<T&> oA(v1), oB(none);
+  
+  oA = v2;
+  BOOST_TEST(oA);
+  BOOST_TEST(addressof(*oA) == addressof(v2));
+  
+  oB = v3;
+  BOOST_TEST(oB);
+  BOOST_TEST(addressof(*oB) == addressof(v3));
+}
+
+template <typename T>
+void test_converting_assignment_for_noconst_const()
+{
+  typename concrete_type_of<T>::type v1(1), v2(2), v3(3);
+  optional<const T&> oA(v1), oB(none);
+  
+  oA = v2;
+  BOOST_TEST(oA);
+  BOOST_TEST(addressof(*oA) == addressof(v2));
+  
+  oB = v3;
+  BOOST_TEST(oB);
+  BOOST_TEST(addressof(*oB) == addressof(v3));
 }
 
 #endif //BOOST_OPTIONAL_TEST_OPTIONAL_REF_ASSIGN_TEST_DEFS_AK_07JAN2015_HPP
