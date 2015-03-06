@@ -808,30 +808,74 @@
             is <a href="../../../../../utility/CopyConstructible.html" target="_top"><code class="computeroutput"><span class="identifier">CopyConstructible</span></code></a> and <code class="computeroutput"><span class="identifier">CopyAssignable</span></code>.
           </li>
 <li class="listitem">
+<p class="simpara">
             <span class="bold"><strong>Effects:</strong></span>
-            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
-<li class="listitem">
-                  If <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
-                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code> no effect, otherwise
-                </li>
-<li class="listitem">
-                  if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
-                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code>, destroys the contained value
-                  by calling <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>, otherwise
-                </li>
-<li class="listitem">
-                  if <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
-                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>, initializes the contained value
-                  as if direct-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code>
-                  with <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>,
-                  otherwise
-                </li>
-<li class="listitem">
-                  (if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
-                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>) assigns <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code> to the contained value.
-                </li>
-</ul></div>
-          </li>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      contains a value
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      does not contain a value
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> contains
+                      a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      assigns <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
+                      to the contained value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      initializes the contained value as if direct-initializing an
+                      object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                      with <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> does not
+                      contain a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      destroys the contained value by calling <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      no effect
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</li>
 <li class="listitem">
             <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>;
           </li>
@@ -919,30 +963,73 @@
             and <code class="computeroutput"><span class="identifier">MoveAssignable</span></code>.
           </li>
 <li class="listitem">
+<p class="simpara">
             <span class="bold"><strong>Effects:</strong></span>
-            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
-<li class="listitem">
-                  If <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
-                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code> no effect, otherwise
-                </li>
-<li class="listitem">
-                  if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
-                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code>, destroys the contained value
-                  by calling <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>, otherwise
-                </li>
-<li class="listitem">
-                  if <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
-                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>, initializes the contained value
-                  as if direct-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code>
-                  with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code>,
-                  otherwise
-                </li>
-<li class="listitem">
-                  (if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
-                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>) assigns <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code> to the contained value.
-                </li>
-</ul></div>
-          </li>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      contains a value
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      does not contain a value
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> contains
+                      a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      assigns <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code> to the contained value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      initializes the contained value as if direct-initializing an
+                      object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                      with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> does not
+                      contain a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      destroys the contained value by calling <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      no effect
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</li>
 <li class="listitem">
             <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>;
           </li>
@@ -997,40 +1084,88 @@
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Effect:</strong></span> Assigns another convertible
-            optional to an optional.
+<p class="simpara">
+            <span class="bold"><strong>Effect:</strong></span>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      contains a value
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      does not contain a value
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> contains
+                      a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      assigns <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
+                      to the contained value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      initializes the contained value as if direct-initializing an
+                      object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                      with <code class="computeroutput"><span class="special">*</span><span class="identifier">rhs</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> does not
+                      contain a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      destroys the contained value by calling <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      no effect
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li class="listitem">
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
-            is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initialized and its value is a <span class="emphasis"><em>copy</em></span> of the value
-            of <code class="computeroutput"><span class="identifier">rhs</span></code> <span class="emphasis"><em>converted</em></span>
-            to type <code class="computeroutput"><span class="identifier">T</span></code>; else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is uninitialized.
+            <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code> or <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">U</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span></code> throws.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Notes:</strong></span> If both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and rhs are initially initialized,
-            <code class="computeroutput"><span class="identifier">T</span></code>'s <span class="emphasis"><em>assignment
-            operator</em></span> (from <code class="computeroutput"><span class="identifier">U</span></code>)
-            is used. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initially initialized but <code class="computeroutput"><span class="identifier">rhs</span></code>
-            is uninitialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>destructor</em></span> is called. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initially uninitialized but rhs
-            is initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>converting constructor</em></span> (from <code class="computeroutput"><span class="identifier">U</span></code>)
-            is called.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Exception Safety:</strong></span> In the event of an
-            exception, the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is unchanged and its value unspecified
-            as far as optional is concerned (it is up to <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>).
-            If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initially uninitialized and <code class="computeroutput"><span class="identifier">T</span></code>'s
-            converting constructor fails, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is left properly uninitialized.
+            <span class="bold"><strong>Exception Safety:</strong></span> If any exception is
+            thrown, the result of the expression <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span></code> remains unchanged. If an exception is
+            thrown during the call to <code class="computeroutput"><span class="identifier">T</span></code>'s
+            constructor, no effect. If an exception is thrown during the call to
+            <code class="computeroutput"><span class="identifier">T</span></code>'s assignment, the state
+            of its contained value is as defined by the exception safety guarantee
+            of <code class="computeroutput"><span class="identifier">T</span></code>'s copy assignment.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Example:</strong></span>
@@ -1053,36 +1188,87 @@
         </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-            <span class="bold"><strong>Effect:</strong></span> Move-assigns another convertible
-            optional to an optional.
+<p class="simpara">
+            <span class="bold"><strong>Effect:</strong></span>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      contains a value
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      does not contain a value
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> contains
+                      a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      assigns <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code> to the contained value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      initializes the contained value as if direct-initializing an
+                      object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                      with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> does not
+                      contain a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      destroys the contained value by calling <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      no effect
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li class="listitem">
+            <span class="bold"><strong>Returns:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Postconditions:</strong></span> If <code class="computeroutput"><span class="identifier">rhs</span></code>
-            is initialized, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initialized and its value is moved from the value of <code class="computeroutput"><span class="identifier">rhs</span></code>; else <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is uninitialized.
+            <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span></code>.
           </li>
 <li class="listitem">
-            <span class="bold"><strong>Throws:</strong></span> Whatever <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span> <span class="identifier">U</span><span class="special">&amp;&amp;</span> <span class="special">)</span></code>
-            or <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">T</span><span class="special">(</span> <span class="identifier">U</span><span class="special">&amp;&amp;</span>
-            <span class="special">)</span></code> throws.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Notes:</strong></span> If both <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> and <code class="computeroutput"><span class="identifier">rhs</span></code>
-            are initially initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>assignment operator</em></span> (from <code class="computeroutput"><span class="identifier">U</span><span class="special">&amp;&amp;</span></code>) is used. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initially initialized but <code class="computeroutput"><span class="identifier">rhs</span></code>
-            is uninitialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>destructor</em></span> is called. If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initially uninitialized but <code class="computeroutput"><span class="identifier">rhs</span></code> is initialized, <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <span class="emphasis"><em>converting constructor</em></span> (from <code class="computeroutput"><span class="identifier">U</span><span class="special">&amp;&amp;</span></code>) is called.
-          </li>
-<li class="listitem">
-            <span class="bold"><strong>Exception Safety:</strong></span> In the event of an
-            exception, the initialization state of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is unchanged and its value unspecified
-            as far as optional is concerned (it is up to <code class="computeroutput"><span class="identifier">T</span></code>'s
-            <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>).
-            If <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-            is initially uninitialized and <code class="computeroutput"><span class="identifier">T</span></code>'s
-            converting constructor fails, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is left properly uninitialized.
+            <span class="bold"><strong>Exception Safety:</strong></span> If any exception is
+            thrown, the result of the expression <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span></code> remains unchanged. If an exception is
+            thrown during the call to <code class="computeroutput"><span class="identifier">T</span></code>'s
+            constructor, no effect. If an exception is thrown during the call to
+            <code class="computeroutput"><span class="identifier">T</span></code>'s assignment, the state
+            of its contained value is as defined by the exception safety guarantee
+            of <code class="computeroutput"><span class="identifier">T</span></code>'s copy assignment.
           </li>
 <li class="listitem">
             <span class="bold"><strong>Example:</strong></span>
@@ -2019,35 +2205,81 @@
             <span class="bold"><strong>Requires:</strong></span> Lvalues of type <code class="computeroutput"><span class="identifier">T</span></code> shall be swappable and <code class="computeroutput"><span class="identifier">T</span></code> shall be <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>.
           </li>
 <li class="listitem">
+<p class="simpara">
             <span class="bold"><strong>Effects:</strong></span>
-            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
-<li class="listitem">
-                  If <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
-                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code>, no effect, otherwise
-                </li>
-<li class="listitem">
-                  if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
-                  <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">rhs</span></code>, initializes the contained
-                  value of <code class="computeroutput"><span class="identifier">rhs</span></code> as
-                  if direct-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code>
-                  with the expression <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*(*</span><span class="keyword">this</span><span class="special">))</span></code>, followed by <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> does not contain a value and
-                  <code class="computeroutput"><span class="identifier">rhs</span></code> contains a
-                  value, otherwise
-                </li>
-<li class="listitem">
-                  if <code class="computeroutput"><span class="special">!*</span><span class="keyword">this</span>
-                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>, initializes the contained value
-                  of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
-                  as if direct-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code>
-                  with the expression <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code>, followed by <code class="computeroutput"><span class="identifier">rhs</span><span class="special">.</span><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>, <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> contains a value and <code class="computeroutput"><span class="identifier">rhs</span></code> does not contain a value,
-                  otherwise
-                </li>
-<li class="listitem">
-                  (if <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span>
-                  <span class="special">&amp;&amp;</span> <span class="keyword">bool</span><span class="special">(</span><span class="identifier">rhs</span><span class="special">)</span></code>) calls <code class="computeroutput"><span class="identifier">swap</span><span class="special">(*(*</span><span class="keyword">this</span><span class="special">),</span> <span class="special">*</span><span class="identifier">rhs</span><span class="special">)</span></code>.
-                </li>
-</ul></div>
-          </li>
+          </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      contains a value
+                    </p>
+                  </th>
+<th>
+                    <p>
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      does not contain a value
+                    </p>
+                  </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> contains
+                      a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      calls <code class="computeroutput"><span class="identifier">swap</span><span class="special">(*(*</span><span class="keyword">this</span><span class="special">),</span> <span class="special">*</span><span class="identifier">rhs</span><span class="special">)</span></code>
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      initializes the contained value of <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> as if direct-initializing
+                      an object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                      with the expression <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*</span><span class="identifier">rhs</span><span class="special">)</span></code>, followed by <code class="computeroutput"><span class="identifier">rhs</span><span class="special">.</span><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>,
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      contains a value and <code class="computeroutput"><span class="identifier">rhs</span></code>
+                      does not contain a value
+                    </p>
+                  </td>
+</tr>
+<tr>
+<td>
+                    <p>
+                      <code class="computeroutput"><span class="identifier">rhs</span></code> does not
+                      contain a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      initializes the contained value of <code class="computeroutput"><span class="identifier">rhs</span></code>
+                      as if direct-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code>
+                      with the expression <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(*(*</span><span class="keyword">this</span><span class="special">))</span></code>, followed by <code class="computeroutput"><span class="identifier">val</span><span class="special">-&gt;</span><span class="identifier">T</span><span class="special">::~</span><span class="identifier">T</span><span class="special">()</span></code>,
+                      <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code>
+                      does not contain a value and <code class="computeroutput"><span class="identifier">rhs</span></code>
+                      contains a value
+                    </p>
+                  </td>
+<td>
+                    <p>
+                      no effect
+                    </p>
+                  </td>
+</tr>
+</tbody>
+</table></div>
+</li>
 <li class="listitem">
             <span class="bold"><strong>Postconditions:</strong></span> The states of <code class="computeroutput"><span class="identifier">x</span></code> and <code class="computeroutput"><span class="identifier">y</span></code>
             interchanged.

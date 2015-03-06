@@ -188,7 +188,7 @@ struct types_when_is_ref
 template <class To, class From>
 void prevent_binding_rvalue_ref_to_optional_lvalue_ref()
 {
-#ifndef BOOST_OPTIONAL_ALLOW_BINDING_TO_RVALUES
+#ifndef BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
   BOOST_STATIC_ASSERT_MSG(
     !boost::is_lvalue_reference<To>::value || !boost::is_rvalue_reference<From>::value, 
     "binding rvalue references to optional lvalue references is disallowed");
@@ -371,13 +371,22 @@ class optional_base : public optional_tag
       if (is_initialized())
       {
         if ( rhs.is_initialized() )
-             assign_value(static_cast<value_type>(rhs.get()), is_reference_predicate() );
+#ifndef BOOST_OPTIONAL_CONFIG_RESTORE_ASSIGNMENT_OF_NONCONVERTIBLE_TYPES
+          assign_value(rhs.get(), is_reference_predicate() );
+#else
+          assign_value(static_cast<value_type>(rhs.get()), is_reference_predicate() );
+#endif
+          
         else destroy();
       }
       else
       {
         if ( rhs.is_initialized() )
+#ifndef BOOST_OPTIONAL_CONFIG_RESTORE_ASSIGNMENT_OF_NONCONVERTIBLE_TYPES
+          construct(rhs.get());
+#else
           construct(static_cast<value_type>(rhs.get()));
+#endif
       }
     }
 

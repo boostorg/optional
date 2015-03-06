@@ -602,10 +602,11 @@ __SPACE__
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `CopyAssignable`.
 * [*Effects:]
-  * If `!*this && !rhs` no effect, otherwise
-  * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
-  * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `*rhs`, otherwise
-  * (if `bool(*this) && bool(rhs)`) assigns `*rhs` to the contained value.
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `*rhs` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `*rhs`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
 * [*Returns:] `*this`;
 * [*Postconditions:] `bool(rhs) == bool(*this)`. 
 * [*Exception Safety:] If any exception is thrown, the initialization state of `*this` and `rhs` remains unchanged.
@@ -662,10 +663,11 @@ __SPACE__
 
 * [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `MoveAssignable`.
 * [*Effects:]
-  * If `!*this && !rhs` no effect, otherwise
-  * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
-  * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`, otherwise
-  * (if `bool(*this) && bool(rhs)`) assigns `std::move(*rhs)` to the contained value.
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `std::move(*rhs)` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
 * [*Returns:] `*this`;
 * [*Postconditions:] `bool(rhs) == bool(*this)`. 
 * [*Remarks:] The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
@@ -696,21 +698,17 @@ __SPACE__
 
 [: `template<U> optional& optional<T` ['(not a ref)]`>::operator= ( optional<U> const& rhs ) ;`]
 
-* [*Effect:] Assigns another convertible optional to an optional.
-* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
-its value is a ['copy] of the value of `rhs` ['converted] to type `T`; else
-`*this` is uninitialized. 
-* [*Throws:] Whatever `T::operator=( U const& )` or `T::T( U const& )` throws.
-* [*Notes:] If both `*this` and rhs are initially initialized, `T`'s
-['assignment operator] (from `U`) is used. If `*this` is initially initialized
-but `rhs` is uninitialized, `T`'s ['destructor] is called. If `*this` is
-initially uninitialized but rhs is initialized, `T`'s ['converting constructor]
-(from `U`) is called.
-* [*Exception Safety:] In the event of an exception, the initialization state
-of `*this` is unchanged and its value unspecified as far as optional is
-concerned (it is up to `T`'s `operator=()`). If `*this` is initially
-uninitialized and `T`'s converting constructor fails, `*this` is left properly
-uninitialized.
+* [*Effect:] 
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `*rhs` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `*rhs`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
+* [*Returns:] `*this`.
+* [*Postconditions:] `bool(rhs) == bool(*this)`. 
+* [*Exception Safety:] If any exception is thrown, the result of the expression `bool(*this)` remains unchanged.
+If an exception is thrown during the call to `T`'s constructor, no effect.
+If an exception is thrown during the call to `T`'s assignment, the state of its contained value is as defined by the exception safety guarantee of `T`'s copy assignment.
 * [*Example:]
 ``
 T v;
@@ -727,21 +725,17 @@ __SPACE__
 
 [: `template<U> optional& optional<T` ['(not a ref)]`>::operator= ( optional<U>&& rhs ) ;`]
 
-* [*Effect:] Move-assigns another convertible optional to an optional.
-* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
-its value is moved from the value of `rhs`; else
-`*this` is uninitialized. 
-* [*Throws:] Whatever `T::operator=( U&& )` or `T::T( U&& )` throws.
-* [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
-[' assignment operator] (from `U&&`) is used. If `*this` is initially initialized
-but `rhs` is uninitialized, `T`'s ['destructor] is called. If `*this` is
-initially uninitialized but `rhs` is initialized, `T`'s ['converting constructor]
-(from `U&&`) is called.
-* [*Exception Safety:] In the event of an exception, the initialization state
-of `*this` is unchanged and its value unspecified as far as optional is
-concerned (it is up to `T`'s `operator=()`). If `*this` is initially
-uninitialized and `T`'s converting constructor fails, `*this` is left properly
-uninitialized.
+* [*Effect:]
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `std::move(*rhs)` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
+* [*Returns:] `*this`.
+* [*Postconditions:] `bool(rhs) == bool(*this)`. 
+* [*Exception Safety:] If any exception is thrown, the result of the expression `bool(*this)` remains unchanged.
+If an exception is thrown during the call to `T`'s constructor, no effect.
+If an exception is thrown during the call to `T`'s assignment, the state of its contained value is as defined by the exception safety guarantee of `T`'s copy assignment.
 * [*Example:]
 ``
 T v;
@@ -1256,10 +1250,11 @@ __SPACE__
 
 * [*Requires:] Lvalues of type `T` shall be swappable and `T` shall be __MOVE_CONSTRUCTIBLE__.
 * [*Effects:]
-  * If `!*this && !rhs`, no effect, otherwise
-  * if `bool(*this) && !rhs`, initializes the contained value of `rhs` as if direct-initializing an object of type `T` with the expression `std::move(*(*this))`, followed by `val->T::~T()`, `*this` does not contain a value and `rhs` contains a value, otherwise
-  * if `!*this && bool(rhs)`, initializes the contained value of `*this` as if direct-initializing an object of type `T` with the expression `std::move(*rhs)`, followed by `rhs.val->T::~T()`, `*this` contains a value and `rhs` does not contain a value, otherwise
-  * (if `bool(*this) && bool(rhs)`) calls `swap(*(*this), *rhs)`.
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][calls `swap(*(*this), *rhs)`][initializes the contained value of `*this` as if direct-initializing an object of type `T` with the expression `std::move(*rhs)`, followed by `rhs.val->T::~T()`, `*this` contains a value and `rhs` does not contain a value]]
+  [[`rhs` does not contain a value][initializes the contained value of `rhs` as if direct-initializing an object of type `T` with the expression `std::move(*(*this))`, followed by `val->T::~T()`, `*this` does not contain a value and `rhs` contains a value][no effect]]
+]
 * [*Postconditions:] The states of `x` and `y` interchanged.
 * [*Throws:] If both are initialized, whatever `swap(T&,T&)` throws. If only
 one is initialized, whatever `T::T ( T&& )` throws.
