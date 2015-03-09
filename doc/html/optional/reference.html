@@ -39,10 +39,12 @@
 
 <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">optional</span>
 <span class="special">{</span>
-    <span class="keyword">public</span> <span class="special">:</span>
+<span class="keyword">public</span> <span class="special">:</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
 
     <span class="comment">// (If T is of reference type, the parameters and results by reference are by value)</span>
 

@@ -17,7 +17,8 @@
 * Improved the trick that prevents streaming out `optional` without header `optional_io.hpp` by using safe-bool idiom. This addresses [@https://svn.boost.org/trac/boost/ticket/10825 Trac #10825]
 * IOStream operators are now mentioned in documentation.
 * Added a way to manually disable move semantics: just define macro `BOOST_OPTIONAL_CONFIG_NO_RVALUE_REFERENCES`. This can be used to work around [@https://svn.boost.org/trac/boost/ticket/10399 Trac #10399]
-* It is no longer possible to assign `optional<U>` to `optional<T>` when `U` is not assignable or convertible to `T`.
+* It is no longer possible to assign `optional<U>` to `optional<T>` when `U` is not assignable or convertible to `T` ([@https://svn.boost.org/trac/boost/ticket/11087 Trac #11087]).
+* Value accessors now work correctly on rvalues of `optional<T&>` ([@https://svn.boost.org/trac/boost/ticket/10839 Trac #10839]).  
 
 
 [heading Boost Release 1.57]

@@ -28,6 +28,7 @@ import testing ;
     [ run optional_test_ref_convert_assign_mutable_int.cpp ]
     [ run optional_test_ref_convert_assign_const_int.cpp ]
     [ run optional_test_ref_portable_minimum.cpp ]
+    [ run optional_test_ref_move.cpp ]
     [ run optional_test_inplace_factory.cpp ]
     [ run optional_test_io.cpp ]
     [ run optional_test_move.cpp ]

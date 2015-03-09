@@ -9,7 +9,6 @@
 // You are welcome to contact the author at:
 //  akrzemi1@gmail.com
 
-#include <iostream>
 #include "boost/optional.hpp"
 
 // THIS TEST SHOULD FAIL TO COMPILE

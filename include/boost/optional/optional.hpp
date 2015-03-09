@@ -1020,7 +1020,7 @@ class optional : public optional_detail::optional_base<T>
 #if (!defined BOOST_NO_CXX11_REF_QUALIFIERS) && (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES) 
     reference_const_type operator *() const& { return this->get() ; }
     reference_type       operator *() &      { return this->get() ; }
-    reference_type_of_temporary_wrapper operator *() && { return boost::move(this->get()) ; }
+    reference_type_of_temporary_wrapper operator *() && { return base::types::move(this->get()) ; }
 #else
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
@@ -1046,7 +1046,7 @@ class optional : public optional_detail::optional_base<T>
     reference_type_of_temporary_wrapper value() &&
       { 
         if (this->is_initialized())
-          return boost::move(this->get()) ;
+          return base::types::move(this->get()) ;
         else
           throw_exception(bad_optional_access());
       }
@@ -1084,7 +1084,7 @@ class optional : public optional_detail::optional_base<T>
     value_type value_or ( U&& v ) && 
       { 
         if (this->is_initialized())
-          return boost::move(get());
+          return base::types::move(get());
         else
           return boost::forward<U>(v);
       }
@@ -1123,7 +1123,7 @@ class optional : public optional_detail::optional_base<T>
     value_type value_or_eval ( F f ) &&
       {
         if (this->is_initialized())
-          return boost::move(get());
+          return base::types::move(get());
         else
           return f();
       }

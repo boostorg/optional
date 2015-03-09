@@ -15,11 +15,13 @@
 
     namespace boost {
 
-    template<class T>
+    template <class T>
     class optional
     {
-        public :
+    public :
 
+        typedef T value_type;
+        
         // (If T is of reference type, the parameters and results by reference are by value)
 
         optional () noexcept ; ``[link reference_optional_constructor __GO_TO__]``
@@ -1137,9 +1139,8 @@ __SPACE__
 * [*Requires:] `T` shall meet requirements of __SGI_EQUALITY_COMPARABLE__.
 * [*Returns:] If both `x` and `y` are initialized, `(*x == *y)`. If only
 `x` or `y` is initialized, `false`. If both are uninitialized, `true`.
-* [*Notes:] Pointers have shallow relational operators while `optional` has
-deep relational operators. Do not use `operator==` directly in generic
-code which expect to be given either an `optional<T>` or a pointer; use
+* [*Notes:] This definition guarantees that `optional<T>` not containing a value is compared unequal to any `optional<T>` containing any value, and equal to any other `optional<T>` not containing a value.
+Pointers have shallow relational operators while `optional` has deep relational operators. Do not use `operator==` directly in generic code which expect to be given either an `optional<T>` or a pointer; use
 __FUNCTION_EQUAL_POINTEES__ instead
 * [*Example:]
 ``
@@ -1166,8 +1167,8 @@ __SPACE__
 
 * [*Requires:] Expression `*x < *y` shall be well-formed and its result shall be convertible to `bool`.
 * [*Returns:] `(!y) ? false : (!x) ? true : *x < *y`.
-* [*Notes:] Pointers have shallow relational operators while `optional` has
-deep relational operators. Do not use `operator<` directly in generic code
+* [*Notes:] This definition guarantees that `optional<T>` not containing a value is ordered as less than any `optional<T>` containing any value, and equivalent to any other `optional<T>` not containing a value.
+Pointers have shallow relational operators while `optional` has deep relational operators. Do not use `operator<` directly in generic code
 which expect to be given either an `optional<T>` or a pointer; use __FUNCTION_LESS_POINTEES__ instead. `T` need not be __SGI_LESS_THAN_COMPARABLE__. Only single `operator<` is required. Other relational operations are defined in terms of this one. If `T`'s `operator<` satisfies the axioms of __SGI_LESS_THAN_COMPARABLE__ (transitivity, antisymmetry and irreflexivity), `optinal<T>` is __SGI_LESS_THAN_COMPARABLE__.
 * [*Example:]
 ``
