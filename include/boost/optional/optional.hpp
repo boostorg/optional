@@ -1106,6 +1106,15 @@ class optional : public optional_detail::optional_base<T>
         else
           return v;
       }
+      
+    template <class U>
+    value_type value_or ( U& v ) const 
+      { 
+        if (this->is_initialized())
+          return get();
+        else
+          return v;
+      }
 #endif
 
 
