@@ -9,145 +9,6 @@
 ]
 
 
-[section Synopsis]
-
-    ```// In Header: <`[@boost:/boost/optional/optional.hpp boost/optional/optional.hpp]'''<phrase role="comment">&gt;</phrase>'''``
-
-    namespace boost {
-
-    template<class T>
-    class optional
-    {
-        public :
-
-        // (If T is of reference type, the parameters and results by reference are by value)
-
-        optional () noexcept ; ``[link reference_optional_constructor __GO_TO__]``
-
-        optional ( none_t ) noexcept ; ``[link reference_optional_constructor_none_t __GO_TO__]``
-
-        optional ( T const& v ) ; ``[link reference_optional_constructor_value __GO_TO__]``
-        
-        optional ( T&& v ) ; ``[link reference_optional_constructor_move_value __GO_TO__]``
-
-        // [new in 1.34]
-        optional ( bool condition, T const& v ) ; ``[link reference_optional_constructor_bool_value __GO_TO__]`` 
-
-        optional ( optional const& rhs ) ; ``[link reference_optional_constructor_optional __GO_TO__]``
-        
-        optional ( optional&& rhs ) noexcept(``['see below]``) ; ``[link reference_optional_move_constructor_optional __GO_TO__]``
-
-        template<class U> explicit optional ( optional<U> const& rhs ) ; ``[link reference_optional_constructor_other_optional __GO_TO__]``
-        
-        template<class U> explicit optional ( optional<U>&& rhs ) ; ``[link reference_optional_move_constructor_other_optional __GO_TO__]``
-
-        template<class InPlaceFactory> explicit optional ( InPlaceFactory const& f ) ; ``[link reference_optional_constructor_factory __GO_TO__]``
-
-        template<class TypedInPlaceFactory> explicit optional ( TypedInPlaceFactory const& f ) ; ``[link reference_optional_constructor_factory __GO_TO__]``
-
-        optional& operator = ( none_t ) noexcept ; ``[link reference_optional_operator_equal_none_t __GO_TO__]``
-
-        optional& operator = ( T const& v ) ; ``[link reference_optional_operator_equal_value __GO_TO__]``
-        
-        optional& operator = ( T&& v ) ; ``[link reference_optional_operator_move_equal_value __GO_TO__]``
-
-        optional& operator = ( optional const& rhs ) ; ``[link reference_optional_operator_equal_optional __GO_TO__]``
-        
-        optional& operator = ( optional&& rhs ) noexcept(``['see below]``) ; ``[link reference_optional_operator_move_equal_optional __GO_TO__]``
-
-        template<class U> optional& operator = ( optional<U> const& rhs ) ; ``[link reference_optional_operator_equal_other_optional __GO_TO__]``
-        
-        template<class U> optional& operator = ( optional<U>&& rhs ) ; ``[link reference_optional_operator_move_equal_other_optional __GO_TO__]``
-        
-        template<class... Args> void emplace ( Args...&& args ) ; ``[link reference_optional_emplace __GO_TO__]``
-
-        template<class InPlaceFactory> optional& operator = ( InPlaceFactory const& f ) ; ``[link reference_optional_operator_equal_factory __GO_TO__]``
-
-        template<class TypedInPlaceFactory> optional& operator = ( TypedInPlaceFactory const& f ) ; ``[link reference_optional_operator_equal_factory __GO_TO__]``
-
-        T const& get() const ; ``[link reference_optional_get __GO_TO__]``
-        T&       get() ; ``[link reference_optional_get __GO_TO__]``
-
-        T const* operator ->() const ; ``[link reference_optional_operator_arrow __GO_TO__]``
-        T*       operator ->() ; ``[link reference_optional_operator_arrow __GO_TO__]``
-
-        T const& operator *() const& ; ``[link reference_optional_operator_asterisk __GO_TO__]``
-        T&       operator *() & ; ``[link reference_optional_operator_asterisk __GO_TO__]``
-        T&&      operator *() && ; ``[link reference_optional_operator_asterisk_move __GO_TO__]``
-        
-        T const& value() const& ; ``[link reference_optional_value __GO_TO__]``
-        T&       value() & ; ``[link reference_optional_value __GO_TO__]``
-        T&&      value() && ; ``[link reference_optional_value_move __GO_TO__]``
-        
-        template<class U> T value_or( U && v ) const& ; ``[link reference_optional_value_or __GO_TO__]``
-        template<class U> T value_or( U && v ) && ; ``[link reference_optional_value_or_move __GO_TO__]``
-        
-        template<class F> T value_or_eval( F f ) const& ; ``[link reference_optional_value_or_call __GO_TO__]``
-        template<class F> T value_or_eval( F f ) && ; ``[link reference_optional_value_or_call_move __GO_TO__]``
-
-        T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
-        T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
-
-        explicit operator bool() const noexcept ; ``[link reference_optional_operator_bool __GO_TO__]``
-
-        bool operator!() const noexcept ; ``[link reference_optional_operator_not __GO_TO__]``
-
-        // deprecated methods
-
-        // (deprecated)
-        void reset() noexcept ; ``[link reference_optional_reset __GO_TO__]``
-
-        // (deprecated)
-        void reset ( T const& ) ; ``[link reference_optional_reset_value __GO_TO__]``
-
-        // (deprecated)
-        bool is_initialized() const ; ``[link reference_optional_is_initialized __GO_TO__]``
-
-        // (deprecated)
-        T const& get_value_or( T const& default ) const ; ``[link reference_optional_get_value_or_value __GO_TO__]`` 
-    };
-
-    template<class T> inline bool operator == ( optional<T> const& x, optional<T> const& y ) ; ``[link reference_operator_compare_equal_optional_optional __GO_TO__]``
-
-    template<class T> inline bool operator != ( optional<T> const& x, optional<T> const& y ) ; ``[link reference_operator_compare_not_equal_optional_optional __GO_TO__]``
-
-    template<class T> inline bool operator <  ( optional<T> const& x, optional<T> const& y ) ; ``[link reference_operator_compare_less_optional_optional __GO_TO__]``
-
-    template<class T> inline bool operator >  ( optional<T> const& x, optional<T> const& y ) ; ``[link reference_operator_compare_greater_optional_optional __GO_TO__]``
-
-    template<class T> inline bool operator <= ( optional<T> const& x, optional<T> const& y ) ; ``[link reference_operator_compare_less_or_equal_optional_optional __GO_TO__]``
-
-    template<class T> inline bool operator >= ( optional<T> const& x, optional<T> const& y ) ; ``[link reference_operator_compare_greater_or_equal_optional_optional __GO_TO__]``
-    
-    template<class T> inline bool operator == ( optional<T> const& x, none_t ) noexcept ; ``[link reference_operator_compare_equal_optional_none __GO_TO__]``
-
-    template<class T> inline bool operator != ( optional<T> const& x, none_t ) noexcept ; ``[link reference_operator_compare_not_equal_optional_none __GO_TO__]``
-
-    template<class T> inline optional<T> make_optional ( T const& v ) ; ``[link reference_make_optional_value __GO_TO__]``
-
-    template<class T> inline optional<T> make_optional ( bool condition, T const& v ) ; ``[link reference_make_optional_bool_value __GO_TO__]``
-
-    template<class T> inline T const& get_optional_value_or ( optional<T> const& opt, T const& default ) ; ``[link reference_optional_get_value_or_value __GO_TO__]`` 
-
-    template<class T> inline T const& get ( optional<T> const& opt ) ; ``[link reference_optional_get __GO_TO__]``
-
-    template<class T> inline T& get ( optional<T> & opt ) ; ``[link reference_optional_get __GO_TO__]``
-
-    template<class T> inline T const* get ( optional<T> const* opt ) ; ``[link reference_optional_get __GO_TO__]``
-
-    template<class T> inline T* get ( optional<T>* opt ) ; ``[link reference_optional_get __GO_TO__]``
-
-    template<class T> inline T const* get_pointer ( optional<T> const& opt ) ; ``[link reference_optional_get_ptr __GO_TO__]``
-
-    template<class T> inline T* get_pointer ( optional<T> & opt ) ; ``[link reference_optional_get_ptr __GO_TO__]``
-
-    template<class T> inline void swap( optional<T>& x, optional<T>& y ) ; ``[link reference_swap_optional_optional __GO_TO__]``
-
-    } // namespace boost
-
-
-[endsect]
-
 [section Detailed Semantics]
 
 Because `T` might be of reference type, in the sequel, those entries whose
@@ -602,10 +463,11 @@ __SPACE__
 
 * [*Requires:] `T` is __COPY_CONSTRUCTIBLE__ and `CopyAssignable`.
 * [*Effects:]
-  * If `!*this && !rhs` no effect, otherwise
-  * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
-  * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `*rhs`, otherwise
-  * (if `bool(*this) && bool(rhs)`) assigns `*rhs` to the contained value.
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `*rhs` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `*rhs`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
 * [*Returns:] `*this`;
 * [*Postconditions:] `bool(rhs) == bool(*this)`. 
 * [*Exception Safety:] If any exception is thrown, the initialization state of `*this` and `rhs` remains unchanged.
@@ -662,10 +524,11 @@ __SPACE__
 
 * [*Requires:] `T` is __MOVE_CONSTRUCTIBLE__ and `MoveAssignable`.
 * [*Effects:]
-  * If `!*this && !rhs` no effect, otherwise
-  * if `bool(*this) && !rhs`, destroys the contained value by calling `val->T::~T()`, otherwise
-  * if `!*this && bool(rhs)`, initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`, otherwise
-  * (if `bool(*this) && bool(rhs)`) assigns `std::move(*rhs)` to the contained value.
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `std::move(*rhs)` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
 * [*Returns:] `*this`;
 * [*Postconditions:] `bool(rhs) == bool(*this)`. 
 * [*Remarks:] The expression inside `noexcept` is equivalent to `is_nothrow_move_constructible<T>::value && is_nothrow_move_assignable<T>::value`.
@@ -696,21 +559,17 @@ __SPACE__
 
 [: `template<U> optional& optional<T` ['(not a ref)]`>::operator= ( optional<U> const& rhs ) ;`]
 
-* [*Effect:] Assigns another convertible optional to an optional.
-* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
-its value is a ['copy] of the value of `rhs` ['converted] to type `T`; else
-`*this` is uninitialized. 
-* [*Throws:] Whatever `T::operator=( U const& )` or `T::T( U const& )` throws.
-* [*Notes:] If both `*this` and rhs are initially initialized, `T`'s
-['assignment operator] (from `U`) is used. If `*this` is initially initialized
-but `rhs` is uninitialized, `T`'s ['destructor] is called. If `*this` is
-initially uninitialized but rhs is initialized, `T`'s ['converting constructor]
-(from `U`) is called.
-* [*Exception Safety:] In the event of an exception, the initialization state
-of `*this` is unchanged and its value unspecified as far as optional is
-concerned (it is up to `T`'s `operator=()`). If `*this` is initially
-uninitialized and `T`'s converting constructor fails, `*this` is left properly
-uninitialized.
+* [*Effect:] 
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `*rhs` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `*rhs`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
+* [*Returns:] `*this`.
+* [*Postconditions:] `bool(rhs) == bool(*this)`. 
+* [*Exception Safety:] If any exception is thrown, the result of the expression `bool(*this)` remains unchanged.
+If an exception is thrown during the call to `T`'s constructor, no effect.
+If an exception is thrown during the call to `T`'s assignment, the state of its contained value is as defined by the exception safety guarantee of `T`'s copy assignment.
 * [*Example:]
 ``
 T v;
@@ -727,21 +586,17 @@ __SPACE__
 
 [: `template<U> optional& optional<T` ['(not a ref)]`>::operator= ( optional<U>&& rhs ) ;`]
 
-* [*Effect:] Move-assigns another convertible optional to an optional.
-* [*Postconditions:] If `rhs` is initialized, `*this` is initialized and
-its value is moved from the value of `rhs`; else
-`*this` is uninitialized. 
-* [*Throws:] Whatever `T::operator=( U&& )` or `T::T( U&& )` throws.
-* [*Notes:] If both `*this` and `rhs` are initially initialized, `T`'s
-[' assignment operator] (from `U&&`) is used. If `*this` is initially initialized
-but `rhs` is uninitialized, `T`'s ['destructor] is called. If `*this` is
-initially uninitialized but `rhs` is initialized, `T`'s ['converting constructor]
-(from `U&&`) is called.
-* [*Exception Safety:] In the event of an exception, the initialization state
-of `*this` is unchanged and its value unspecified as far as optional is
-concerned (it is up to `T`'s `operator=()`). If `*this` is initially
-uninitialized and `T`'s converting constructor fails, `*this` is left properly
-uninitialized.
+* [*Effect:]
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][assigns `std::move(*rhs)` to the contained value][initializes the contained value as if direct-initializing an object of type `T` with `std::move(*rhs)`]]
+  [[`rhs` does not contain a value][destroys the contained value by calling `val->T::~T()`][no effect]]
+]
+* [*Returns:] `*this`.
+* [*Postconditions:] `bool(rhs) == bool(*this)`. 
+* [*Exception Safety:] If any exception is thrown, the result of the expression `bool(*this)` remains unchanged.
+If an exception is thrown during the call to `T`'s constructor, no effect.
+If an exception is thrown during the call to `T`'s assignment, the state of its contained value is as defined by the exception safety guarantee of `T`'s copy assignment.
 * [*Example:]
 ``
 T v;
@@ -1143,9 +998,8 @@ __SPACE__
 * [*Requires:] `T` shall meet requirements of __SGI_EQUALITY_COMPARABLE__.
 * [*Returns:] If both `x` and `y` are initialized, `(*x == *y)`. If only
 `x` or `y` is initialized, `false`. If both are uninitialized, `true`.
-* [*Notes:] Pointers have shallow relational operators while `optional` has
-deep relational operators. Do not use `operator==` directly in generic
-code which expect to be given either an `optional<T>` or a pointer; use
+* [*Notes:] This definition guarantees that `optional<T>` not containing a value is compared unequal to any `optional<T>` containing any value, and equal to any other `optional<T>` not containing a value.
+Pointers have shallow relational operators while `optional` has deep relational operators. Do not use `operator==` directly in generic code which expect to be given either an `optional<T>` or a pointer; use
 __FUNCTION_EQUAL_POINTEES__ instead
 * [*Example:]
 ``
@@ -1172,8 +1026,8 @@ __SPACE__
 
 * [*Requires:] Expression `*x < *y` shall be well-formed and its result shall be convertible to `bool`.
 * [*Returns:] `(!y) ? false : (!x) ? true : *x < *y`.
-* [*Notes:] Pointers have shallow relational operators while `optional` has
-deep relational operators. Do not use `operator<` directly in generic code
+* [*Notes:] This definition guarantees that `optional<T>` not containing a value is ordered as less than any `optional<T>` containing any value, and equivalent to any other `optional<T>` not containing a value.
+Pointers have shallow relational operators while `optional` has deep relational operators. Do not use `operator<` directly in generic code
 which expect to be given either an `optional<T>` or a pointer; use __FUNCTION_LESS_POINTEES__ instead. `T` need not be __SGI_LESS_THAN_COMPARABLE__. Only single `operator<` is required. Other relational operations are defined in terms of this one. If `T`'s `operator<` satisfies the axioms of __SGI_LESS_THAN_COMPARABLE__ (transitivity, antisymmetry and irreflexivity), `optinal<T>` is __SGI_LESS_THAN_COMPARABLE__.
 * [*Example:]
 ``
@@ -1256,10 +1110,11 @@ __SPACE__
 
 * [*Requires:] Lvalues of type `T` shall be swappable and `T` shall be __MOVE_CONSTRUCTIBLE__.
 * [*Effects:]
-  * If `!*this && !rhs`, no effect, otherwise
-  * if `bool(*this) && !rhs`, initializes the contained value of `rhs` as if direct-initializing an object of type `T` with the expression `std::move(*(*this))`, followed by `val->T::~T()`, `*this` does not contain a value and `rhs` contains a value, otherwise
-  * if `!*this && bool(rhs)`, initializes the contained value of `*this` as if direct-initializing an object of type `T` with the expression `std::move(*rhs)`, followed by `rhs.val->T::~T()`, `*this` contains a value and `rhs` does not contain a value, otherwise
-  * (if `bool(*this) && bool(rhs)`) calls `swap(*(*this), *rhs)`.
+[table 
+  [[][`*this` contains a value][`*this` does not contain a value]]
+  [[`rhs` contains a value][calls `swap(*(*this), *rhs)`][initializes the contained value of `*this` as if direct-initializing an object of type `T` with the expression `std::move(*rhs)`, followed by `rhs.val->T::~T()`, `*this` contains a value and `rhs` does not contain a value]]
+  [[`rhs` does not contain a value][initializes the contained value of `rhs` as if direct-initializing an object of type `T` with the expression `std::move(*(*this))`, followed by `val->T::~T()`, `*this` does not contain a value and `rhs` contains a value][no effect]]
+]
 * [*Postconditions:] The states of `x` and `y` interchanged.
 * [*Throws:] If both are initialized, whatever `swap(T&,T&)` throws. If only
 one is initialized, whatever `T::T ( T&& )` throws.

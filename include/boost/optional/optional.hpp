@@ -188,7 +188,7 @@ struct types_when_is_ref
 template <class To, class From>
 void prevent_binding_rvalue_ref_to_optional_lvalue_ref()
 {
-#ifndef BOOST_OPTIONAL_ALLOW_BINDING_TO_RVALUES
+#ifndef BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
   BOOST_STATIC_ASSERT_MSG(
     !boost::is_lvalue_reference<To>::value || !boost::is_rvalue_reference<From>::value, 
     "binding rvalue references to optional lvalue references is disallowed");
@@ -371,13 +371,22 @@ class optional_base : public optional_tag
       if (is_initialized())
       {
         if ( rhs.is_initialized() )
-             assign_value(static_cast<value_type>(rhs.get()), is_reference_predicate() );
+#ifndef BOOST_OPTIONAL_CONFIG_RESTORE_ASSIGNMENT_OF_NONCONVERTIBLE_TYPES
+          assign_value(rhs.get(), is_reference_predicate() );
+#else
+          assign_value(static_cast<value_type>(rhs.get()), is_reference_predicate() );
+#endif
+          
         else destroy();
       }
       else
       {
         if ( rhs.is_initialized() )
+#ifndef BOOST_OPTIONAL_CONFIG_RESTORE_ASSIGNMENT_OF_NONCONVERTIBLE_TYPES
+          construct(rhs.get());
+#else
           construct(static_cast<value_type>(rhs.get()));
+#endif
       }
     }
 
@@ -1011,7 +1020,7 @@ class optional : public optional_detail::optional_base<T>
 #if (!defined BOOST_NO_CXX11_REF_QUALIFIERS) && (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES) 
     reference_const_type operator *() const& { return this->get() ; }
     reference_type       operator *() &      { return this->get() ; }
-    reference_type_of_temporary_wrapper operator *() && { return boost::move(this->get()) ; }
+    reference_type_of_temporary_wrapper operator *() && { return base::types::move(this->get()) ; }
 #else
     reference_const_type operator *() const { return this->get() ; }
     reference_type       operator *()       { return this->get() ; }
@@ -1037,7 +1046,7 @@ class optional : public optional_detail::optional_base<T>
     reference_type_of_temporary_wrapper value() &&
       { 
         if (this->is_initialized())
-          return boost::move(this->get()) ;
+          return base::types::move(this->get()) ;
         else
           throw_exception(bad_optional_access());
       }
@@ -1075,7 +1084,7 @@ class optional : public optional_detail::optional_base<T>
     value_type value_or ( U&& v ) && 
       { 
         if (this->is_initialized())
-          return boost::move(get());
+          return base::types::move(get());
         else
           return boost::forward<U>(v);
       }
@@ -1091,6 +1100,15 @@ class optional : public optional_detail::optional_base<T>
 #else
     template <class U>
     value_type value_or ( U const& v ) const 
+      { 
+        if (this->is_initialized())
+          return get();
+        else
+          return v;
+      }
+      
+    template <class U>
+    value_type value_or ( U& v ) const 
       { 
         if (this->is_initialized())
           return get();
@@ -1114,7 +1132,7 @@ class optional : public optional_detail::optional_base<T>
     value_type value_or_eval ( F f ) &&
       {
         if (this->is_initialized())
-          return boost::move(get());
+          return base::types::move(get());
         else
           return f();
       }
