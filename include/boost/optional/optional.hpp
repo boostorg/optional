@@ -1251,7 +1251,7 @@ get_pointer ( optional<T>& opt )
 // The following declaration prevents a bug where operator safe-bool is used upon streaming optional object if you forget the IO header.
 template<class CharType, class CharTrait>
 std::basic_ostream<CharType, CharTrait>&
-operator<<(std::basic_ostream<CharType, CharTrait>& out, optional_detail::optional_tag const& v)
+operator<<(std::basic_ostream<CharType, CharTrait>&, optional_detail::optional_tag const&)
 {
   BOOST_STATIC_ASSERT_MSG(sizeof(CharType) == 0, "If you want to output boost::optional, include header <boost/optional/optional_io.hpp>"); 
 }
