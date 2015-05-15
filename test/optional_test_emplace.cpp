@@ -145,11 +145,16 @@ void test_clear_on_throw()
 
 void test_no_assignment_on_emplacement()
 {
-    optional<const std::string> os;
+    optional<const std::string> os, ot;
     BOOST_TEST(!os);
     os.emplace("wow");
     BOOST_TEST(os);
     BOOST_TEST_EQ(*os, "wow");
+    
+    BOOST_TEST(!ot);
+    ot.emplace();
+    BOOST_TEST(ot);
+    BOOST_TEST_EQ(*ot, "");
 }
 
 int main()
