@@ -18,6 +18,7 @@ import testing ;
 {
   test-suite optional :
     [ run optional_test.cpp ]
+    [ run ak_test_vc14_noexcept.cpp ]
     [ run optional_test_swap.cpp ]
     [ run optional_test_conversions_from_U.cpp ]
     [ run optional_test_tie.cpp ]
