@@ -1543,8 +1543,17 @@ struct swap_selector<false>
 
 } // namespace optional_detail
 
+#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_CONFIG_RESTORE_OBSOLETE_SWAP_IMPLEMENTATION)
+
+template<class T>
+struct optional_swap_should_use_default_constructor : boost::false_type {} ;
+
+#else
+
 template<class T>
 struct optional_swap_should_use_default_constructor : has_nothrow_default_constructor<T> {} ;
+
+#endif //BOOST_NO_CXX11_RVALUE_REFERENCES
 
 template<class T> inline void swap ( optional<T>& x, optional<T>& y )
   //BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && BOOST_NOEXCEPT_EXPR(boost::swap(*x, *y)))
