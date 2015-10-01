@@ -58,6 +58,7 @@ import testing ;
     [ compile-fail optional_test_fail_explicit_convert_in_value_or.cpp ]
     [ compile-fail optional_test_fail_explicit_convert_in_value_or_call.cpp ]
     [ compile-fail optional_test_fail_io_without_io.cpp ]
+    [ compile-fail optional_test_fail_none_io_without_io.cpp ]
     [ compile-fail optional_test_fail_convert_assign_of_enums.cpp ]
   ;
 }
