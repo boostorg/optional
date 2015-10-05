@@ -28,29 +28,29 @@ void prevent_binding_rvalue()
 }
 
 template <class T>
-typename boost::remove_reference<T>::type& forward_reference(T&& r)
+BOOST_DEDUCED_TYPENAME boost::remove_reference<T>::type& forward_reference(T&& r)
 {
     BOOST_STATIC_ASSERT_MSG(boost::is_lvalue_reference<T>::value, 
                             "binding rvalue references to optional lvalue references is disallowed");
     return boost::forward<T>(r);
 }
 
-template <typename T>
+template <class T>
 struct is_optional_
 {
   static const bool value = false;
 };
 
-template <typename U>
-struct is_optional_<::boost::optional<U>>
+template <class U>
+struct is_optional_< ::boost::optional<U> >
 {
   static const bool value = true;
 };
 
-template <typename T>
+template <class T>
 struct is_no_optional
 {
-  static const bool value = !is_optional_<typename boost::decay<T>::type>::value;
+  static const bool value = !is_optional_<BOOST_DEDUCED_TYPENAME boost::decay<T>::type>::value;
 };
 
 } // namespace detail
@@ -90,7 +90,7 @@ public:
     T& value() const { return ptr_ ? *ptr_ : (throw_exception(bad_optional_access()), *ptr_); }
 
     
-    template <typename F>
+    template <class F>
     T& value_or_eval(F f) const { return ptr_ ? *ptr_ : detail::forward_reference(f()); }
     
     bool operator!() const BOOST_NOEXCEPT { return ptr_ == 0; }  
