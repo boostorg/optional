@@ -11,6 +11,11 @@
 
 [section:relnotes Release Notes]
 
+[heading Boost Release X.XX]
+
+* Changed the implementation of `boost::none`: now it is a constant with internal linkage. This addresses [@https://svn.boost.org/trac/boost/ticket/11203 Trac #11203].
+* Now `boost::optional` is specialized for reference parameters. This way the `sizeof` of optional reference is that of a pointer, and a number of bugs is avoided.
+
 [heading Boost Release 1.59]
 
 * For C++03 compilers, added 0-argument overload for member function `emplace()`, and therewith removed the dependency on `<boost/utility/in_place_factory.hpp>`.

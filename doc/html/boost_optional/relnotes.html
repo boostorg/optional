@@ -28,6 +28,23 @@
 </h2></div></div></div>
 <h4>
 <a name="boost_optional.relnotes.h0"></a>
+      <span class="phrase"><a name="boost_optional.relnotes.boost_release_x_xx"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_x_xx">Boost
+      Release X.XX</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          Changed the implementation of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code>:
+          now it is a constant with internal linkage. This addresses <a href="https://svn.boost.org/trac/boost/ticket/11203" target="_top">Trac
+          #11203</a>.
+        </li>
+<li class="listitem">
+          Now <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional</span></code> is specialized for reference
+          parameters. This way the <code class="computeroutput"><span class="keyword">sizeof</span></code>
+          of optional reference is that of a pointer, and a number of bugs is avoided.
+        </li>
+</ul></div>
+<h4>
+<a name="boost_optional.relnotes.h1"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_59"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_59">Boost
       Release 1.59</a>
     </h4>
@@ -36,7 +53,7 @@
           and therewith removed the dependency on <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">utility</span><span class="special">/</span><span class="identifier">in_place_factory</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>.
         </li></ul></div>
 <h4>
-<a name="boost_optional.relnotes.h1"></a>
+<a name="boost_optional.relnotes.h2"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_58"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_58">Boost
       Release 1.58</a>
     </h4>
@@ -72,7 +89,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="boost_optional.relnotes.h2"></a>
+<a name="boost_optional.relnotes.h3"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_57"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_57">Boost
       Release 1.57</a>
     </h4>
@@ -82,7 +99,7 @@
           to fix C++03 compile error on <code class="computeroutput"><span class="identifier">logic_error</span><span class="special">(</span><span class="string">"..."</span><span class="special">)</span></code>"</em></span>.
         </li></ul></div>
 <h4>
-<a name="boost_optional.relnotes.h3"></a>
+<a name="boost_optional.relnotes.h4"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_56"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_56">Boost
       Release 1.56</a>
     </h4>

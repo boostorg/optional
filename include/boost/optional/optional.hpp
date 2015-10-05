@@ -20,7 +20,6 @@
 #include <new>
 #include <iosfwd>
 
-#include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/core/addressof.hpp>
 #include <boost/core/enable_if.hpp>
@@ -52,42 +51,7 @@
 #include <boost/utility/compare_pointees.hpp>
 
 #include <boost/optional/optional_fwd.hpp>
-
-#if (defined BOOST_NO_CXX11_RVALUE_REFERENCES) || (defined BOOST_OPTIONAL_CONFIG_NO_RVALUE_REFERENCES)
-#define BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
-#endif
-
-#if BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION,<=700)
-// AFAICT only Intel 7 correctly resolves the overload set
-// that includes the in-place factory taking functions,
-// so for the other icc versions, in-place factory support
-// is disabled
-#define BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
-#endif
-
-#if BOOST_WORKAROUND(__BORLANDC__, <= 0x551)
-// BCB (5.5.1) cannot parse the nested template struct in an inplace factory.
-#define BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
-#endif
-
-#if !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) \
-    && BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x581) )
-// BCB (up to 5.64) has the following bug:
-//   If there is a member function/operator template of the form
-//     template<class Expr> mfunc( Expr expr ) ;
-//   some calls are resolved to this even if there are other better matches.
-//   The effect of this bug is that calls to converting ctors and assignments
-//   are incrorrectly sink to this general catch-all member function template as shown above.
-#define BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION
-#endif
-
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
-// GCC since 3.3 has may_alias attribute that helps to alleviate optimizer issues with
-// regard to violation of the strict aliasing rules. The optional< T > storage type is marked
-// with this attribute in order to let the compiler know that it will alias objects of type T
-// and silence compilation warnings.
-#define BOOST_OPTIONAL_DETAIL_USE_ATTRIBUTE_MAY_ALIAS
-#endif
+#include <boost/optional/detail/optional_config.hpp>
 
 // Daniel Wallin discovered that bind/apply.hpp badly interacts with the apply<>
 // member template of a factory as used in the optional<> implementation.
@@ -101,7 +65,6 @@ namespace boost_optional_detail
     factory.BOOST_NESTED_TEMPLATE apply<T>(address);
   }
 }
-
 
 namespace boost {
 
@@ -252,7 +215,7 @@ class optional_base : public optional_tag
       :
       m_initialized(false)
     {
-      construct(val);
+        construct(val);
     }
 
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
@@ -1180,6 +1143,14 @@ class optional<T&&>
 } ;
 #endif
 
+} // namespace boost
+
+#ifndef BOOST_OPTIONAL_CONFIG_DONT_SPECIALIZE_OPTIONAL_REFS
+# include <boost/optional/detail/optional_reference_spec.hpp>
+#endif
+
+namespace boost {
+
 // Returns optional<T>(v)
 template<class T>
 inline
@@ -1277,291 +1248,9 @@ operator<<(std::basic_ostream<CharType, CharTrait>& os, optional_detail::optiona
   return os;  
 }
 
-// optional's relational operators ( ==, !=, <, >, <=, >= ) have deep-semantics (compare values).
-// WARNING: This is UNLIKE pointers. Use equal_pointees()/less_pointess() in generic code instead.
-
-
-//
-// optional<T> vs optional<T> cases
-//
-
-template<class T>
-inline
-bool operator == ( optional<T> const& x, optional<T> const& y )
-{ return equal_pointees(x,y); }
-
-template<class T>
-inline
-bool operator < ( optional<T> const& x, optional<T> const& y )
-{ return less_pointees(x,y); }
-
-template<class T>
-inline
-bool operator != ( optional<T> const& x, optional<T> const& y )
-{ return !( x == y ) ; }
-
-template<class T>
-inline
-bool operator > ( optional<T> const& x, optional<T> const& y )
-{ return y < x ; }
-
-template<class T>
-inline
-bool operator <= ( optional<T> const& x, optional<T> const& y )
-{ return !( y < x ) ; }
-
-template<class T>
-inline
-bool operator >= ( optional<T> const& x, optional<T> const& y )
-{ return !( x < y ) ; }
-
-
-//
-// optional<T> vs T cases
-//
-template<class T>
-inline
-bool operator == ( optional<T> const& x, T const& y )
-{ return equal_pointees(x, optional<T>(y)); }
-
-template<class T>
-inline
-bool operator < ( optional<T> const& x, T const& y )
-{ return less_pointees(x, optional<T>(y)); }
-
-template<class T>
-inline
-bool operator != ( optional<T> const& x, T const& y )
-{ return !( x == y ) ; }
-
-template<class T>
-inline
-bool operator > ( optional<T> const& x, T const& y )
-{ return y < x ; }
-
-template<class T>
-inline
-bool operator <= ( optional<T> const& x, T const& y )
-{ return !( y < x ) ; }
-
-template<class T>
-inline
-bool operator >= ( optional<T> const& x, T const& y )
-{ return !( x < y ) ; }
-
-//
-// T vs optional<T> cases
-//
-
-template<class T>
-inline
-bool operator == ( T const& x, optional<T> const& y )
-{ return equal_pointees( optional<T>(x), y ); }
-
-template<class T>
-inline
-bool operator < ( T const& x, optional<T> const& y )
-{ return less_pointees( optional<T>(x), y ); }
-
-template<class T>
-inline
-bool operator != ( T const& x, optional<T> const& y )
-{ return !( x == y ) ; }
-
-template<class T>
-inline
-bool operator > ( T const& x, optional<T> const& y )
-{ return y < x ; }
-
-template<class T>
-inline
-bool operator <= ( T const& x, optional<T> const& y )
-{ return !( y < x ) ; }
-
-template<class T>
-inline
-bool operator >= ( T const& x, optional<T> const& y )
-{ return !( x < y ) ; }
-
-
-//
-// optional<T> vs none cases
-//
-
-template<class T>
-inline
-bool operator == ( optional<T> const& x, none_t ) BOOST_NOEXCEPT
-{ return !x; }
-
-template<class T>
-inline
-bool operator < ( optional<T> const& x, none_t )
-{ return less_pointees(x,optional<T>() ); }
-
-template<class T>
-inline
-bool operator != ( optional<T> const& x, none_t ) BOOST_NOEXCEPT
-{ return bool(x); }
-
-template<class T>
-inline
-bool operator > ( optional<T> const& x, none_t y )
-{ return y < x ; }
-
-template<class T>
-inline
-bool operator <= ( optional<T> const& x, none_t y )
-{ return !( y < x ) ; }
-
-template<class T>
-inline
-bool operator >= ( optional<T> const& x, none_t y )
-{ return !( x < y ) ; }
-
-//
-// none vs optional<T> cases
-//
-
-template<class T>
-inline
-bool operator == ( none_t , optional<T> const& y ) BOOST_NOEXCEPT
-{ return !y; }
-
-template<class T>
-inline
-bool operator < ( none_t , optional<T> const& y )
-{ return less_pointees(optional<T>() ,y); }
-
-template<class T>
-inline
-bool operator != ( none_t, optional<T> const& y ) BOOST_NOEXCEPT
-{ return bool(y); }
-
-template<class T>
-inline
-bool operator > ( none_t x, optional<T> const& y )
-{ return y < x ; }
-
-template<class T>
-inline
-bool operator <= ( none_t x, optional<T> const& y )
-{ return !( y < x ) ; }
-
-template<class T>
-inline
-bool operator >= ( none_t x, optional<T> const& y )
-{ return !( x < y ) ; }
-
-namespace optional_detail {
-
-template<bool use_default_constructor> struct swap_selector;
-
-template<>
-struct swap_selector<true>
-{
-    template<class T>
-    static void optional_swap ( optional<T>& x, optional<T>& y )
-    {
-        const bool hasX = !!x;
-        const bool hasY = !!y;
-
-        if ( !hasX && !hasY )
-            return;
-
-        if( !hasX )
-            x.emplace();
-        else if ( !hasY )
-            y.emplace();
-
-        // Boost.Utility.Swap will take care of ADL and workarounds for broken compilers
-        boost::swap(x.get(),y.get());
-
-        if( !hasX )
-            y = boost::none ;
-        else if( !hasY )
-            x = boost::none ;
-    }
-};
-
-#ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
-template<>
-struct swap_selector<false>
-{
-    template<class T>
-    static void optional_swap ( optional<T>& x, optional<T>& y ) 
-    //BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && BOOST_NOEXCEPT_EXPR(boost::swap(*x, *y)))
-    {
-        if(x)
-        {
-            if (y)
-            {
-                boost::swap(*x, *y);
-            }
-            else
-            {
-                y = boost::move(*x);
-                x = boost::none;
-            }
-        }
-        else
-        {
-            if (y)
-            {
-                x = boost::move(*y);
-                y = boost::none;
-            }
-        }
-    }
-};
-#else
-template<>
-struct swap_selector<false>
-{
-    template<class T>
-    static void optional_swap ( optional<T>& x, optional<T>& y )
-    {
-        const bool hasX = !!x;
-        const bool hasY = !!y;
-
-        if ( !hasX && hasY )
-        {
-            x = y.get();
-            y = boost::none ;
-        }
-        else if ( hasX && !hasY )
-        {
-            y = x.get();
-            x = boost::none ;
-        }
-        else if ( hasX && hasY )
-        {
-            // Boost.Utility.Swap will take care of ADL and workarounds for broken compilers
-            boost::swap(x.get(),y.get());
-        }
-    }
-};
-#endif // !defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
-
-} // namespace optional_detail
-
-#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_CONFIG_RESTORE_OBSOLETE_SWAP_IMPLEMENTATION)
-
-template<class T>
-struct optional_swap_should_use_default_constructor : boost::false_type {} ;
-
-#else
-
-template<class T>
-struct optional_swap_should_use_default_constructor : has_nothrow_default_constructor<T> {} ;
-
-#endif //BOOST_NO_CXX11_RVALUE_REFERENCES
-
-template<class T> inline void swap ( optional<T>& x, optional<T>& y )
-  //BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && BOOST_NOEXCEPT_EXPR(boost::swap(*x, *y)))
-{
-    optional_detail::swap_selector<optional_swap_should_use_default_constructor<T>::value>::optional_swap(x, y);
-}
-
 } // namespace boost
 
-#endif
+#include <boost/optional/detail/optional_relops.hpp>
+#include <boost/optional/detail/optional_swap.hpp>
+
+#endif // header guard
