@@ -82,7 +82,7 @@ public:
     
     
     void swap(optional& rhs) BOOST_NOEXCEPT { std::swap(ptr_, rhs.ptr_); }
-    T& get() const { BOOST_ASSERT(ptr_); return *ptr_; }
+    T& get() const { BOOST_ASSERT(ptr_); return   *ptr_; }
 
     T* get_ptr() const BOOST_NOEXCEPT { return ptr_; }
     T* operator->() const { BOOST_ASSERT(ptr_); return ptr_; }
@@ -133,25 +133,30 @@ public:
 #else  // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
     template <class U>
-        optional(const U& v) BOOST_NOEXCEPT : ptr_(boost::addressof(v)) { }
+        optional(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT : ptr_(boost::addressof(v)) { }
         
     template <class U>
-        optional(bool cond, const U& v) BOOST_NOEXCEPT : ptr_(cond ? boost::addressof(v) : 0) {}
+        optional(bool cond, U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT : ptr_(cond ? boost::addressof(v) : 0) {}
         
     template <class U>
-        optional operator=(const U& v) BOOST_NOEXCEPT { ptr_ = boost::addressof(v); return *this; }
+        BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U>, optional<T&>&>::type
+        operator=(U& v) BOOST_NOEXCEPT { ptr_ = boost::addressof(v); return *this; }
         
     template <class U>
-        void emplace(const U& v) BOOST_NOEXCEPT { ptr_ = boost::addressof(v); }
+        void emplace(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT
+        { ptr_ = boost::addressof(v); }
         
     template <class U>
-      T& get_value_or(const U& v) const BOOST_NOEXCEPT { return ptr_ ? *ptr_ : v; }
+      T& get_value_or(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) const BOOST_NOEXCEPT
+      { return ptr_ ? *ptr_ : v; }
       
     template <class U>
-        T& value_or(const U& v) const BOOST_NOEXCEPT { return ptr_ ? *ptr_ : v; }
+        T& value_or(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) const BOOST_NOEXCEPT
+        { return ptr_ ? *ptr_ : v; }
         
     template <class U>
-      void reset(const U& v) BOOST_NOEXCEPT { ptr_ = boost::addressof(v); }
+      void reset(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT
+      { ptr_ = boost::addressof(v); }
       
 #endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 };
