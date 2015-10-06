@@ -18,6 +18,8 @@ namespace boost {
 
 namespace detail {
 
+#ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
+
 template <class From>
 void prevent_binding_rvalue()
 {
@@ -34,6 +36,8 @@ BOOST_DEDUCED_TYPENAME boost::remove_reference<T>::type& forward_reference(T&& r
                             "binding rvalue references to optional lvalue references is disallowed");
     return boost::forward<T>(r);
 }
+
+#endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
 template <class T>
 struct is_optional_
