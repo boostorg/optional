@@ -92,10 +92,6 @@ public:
     T* operator->() const { BOOST_ASSERT(ptr_); return ptr_; }
     T& operator*() const { BOOST_ASSERT(ptr_); return *ptr_; }
     T& value() const { return ptr_ ? *ptr_ : (throw_exception(bad_optional_access()), *ptr_); }
-
-    
-    template <class F>
-    T& value_or_eval(F f) const { return ptr_ ? *ptr_ : detail::forward_reference(f()); }
     
     bool operator!() const BOOST_NOEXCEPT { return ptr_ == 0; }  
     BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
@@ -134,6 +130,9 @@ public:
       void reset(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R> >::type* = 0) BOOST_NOEXCEPT
       { detail::prevent_binding_rvalue<R>(); ptr_ = boost::addressof(r); }
       
+    template <class F>
+        T& value_or_eval(F f) const { return ptr_ ? *ptr_ : detail::forward_reference(f()); }
+      
 #else  // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
     template <class U>
@@ -161,6 +160,9 @@ public:
     template <class U>
       void reset(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT
       { ptr_ = boost::addressof(v); }
+      
+    template <class F>
+      T& value_or_eval(F f) const { return ptr_ ? *ptr_ : f(); }
       
 #endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 };
