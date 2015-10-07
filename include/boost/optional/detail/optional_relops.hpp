@@ -193,3 +193,4 @@ bool operator >= ( none_t x, optional<T> const& y )
 } // namespace boost
 
 #endif // header guard
+
