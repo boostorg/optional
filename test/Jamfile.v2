@@ -60,5 +60,7 @@ import testing ;
     [ compile-fail optional_test_fail_io_without_io.cpp ]
     [ compile-fail optional_test_fail_none_io_without_io.cpp ]
     [ compile-fail optional_test_fail_convert_assign_of_enums.cpp ]
+    [ run optional_xconfig_NO_PROPER_ASSIGN_FROM_CONST_INT_pass.cpp ]
+    [ run-fail optional_xconfig_NO_PROPER_ASSIGN_FROM_CONST_INT_fail.cpp ]
   ;
 }
