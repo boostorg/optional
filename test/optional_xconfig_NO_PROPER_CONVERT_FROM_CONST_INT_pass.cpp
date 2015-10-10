@@ -12,7 +12,7 @@
 #include "boost/core/lightweight_test.hpp"
 #include "boost/optional/detail/optional_config.hpp"
 
-#ifndef BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
+#ifndef BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
 
 const int global_i = 0;
 
