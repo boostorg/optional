@@ -59,4 +59,13 @@
 # define BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
 #endif
 
+#if defined(__GNUC__)
+# if (__GNUC__ == 5 && __GNUC_MINOR__ <= 2) || (__GNUC__ == 6 && __GNUC_MINOR__ < 1)
+// On GCC 5.1, 5.2 and 6.0 an unwanted temporary is created when you copy-initialize
+// from a const lvalue of integral type. Thus we bind not to the original address but
+// to a temporary.
+#  define BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
+# endif
+#endif
+
 #endif // header guard
