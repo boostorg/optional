@@ -9,6 +9,7 @@
 // You are welcome to contact the author at:
 //  akrzemi1@gmail.com
 
+#include "boost/core/ignore_unused.hpp"
 #include "boost/core/lightweight_test.hpp"
 #include "boost/optional/detail/optional_config.hpp"
 
@@ -35,6 +36,7 @@ struct Binder
 int main()
 {
   Binder b = global_i;
+  boost::ignore_unused(b);
   return boost::report_errors();
 }
 
