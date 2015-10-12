@@ -9,6 +9,7 @@
 // You are welcome to contact the author at:
 //  akrzemi1@gmail.com
 
+#include "boost/core/ignore_unused.hpp"
 #include "boost/core/lightweight_test.hpp"
 #include "boost/optional/detail/optional_config.hpp"
 
@@ -18,15 +19,16 @@ const int global_i = 0;
 
 struct Binder
 {
-	Binder(const int& i)
-	{
-		BOOST_TEST(&i == &global_i);
+  Binder(const int& i)
+  {
+    BOOST_TEST(&i == &global_i);
   }
 };
 
 int main()
 {
   Binder b = global_i;
+  boost::ignore_unused(b);
   return boost::report_errors();
 }
 
