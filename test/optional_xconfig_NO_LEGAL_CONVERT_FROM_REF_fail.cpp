@@ -9,17 +9,29 @@
 // You are welcome to contact the author at:
 //  akrzemi1@gmail.com
 
+#include "boost/core/ignore_unused.hpp"
 #include "boost/core/lightweight_test.hpp"
 #include "boost/optional/detail/optional_config.hpp"
 
+#ifndef BOOST_OPTIONAL_CONFIG_NO_LEGAL_CONVERT_FROM_REF
+
+static_assert(false, "failed as requested");
+
+#else
+
+struct S {};
+
+struct Binder
+{
+  S& ref_;
+  template <typename R> Binder (R&&r) : ref_(r) {}
+};
+
 int main()
 {
-#if defined(__GNUC__)
-  int empty = -1;
-  BOOST_TEST_EQ(empty, __GNUC__);
-  BOOST_TEST_EQ(empty, __GNUC_MINOR__);
-  BOOST_TEST_EQ(empty, __GNUC_PATCHLEVEL__);
-  BOOST_TEST_EQ(empty, __cplusplus);
-#endif
-  return boost::report_errors();
+  S s ;
+  Binder b = s;
+  boost::ignore_unused(b);
 }
+
+#endif

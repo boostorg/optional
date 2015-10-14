@@ -82,4 +82,18 @@
 
 #endif // defined(__GNUC__)
 
+#if defined(__GNUC__)
+// On some initial rvalue reference implementations GCC does it in a strange way,
+// preferring perfect-forwarding constructor to implicit copy constructor.
+
+# if (__GNUC__ == 4 && __GNUC_MINOR__ == 4)
+#  define BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
+# endif
+
+# if (__GNUC__ == 4 && __GNUC_MINOR__ == 5)
+#  define BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
+# endif
+
+#endif // defined(__GNUC__)
+
 #endif // header guard
