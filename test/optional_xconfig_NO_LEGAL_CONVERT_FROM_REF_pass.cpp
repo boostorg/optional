@@ -13,7 +13,11 @@
 #include "boost/core/lightweight_test.hpp"
 #include "boost/optional/detail/optional_config.hpp"
 
-#ifndef BOOST_OPTIONAL_CONFIG_NO_LEGAL_CONVERT_FROM_REF
+#if (defined BOOST_NO_CXX11_RVALUE_REFERENCES) || (defined BOOST_OPTIONAL_CONFIG_NO_LEGAL_CONVERT_FROM_REF)
+
+int main() { return 0; }
+
+#else
 
 struct S {};
 
@@ -28,13 +32,6 @@ int main()
   S s ; 
   Binder b = s;
   boost::ignore_unused(b);
-  return 0;
-}
-
-#else
-
-int main()
-{
   return 0;
 }
 
