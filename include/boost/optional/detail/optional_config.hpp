@@ -82,7 +82,7 @@
 
 #endif // defined(__GNUC__)
 
-#if (defined __GNUC__) && (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
+#if (defined __GNUC__) && (!defined BOOST_NO_CXX11_RVALUE_REFERENCES) && (!defined BOOST_INTEL_CXX_VERSION)
 // On some initial rvalue reference implementations GCC does it in a strange way,
 // preferring perfect-forwarding constructor to implicit copy constructor.
 
