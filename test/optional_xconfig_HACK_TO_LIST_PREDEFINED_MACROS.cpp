@@ -11,10 +11,21 @@
 
 #include "boost/core/lightweight_test.hpp"
 #include "boost/optional/detail/optional_config.hpp"
+#include <string>
 
 int main()
 {
 #if defined(__GNUC__)
+
+  std::string rrefs_y = "HAS RVALUE REFS";
+  std::string rrefs_n = "NO RVALUE REFS";
+  
+#if !defined BOOST_NO_CXX11_RVALUE_REFERENCES
+  BOOST_TEST_EQ("", rrefs_y);
+#else
+  BOOST_TEST_EQ("", rrefs_n);
+#endif
+
   int empty = -1;
   BOOST_TEST_EQ(empty, __GNUC__);
   BOOST_TEST_EQ(empty, __GNUC_MINOR__);
