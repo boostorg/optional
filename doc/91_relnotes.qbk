@@ -11,9 +11,14 @@
 
 [section:relnotes Release Notes]
 
-[heading Boost Release 1.59]
+[heading Boost Release 1.60]
+
+* Changed the implementation of `boost::none` again. Now it is a const object with internal linkage (as any other tag). This fixes [@https://svn.boost.org/trac/boost/ticket/11203 Trac #11203].
+
+[heading Boost Release 1.59]  
 
 * For C++03 compilers, added 0-argument overload for member function `emplace()`, and therewith removed the dependency on `<boost/utility/in_place_factory.hpp>`.
+* Fixed [@https://svn.boost.org/trac/boost/ticket/11241 Trac #11241].
 
 [heading Boost Release 1.58]
 
