@@ -17,13 +17,18 @@ int main()
 {
 #if defined(__GNUC__)
 
-  std::string rrefs_y = "HAS RVALUE REFS";
-  std::string rrefs_n = "NO RVALUE REFS";
+  std::string emptys;
+  
+#ifdef BOOST_INTEL_CXX_VERSION
+  BOOST_TEST_EQ(emptys, "HAS INTEL INSIDE");
+#else
+  BOOST_TEST_EQ(emptys, "NO INTEL INSIDE");
+#endif
   
 #if !defined BOOST_NO_CXX11_RVALUE_REFERENCES
-  BOOST_TEST_EQ("", rrefs_y);
+  BOOST_TEST_EQ(emptys, "HAS RVALUE REFS");
 #else
-  BOOST_TEST_EQ("", rrefs_n);
+  BOOST_TEST_EQ(emptys, "NO RVALUE REFS");
 #endif
 
   int empty = -1;
