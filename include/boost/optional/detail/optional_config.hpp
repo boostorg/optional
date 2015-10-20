@@ -87,11 +87,11 @@
 // preferring perfect-forwarding constructor to implicit copy constructor.
 
 # if (__GNUC__ == 4 && __GNUC_MINOR__ == 4)
-#  define BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
+#  define BOOST_OPTIONAL_CONFIG_NO_LEGAL_CONVERT_FROM_REF
 # endif
 
 # if (__GNUC__ == 4 && __GNUC_MINOR__ == 5)
-#  define BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
+#  define BOOST_OPTIONAL_CONFIG_NO_LEGAL_CONVERT_FROM_REF
 # endif
 
 #endif // defined(__GNUC__)
