@@ -17,7 +17,7 @@
 
 int main()
 {
-  BOOST_ERROR("failed as requested");
+  static_assert(false, "failed as requested");
   return boost::report_errors();
 }
 
