@@ -59,16 +59,16 @@
 # define BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
 #endif
 
-#if (defined __GNUC__) && (!defined BOOST_INTEL_CXX_VERSION)
+#if (defined __GNUC__) && (!defined BOOST_INTEL_CXX_VERSION) && (!defined __clang__)
 // On some GCC versions an unwanted temporary is created when you copy-initialize
 // from a const lvalue of integral type. Thus we bind not to the original address but
 // to a temporary.
 
-# if (__GNUC__ == 4 && __GNUC_MINOR__ == 4)
+# if (__GNUC__ < 4)
 #  define BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
 # endif
 
-# if (__GNUC__ == 4 && __GNUC_MINOR__ == 5)
+# if (__GNUC__ == 4 && __GNUC_MINOR__ <= 5)
 #  define BOOST_OPTIONAL_CONFIG_NO_PROPER_CONVERT_FROM_CONST_INT
 # endif
 
