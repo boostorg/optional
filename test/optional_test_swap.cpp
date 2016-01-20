@@ -23,6 +23,13 @@
 
 #include "boost/core/lightweight_test.hpp"
 
+#if __cplusplus < 201103L
+#include <algorithm>
+#define SWAP_EX_SPEC
+#else
+#include <utility>
+#define SWAP_EX_SPEC noexcept
+#endif
 
 using boost::optional;
 using boost::none;
@@ -237,12 +244,14 @@ void swap(optional_swap_test::class_whose_default_ctor_should_be_used & x, optio
 
 template <>
 void swap(optional_swap_test::class_whose_default_ctor_should_not_be_used & x, optional_swap_test::class_whose_default_ctor_should_not_be_used & y)
+SWAP_EX_SPEC
 {
   optional_swap_test::swap(x, y);
 }
 
 template <>
 void swap(optional_swap_test::class_without_default_ctor & x, optional_swap_test::class_without_default_ctor & y)
+SWAP_EX_SPEC
 {
   optional_swap_test::swap(x, y);
 }
