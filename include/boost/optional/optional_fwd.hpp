@@ -20,6 +20,7 @@ namespace boost {
 
 template<class T> class optional ;
 
+// This forward is needed to refer to namespace scope swap from the member swap
 template<class T> void swap ( optional<T>& , optional<T>& );
 
 template<class T> struct optional_swap_should_use_default_constructor ;

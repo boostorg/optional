@@ -1,4 +1,4 @@
-// Copyright (C) 2015 Andrzej Krzemienski.
+// Copyright (C) 2015-2016 Andrzej Krzemienski.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -167,9 +167,8 @@ public:
 #endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 };
 
-// TODO: what if no rvalue refs
 } // namespace boost
 
-#endif // 0
+#endif // 1/0
 
 #endif // header guard
