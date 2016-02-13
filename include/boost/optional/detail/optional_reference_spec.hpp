@@ -167,6 +167,12 @@ public:
 #endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 };
 
+template <class T> 
+  void swap ( optional<T&>& x, optional<T&>& y) BOOST_NOEXCEPT
+{
+  x.swap(y);
+}
+
 } // namespace boost
 
 #endif // 1/0

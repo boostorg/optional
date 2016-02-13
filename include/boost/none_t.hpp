@@ -37,4 +37,3 @@ struct none_t
 } // namespace boost
 
 #endif // header guard
-
