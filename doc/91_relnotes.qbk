@@ -13,7 +13,12 @@
 
 [heading Boost Release X.XX]
 
-* Now `boost::optional` is specialized for reference parameters. This way the `sizeof` of optional reference is that of a pointer, and a number of bugs is avoided.
+* Now `boost::optional` is specialized for reference parameters. This addresses a couple of issues:
+  * the `sizeof` of optional reference is that of a pointer,
+  * some bugs connected to copying optional references are gone,
+  * you can swap optional references: it is like swapping pointers: shalow, underlying objects are not affected,
+  * optional references to abstract types work.
+* Documented nested typedefs ([@https://svn.boost.org/trac/boost/ticket/5193 Trac #5193]).
 
 [heading Boost Release 1.60]
 

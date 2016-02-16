@@ -33,7 +33,7 @@ void test_all_const_cases()
 int main()
 {
   test_all_const_cases<ScopeGuard>();
-  //test_all_const_cases<Abstract>();
+  test_all_const_cases<Abstract>();
   
   return boost::report_errors();
 }
