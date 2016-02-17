@@ -46,6 +46,24 @@ class aligned_storage
     void const* address() const { return dummy_.data; }
     void      * address()       { return dummy_.data; }
 #endif
+
+#if defined(BOOST_OPTIONAL_DETAIL_USE_ATTRIBUTE_MAY_ALIAS)
+	// This workaround is supposed to silence GCC warnings about broken strict aliasing rules
+	T const& ref() const
+	{
+		union { void const* ap_pvoid; T const* as_ptype; } caster = { address() };
+		return *caster.as_ptype;
+	}
+	T &      ref()
+	{
+		union { void* ap_pvoid; T* as_ptype; } caster = { address() };
+		return *caster.as_ptype;
+	}
+#else
+	T const& ref() const { return *static_cast<T const*>(address()); }
+	T &      ref()       { return *static_cast<T *>     (address()); }
+#endif
+
 } ;
 
 } // namespace optional_detail

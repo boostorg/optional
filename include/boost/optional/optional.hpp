@@ -65,8 +65,7 @@ class optional_base : public optional_tag
 {
   private :
 
-    typedef T internal_type ;
-    typedef aligned_storage<internal_type> storage_type ;
+    typedef aligned_storage<T> storage_type ;
     typedef optional_base<T> this_type ;
 
   protected :
@@ -321,14 +320,14 @@ class optional_base : public optional_tag
 
     void construct ( argument_type val )
      {
-       ::new (m_storage.address()) internal_type(val) ;
+       ::new (m_storage.address()) value_type(val) ;
        m_initialized = true ;
      }
      
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
     void construct ( rval_reference_type val )
      {
-       ::new (m_storage.address()) internal_type( boost::move(val) ) ;
+       ::new (m_storage.address()) value_type( boost::move(val) ) ;
        m_initialized = true ;
      }
 #endif
@@ -341,7 +340,7 @@ class optional_base : public optional_tag
     void emplace_assign ( Args&&... args )
      {
        destroy();
-       ::new (m_storage.address()) internal_type( boost::forward<Args>(args)... );
+       ::new (m_storage.address()) value_type( boost::forward<Args>(args)... );
        m_initialized = true ;
      }
 #elif (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES)
@@ -349,14 +348,14 @@ class optional_base : public optional_tag
     void emplace_assign ( Arg&& arg )
      {
        destroy();
-       ::new (m_storage.address()) internal_type( boost::forward<Arg>(arg) );
+       ::new (m_storage.address()) value_type( boost::forward<Arg>(arg) );
        m_initialized = true ;
      }
      
     void emplace_assign ()
      {
        destroy();
-       ::new (m_storage.address()) internal_type();
+       ::new (m_storage.address()) value_type();
        m_initialized = true ;
      }
 #else
@@ -364,7 +363,7 @@ class optional_base : public optional_tag
     void emplace_assign ( const Arg& arg )
      {
        destroy();
-       ::new (m_storage.address()) internal_type( arg );
+       ::new (m_storage.address()) value_type( arg );
        m_initialized = true ;
      }
      
@@ -372,14 +371,14 @@ class optional_base : public optional_tag
     void emplace_assign ( Arg& arg )
      {
        destroy();
-       ::new (m_storage.address()) internal_type( arg );
+       ::new (m_storage.address()) value_type( arg );
        m_initialized = true ;
      }
      
     void emplace_assign ()
      {
        destroy();
-       ::new (m_storage.address()) internal_type();
+       ::new (m_storage.address()) value_type();
        m_initialized = true ;
      }
 #endif
@@ -461,7 +460,7 @@ class optional_base : public optional_tag
     template<class Expr>
     void construct ( Expr&& expr, void const* )
     {
-      new (m_storage.address()) internal_type(boost::forward<Expr>(expr)) ;
+      new (m_storage.address()) value_type(boost::forward<Expr>(expr)) ;
       m_initialized = true ;
     }
 
@@ -482,7 +481,7 @@ class optional_base : public optional_tag
     template<class Expr>
     void construct ( Expr const& expr, void const* )
      {
-       new (m_storage.address()) internal_type(expr) ;
+       new (m_storage.address()) value_type(expr) ;
        m_initialized = true ;
      }
 
@@ -520,7 +519,7 @@ class optional_base : public optional_tag
        {
          // An exception can be thrown here.
          // It it happens, THIS will be left uninitialized.
-         new (m_storage.address()) internal_type(boost::move(expr.get())) ;
+         new (m_storage.address()) value_type(boost::move(expr.get())) ;
          m_initialized = true ;
        }
      }
@@ -533,7 +532,7 @@ class optional_base : public optional_tag
        {
          // An exception can be thrown here.
          // It it happens, THIS will be left uninitialized.
-         new (m_storage.address()) internal_type(expr.get()) ;
+         new (m_storage.address()) value_type(expr.get()) ;
          m_initialized = true ;
        }
      }
@@ -551,48 +550,15 @@ class optional_base : public optional_tag
         destroy_impl() ;
     }
 
-    reference_const_type get_impl() const { return dereference(get_object()) ; }
-    reference_type       get_impl()       { return dereference(get_object()) ; }
+    reference_const_type get_impl() const { return m_storage.ref() ; }
+    reference_type       get_impl()       { return m_storage.ref() ; }
 
-    pointer_const_type get_ptr_impl() const { return cast_ptr(get_object()) ; }
-    pointer_type       get_ptr_impl()       { return cast_ptr(get_object()) ; }
+    pointer_const_type get_ptr_impl() const { return boost::addressof(m_storage.ref()); }
+    pointer_type       get_ptr_impl()       { return boost::addressof(m_storage.ref()); }
 
   private :
 
-    // internal_type can be either T or reference_content<T>
-#if defined(BOOST_OPTIONAL_DETAIL_USE_ATTRIBUTE_MAY_ALIAS)
-    // This workaround is supposed to silence GCC warnings about broken strict aliasing rules
-    internal_type const* get_object() const
-    {
-        union { void const* ap_pvoid; internal_type const* as_ptype; } caster = { m_storage.address() };
-        return caster.as_ptype;
-    }
-    internal_type *      get_object()
-    {
-        union { void* ap_pvoid; internal_type* as_ptype; } caster = { m_storage.address() };
-        return caster.as_ptype;
-    }
-#else
-    internal_type const* get_object() const { return static_cast<internal_type const*>(m_storage.address()); }
-    internal_type *      get_object()       { return static_cast<internal_type *>     (m_storage.address()); }
-#endif
-
-    // reference_content<T> lacks an implicit conversion to T&, so the following is needed to obtain a proper reference.
-    reference_const_type dereference( internal_type const* p ) const { return *p ; }
-    reference_type       dereference( internal_type*       p )       { return *p ; }
-
-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x581))
-    void destroy_impl ( ) { get_ptr_impl()->internal_type::~internal_type() ; m_initialized = false ; }
-#else
-    void destroy_impl ( ) { get_ptr_impl()->~T() ; m_initialized = false ; }
-#endif
-
-
-    // If T is of reference type, trying to get a pointer to the held value must result in a compile-time error.
-    // Decent compilers should disallow conversions from reference_content<T>* to T*, but just in case,
-    // the following olverloads are used to filter out the case and guarantee an error in case of T being a reference.
-    pointer_const_type cast_ptr( internal_type const* p ) const { return p ; }
-    pointer_type       cast_ptr( internal_type *      p )       { return p ; }
+    void destroy_impl ( ) { m_storage.ref().T::~T() ; m_initialized = false ; }
 
     bool m_initialized ;
     storage_type m_storage ;
