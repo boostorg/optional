@@ -712,8 +712,6 @@ class optional : public optional_detail::optional_base<T>
 	{}
 
 #endif
-   // No-throw (assuming T::~T() doesn't)
-    ~optional() {}
 
 #if !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
     // Assigns from an expression. See corresponding constructor.
