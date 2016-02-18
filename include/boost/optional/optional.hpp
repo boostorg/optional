@@ -682,7 +682,7 @@ class optional : public optional_detail::optional_base<T>
 #if BOOST_WORKAROUND(_MSC_VER, <= 1600)
     //  On old MSVC compilers the implicitly declared dtor is not called
     ~optional() {}
-#else
+#endif
 
 	
 #if !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
