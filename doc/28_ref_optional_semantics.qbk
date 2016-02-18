@@ -857,7 +857,7 @@ __SPACE__
 
 * [*Postconditions:] `bool(*this) == bool(rhs)`.
 
-* [*Notes:] This behaviour is called ['rebinding semantics]. See [link boost_optional.tutorial.rebinding_semantics_for_assignment_of_optional_references here] for details.
+* [*Notes:] This behaviour is called ['rebinding semantics]. See [link boost_optional.tutorial.optional_references.rebinding_semantics_for_assignment_of_optional_references here] for details.
 
 * [*Example:]
 ``

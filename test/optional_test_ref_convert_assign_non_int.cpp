@@ -25,9 +25,9 @@
 template <typename T>
 void test_all_const_cases()
 {
-  test_converting_assignment<T>();
-  test_converting_assignment<const T>();
-  test_converting_assignment_for_noconst_const<T>();
+  test_converting_assignment<T, T>();
+  test_converting_assignment<const T, const T>();
+  test_converting_assignment<T, const T>();
 }
 
 int main()

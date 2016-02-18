@@ -12,6 +12,11 @@
 #ifndef BOOST_OPTIONAL_DETAIL_OPTIONAL_REFERENCE_SPEC_AJK_03OCT2015_HPP
 #define BOOST_OPTIONAL_DETAIL_OPTIONAL_REFERENCE_SPEC_AJK_03OCT2015_HPP
 
+#ifdef BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_const.hpp>
+#endif
+
 # if 1
 
 namespace boost {
@@ -38,6 +43,19 @@ BOOST_DEDUCED_TYPENAME boost::remove_reference<T>::type& forward_reference(T&& r
 }
 
 #endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
+
+template <class From>
+void prevent_assignment_from_false_const_integral()
+{
+#ifndef BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
+#ifdef BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
+    // MSVC compiler without rvalue refernces: we need to disable the asignment from
+    // const integral lvalue reference, as it may be an invalid temporary
+    BOOST_STATIC_ASSERT_MSG(!(boost::is_const<From>::value && boost::is_integral<From>::value), 
+                            "binding const lvalue references to integral types is disabled in this compiler");
+#endif
+#endif   
+}
 
 template <class T>
 struct is_optional_
@@ -140,11 +158,15 @@ public:
         
     template <class U>
         optional(bool cond, U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT : ptr_(cond ? boost::addressof(v) : 0) {}
-        
+
     template <class U>
         BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U>, optional<T&>&>::type
-        operator=(U& v) BOOST_NOEXCEPT { ptr_ = boost::addressof(v); return *this; }
-        
+        operator=(U& v) BOOST_NOEXCEPT
+        {
+            detail::prevent_assignment_from_false_const_integral<U>();
+            ptr_ = boost::addressof(v); return *this;
+        }
+
     template <class U>
         void emplace(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT
         { ptr_ = boost::addressof(v); }
