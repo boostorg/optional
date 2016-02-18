@@ -679,7 +679,7 @@ class optional : public optional_detail::optional_base<T>
 
 #endif
 
-#if BOOST_WORKAROUND(_MSC_VER, <= 1500)
+#if BOOST_WORKAROUND(_MSC_VER, <= 1600)
     //  On old MSVC compilers the implicitly declared dtor is not called
     ~optional() {}
 #else
