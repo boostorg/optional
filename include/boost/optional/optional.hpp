@@ -678,7 +678,9 @@ class optional : public optional_detail::optional_base<T>
 	{}
 
 #endif
-
+	// I need this declaration for msvc-8.0 (otherwise, T::~T() is never called)
+	~optional() {}
+	
 #if !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
     // Assigns from an expression. See corresponding constructor.
     // Basic Guarantee: If the resolved T ctor throws, this is left UNINITIALIZED
