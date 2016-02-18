@@ -678,8 +678,12 @@ class optional : public optional_detail::optional_base<T>
 	{}
 
 #endif
-	// I need this declaration for msvc-8.0 (otherwise, T::~T() is never called)
-	~optional() {}
+
+#if BOOST_WORKAROUND(_MSC_VER, <= 1500)
+    //  On old MSVC compilers the implicitly declared dtor is not called
+    ~optional() {}
+#else
+
 	
 #if !defined(BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT) && !defined(BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION)
     // Assigns from an expression. See corresponding constructor.
