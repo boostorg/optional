@@ -37,6 +37,7 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_constructible.hpp>
 #include <boost/type_traits/is_lvalue_reference.hpp>
 #include <boost/type_traits/is_nothrow_move_assignable.hpp>
 #include <boost/type_traits/is_nothrow_move_constructible.hpp>
@@ -565,17 +566,39 @@ class optional_base : public optional_tag
     storage_type m_storage ;
 } ;
 
-
+// definition of metafunciton is_optional_val_init_candidate
 template <typename U>
 struct is_optional_related
-  : boost::conditional<boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
-                    || boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<U>::type, none_t>::value,
+  : boost::conditional< boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
+                     || boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<U>::type, none_t>::value,
     boost::true_type, boost::false_type>::type
 {};
-    
-template <typename, typename U>
+
+#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800) && !BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40500)
+  // this condition is a copy paste from is_constructible.hpp
+  
+template <typename T, typename U>
+struct is_convertible_to_T_or_factory
+  : boost::conditional< boost::is_base_of<boost::in_place_factory_base, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
+                     || boost::is_base_of<boost::typed_in_place_factory_base, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
+                     || boost::is_constructible<T, U&&>::value
+                      , boost::true_type, boost::false_type>::type
+{};
+
+#else
+
+#define BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT
+
+template <typename, typename>
+struct is_convertible_to_T_or_factory : boost::true_type
+{};
+
+#endif // is_convertible condition
+
+template <typename T, typename U>
 struct is_optional_val_init_candidate
-  : boost::conditional<!is_optional_related<U>::value, boost::true_type, boost::false_type>::type
+  : boost::conditional< !is_optional_related<U>::value && is_convertible_to_T_or_factory<T, U>::value
+                      , boost::true_type, boost::false_type>::type
 {};
     
 } // namespace optional_detail
