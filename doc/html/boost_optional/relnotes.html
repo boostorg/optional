@@ -61,7 +61,9 @@
           #5193</a>).
         </li>
 <li class="listitem">
-          Made the optional value constructor SFINAE-friendly, which fixes <a href="https://svn.boost.org/trac/boost/ticket/12002" target="_top">Trac #12002</a>.
+          Made the perfect-forwarding constructor SFINAE-friendly, which fixes <a href="https://svn.boost.org/trac/boost/ticket/12002" target="_top">Trac #12002</a>.
+          However, this only works in the newer compilers that implement variadic
+          macros and <code class="computeroutput"><span class="keyword">decltype</span></code> correctly.
         </li>
 </ul></div>
 <h4>

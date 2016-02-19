@@ -20,7 +20,7 @@
   * you can swap optional references: it is like swapping pointers: shalow, underlying objects are not affected,
   * optional references to abstract types work.
 * Documented nested typedefs ([@https://svn.boost.org/trac/boost/ticket/5193 Trac #5193]).
-* Made the optional value constructor SFINAE-friendly, which fixes [@https://svn.boost.org/trac/boost/ticket/12002 Trac #12002].
+* Made the perfect-forwarding constructor SFINAE-friendly, which fixes [@https://svn.boost.org/trac/boost/ticket/12002 Trac #12002]. However, this only works in the newer compilers that implement variadic macros and `decltype` correctly.
 
 [heading Boost Release 1.60]
 
