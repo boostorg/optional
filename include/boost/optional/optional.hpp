@@ -30,6 +30,7 @@
 #include <boost/throw_exception.hpp>
 #include <boost/type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
+#include <boost/type_traits/conditional.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
 #include <boost/type_traits/type_with_alignment.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -564,6 +565,19 @@ class optional_base : public optional_tag
     storage_type m_storage ;
 } ;
 
+
+template <typename U>
+struct is_optional_related
+  : boost::conditional<boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
+                    || boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<U>::type, none_t>::value,
+    boost::true_type, boost::false_type>::type
+{};
+    
+template <typename, typename U>
+struct is_optional_val_init_candidate
+  : boost::conditional<!is_optional_related<U>::value, boost::true_type, boost::false_type>::type
+{};
+    
 } // namespace optional_detail
 
 template<class T>
@@ -652,9 +666,7 @@ class optional : public optional_detail::optional_base<T>
 
   template<class Expr>
   explicit optional ( Expr&& expr, 
-                      BOOST_DEDUCED_TYPENAME boost::disable_if_c<
-                        (boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type>::value) || 
-                        boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type, none_t>::value >::type* = 0 
+                      BOOST_DEDUCED_TYPENAME boost::enable_if< optional_detail::is_optional_val_init_candidate<T, Expr> >::type* = 0 
   ) 
     : base(boost::forward<Expr>(expr),boost::addressof(expr)) 
     {}
@@ -691,11 +703,7 @@ class optional : public optional_detail::optional_base<T>
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
     template<class Expr>
-    BOOST_DEDUCED_TYPENAME boost::disable_if_c<
-      boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type>::value || 
-        boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<Expr>::type, none_t>::value,
-      optional&
-    >::type 
+    BOOST_DEDUCED_TYPENAME boost::enable_if<optional_detail::is_optional_val_init_candidate<T, Expr>, optional&>::type 
     operator= ( Expr&& expr )
       {
         this->assign_expr(boost::forward<Expr>(expr),boost::addressof(expr));
