@@ -560,7 +560,11 @@ class optional_base : public optional_tag
 
   private :
 
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1400)
+    void destroy_impl ( ) { boost::addressof(m_storage.ref())->~T() ; m_initialized = false ; }
+#else
     void destroy_impl ( ) { m_storage.ref().T::~T() ; m_initialized = false ; }
+#endif
 
     bool m_initialized ;
     storage_type m_storage ;
