@@ -68,6 +68,5 @@ import testing ;
     [ run-fail optional_xconfig_NO_PROPER_CONVERT_FROM_CONST_INT_fail.cpp ]
     [ run optional_xconfig_NO_LEGAL_CONVERT_FROM_REF_pass.cpp ]
     [ compile-fail optional_xconfig_NO_LEGAL_CONVERT_FROM_REF_fail.cpp ]
-    [ run optional_xconfig_HACK_TO_LIST_PREDEFINED_MACROS.cpp ]
   ;
 }
