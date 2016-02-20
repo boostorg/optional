@@ -555,13 +555,13 @@ class optional_base : public optional_tag
     reference_const_type get_impl() const { return m_storage.ref() ; }
     reference_type       get_impl()       { return m_storage.ref() ; }
 
-    pointer_const_type get_ptr_impl() const { return boost::addressof(m_storage.ref()); }
-    pointer_type       get_ptr_impl()       { return boost::addressof(m_storage.ref()); }
+    pointer_const_type get_ptr_impl() const { return m_storage.ptr_ref(); }
+    pointer_type       get_ptr_impl()       { return m_storage.ptr_ref(); }
 
   private :
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1600)
-    void destroy_impl ( ) { boost::addressof(m_storage.ref())->~T() ; m_initialized = false ; }
+    void destroy_impl ( ) { m_storage.ptr_ref()->~T() ; m_initialized = false ; }
 #else
     void destroy_impl ( ) { m_storage.ref().T::~T() ; m_initialized = false ; }
 #endif
