@@ -578,8 +578,9 @@ struct is_optional_related
     boost::true_type, boost::false_type>::type
 {};
 
-#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800) && !BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40500)
+#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800) && !BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40500) && !defined(__SUNPRO_CC)
   // this condition is a copy paste from is_constructible.hpp
+  // I also disable SUNPRO, as it seems not to support type_traits correctly
   
 template <typename T, typename U>
 struct is_convertible_to_T_or_factory
