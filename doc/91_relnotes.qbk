@@ -11,7 +11,7 @@
 
 [section:relnotes Release Notes]
 
-[heading Boost Release X.XX]
+[heading Boost Release 1.61]
 
 * Now `boost::optional` is specialized for reference parameters. This addresses a couple of issues:
   * the `sizeof` of optional reference is that of a pointer,
