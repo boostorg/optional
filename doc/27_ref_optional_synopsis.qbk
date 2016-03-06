@@ -79,6 +79,7 @@
         typedef T         value_type ;
         typedef T &       reference_type ;
         typedef T const&  reference_const_type ;
+        typedef T &&      rval_reference_type ;
         typedef T *       pointer_type ;
         typedef T const*  pointer_const_type ;
         
@@ -182,6 +183,7 @@
         typedef T& value_type;
         typedef T& reference_type;
         typedef T& reference_const_type; // no const propagation
+        typedef T& rval_reference_type;
         typedef T* pointer_type;
         typedef T* pointer_const_type;   // no const propagation
 

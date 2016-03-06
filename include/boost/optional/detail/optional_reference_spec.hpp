@@ -86,6 +86,7 @@ public:
     typedef T& value_type;
     typedef T& reference_type;
     typedef T& reference_const_type;
+    typedef T& rval_reference_type;
     typedef T* pointer_type;
     typedef T* pointer_const_type;
     
