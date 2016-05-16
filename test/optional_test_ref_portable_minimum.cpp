@@ -465,10 +465,12 @@ int main()
   test_optional_ref<int>();
   test_optional_ref<ScopeGuard>();
   test_optional_ref<Abstract>();
+  test_optional_ref< optional<int> >();
   
   test_optional_const_ref<int>();
   test_optional_const_ref<ScopeGuard>();
   test_optional_const_ref<Abstract>();
+  test_optional_const_ref< optional<int> >();
   
   return boost::report_errors();
 }
