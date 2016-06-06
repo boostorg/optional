@@ -125,31 +125,31 @@ public:
     optional(T&& /* rhs */) BOOST_NOEXCEPT { detail::prevent_binding_rvalue<T&&>(); }
     
     template <class R>
-        optional(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R> >::type* = 0) BOOST_NOEXCEPT
+        optional(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<R>::type>::value >::type* = 0) BOOST_NOEXCEPT
         : ptr_(boost::addressof(r)) { detail::prevent_binding_rvalue<R>(); }
         
     template <class R>
-        optional(bool cond, R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R> >::type* = 0) BOOST_NOEXCEPT
+        optional(bool cond, R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<R>::type>::value >::type* = 0) BOOST_NOEXCEPT
         : ptr_(cond ? boost::addressof(r) : 0) { detail::prevent_binding_rvalue<R>(); }
         
     template <class R>
-        BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R>, optional<T&>&>::type
+        BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<R>::type>::value >::type
         operator=(R&& r) BOOST_NOEXCEPT { detail::prevent_binding_rvalue<R>(); ptr_ = boost::addressof(r); return *this; }
         
     template <class R>
-        void emplace(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R> >::type* = 0) BOOST_NOEXCEPT
+        void emplace(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<R>::type>::value >::type* = 0) BOOST_NOEXCEPT
         { detail::prevent_binding_rvalue<R>(); ptr_ = boost::addressof(r); }
         
     template <class R>
-      T& get_value_or(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R> >::type* = 0) const BOOST_NOEXCEPT
+      T& get_value_or(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<R>::type>::value >::type* = 0) const BOOST_NOEXCEPT
       { detail::prevent_binding_rvalue<R>(); return ptr_ ? *ptr_ : r; }
       
     template <class R>
-        T& value_or(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R> >::type* = 0) const BOOST_NOEXCEPT
+        T& value_or(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<R>::type>::value >::type* = 0) const BOOST_NOEXCEPT
         { detail::prevent_binding_rvalue<R>(); return ptr_ ? *ptr_ : r; }
         
     template <class R>
-      void reset(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<R> >::type* = 0) BOOST_NOEXCEPT
+      void reset(R&& r, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<R>::type>::value >::type* = 0) BOOST_NOEXCEPT
       { detail::prevent_binding_rvalue<R>(); ptr_ = boost::addressof(r); }
       
     template <class F>
@@ -158,13 +158,13 @@ public:
 #else  // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
     template <class U>
-        optional(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT : ptr_(boost::addressof(v)) { }
+        optional(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<U>::type>::value >::type* = 0) BOOST_NOEXCEPT : ptr_(boost::addressof(v)) { }
         
     template <class U>
-        optional(bool cond, U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT : ptr_(cond ? boost::addressof(v) : 0) {}
+        optional(bool cond, U& v, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<U>::type>::value >::type* = 0) BOOST_NOEXCEPT : ptr_(cond ? boost::addressof(v) : 0) {}
 
     template <class U>
-        BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U>, optional<T&>&>::type
+        BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<U>::type>::value >::type
         operator=(U& v) BOOST_NOEXCEPT
         {
             detail::prevent_assignment_from_false_const_integral<U>();
@@ -172,19 +172,19 @@ public:
         }
 
     template <class U>
-        void emplace(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT
+        void emplace(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<U>::type>::value >::type* = 0) BOOST_NOEXCEPT
         { ptr_ = boost::addressof(v); }
         
     template <class U>
-      T& get_value_or(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) const BOOST_NOEXCEPT
+      T& get_value_or(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<U>::type>::value >::type* = 0) const BOOST_NOEXCEPT
       { return ptr_ ? *ptr_ : v; }
       
     template <class U>
-        T& value_or(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) const BOOST_NOEXCEPT
+        T& value_or(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<U>::type>::value >::type* = 0) const BOOST_NOEXCEPT
         { return ptr_ ? *ptr_ : v; }
         
     template <class U>
-      void reset(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_no_optional<U> >::type* = 0) BOOST_NOEXCEPT
+      void reset(U& v, BOOST_DEDUCED_TYPENAME boost::enable_if_c<!boost::is_same<optional<T&>, typename boost::decay<U>::type>::value >::type* = 0) BOOST_NOEXCEPT
       { ptr_ = boost::addressof(v); }
       
     template <class F>
