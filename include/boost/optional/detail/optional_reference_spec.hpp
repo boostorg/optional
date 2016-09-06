@@ -68,7 +68,7 @@ void prevent_assignment_from_false_const_integral()
 #ifdef BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
     // MSVC compiler without rvalue refernces: we need to disable the asignment from
     // const integral lvalue reference, as it may be an invalid temporary
-    BOOST_STATIC_ASSERT_MSG(!is_const_interal<From>::value, 
+    BOOST_STATIC_ASSERT_MSG(!is_const_integral<From>::value, 
                             "binding const lvalue references to integral types is disabled in this compiler");
 #endif
 #endif   
