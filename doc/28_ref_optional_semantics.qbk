@@ -1181,7 +1181,7 @@ __SPACE__
 [: `bool operator != ( optional<T> const& x, none_t ) noexcept;`]
 [: `bool operator != ( none_t, optional<T> const& x ) noexcept;`]
 
-* [*Returns: ] `!( x == y );`
+* [*Returns: ] `bool(x);`
 
 
 __SPACE__
