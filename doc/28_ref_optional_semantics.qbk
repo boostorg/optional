@@ -446,7 +446,7 @@ __SPACE__
 
 [#reference_optional_emplace]
 
-[: `template<class... Args> void optional<T>::emplace( Args...&& args );`]
+[: `template<class... Args> void optional<T>::emplace( Args&&... args );`]
 
 * [*Requires:] The compiler supports rvalue references and variadic templates.
 * [*Effect:] If `*this` is initialized calls `*this = none`.

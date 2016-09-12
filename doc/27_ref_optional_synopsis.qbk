@@ -120,7 +120,7 @@
         
         template<class U> optional& operator = ( optional<U>&& rhs ) ; ``[link reference_optional_operator_move_equal_other_optional __GO_TO__]``
         
-        template<class... Args> void emplace ( Args...&& args ) ; ``[link reference_optional_emplace __GO_TO__]``
+        template<class... Args> void emplace ( Args&&... args ) ; ``[link reference_optional_emplace __GO_TO__]``
 
         template<class InPlaceFactory> optional& operator = ( InPlaceFactory const& f ) ; ``[link reference_optional_operator_equal_factory __GO_TO__]``
 
