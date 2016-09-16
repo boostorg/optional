@@ -83,7 +83,7 @@ This is how you solve it with `boost::optional`:
 [include 14_io.qbk]
 [include 15_optional_references.qbk]
 [include 16_in_place_factories.qbk]
-[include 17_optional_bool.qbk]
+[include 17_gotchas.qbk]
 [include 18_exception_safety.qbk]
 [include 19_type_requirements.qbk]
 [include 1A_on_performance.qbk]
