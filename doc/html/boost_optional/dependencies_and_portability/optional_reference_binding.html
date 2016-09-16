@@ -28,18 +28,19 @@
       Reference Binding</a>
 </h3></div></div></div>
 <p>
-        A number of compilers incorrectly treat const lvalues of integral type as
-        rvalues, and create an illegal temporary when binding to an lvalue reference
-        to const in some expressions. This could result in creating an optional lvalue
-        reference that is in fact bound to an unexpected temporary rather than to
-        the intended object. In order to prevent hard to find run-time bugs, this
-        library performs compile-time checks to prevent expressions that would otherwise
-        bind an optional reference to an unexpected temporary. As a consequence,
-        on certain compilers certain pieces of functionality in optional references
-        are missing. In order to maintain a portability of your code across diferent
-        compilers, it is recommended that you only stick to the minimum portable
-        interface of optional references: prefer direct-initialization and copy assignment
-        of optional references to copy-initialization and assignment from <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span></code>:
+        <a name="optional_reference_binding"></a>A number of compilers incorrectly
+        treat const lvalues of integral type as rvalues, and create an illegal temporary
+        when binding to an lvalue reference to const in some expressions. This could
+        result in creating an optional lvalue reference that is in fact bound to
+        an unexpected temporary rather than to the intended object. In order to prevent
+        hard to find run-time bugs, this library performs compile-time checks to
+        prevent expressions that would otherwise bind an optional reference to an
+        unexpected temporary. As a consequence, on certain compilers certain pieces
+        of functionality in optional references are missing. In order to maintain
+        a portability of your code across diferent compilers, it is recommended that
+        you only stick to the minimum portable interface of optional references:
+        prefer direct-initialization and copy assignment of optional references to
+        copy-initialization and assignment from <code class="computeroutput"><span class="identifier">T</span><span class="special">&amp;</span></code>:
       </p>
 <pre class="programlisting"><span class="keyword">const</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&amp;&gt;</span> <span class="identifier">or1</span><span class="special">;</span>
