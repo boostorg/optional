@@ -127,8 +127,8 @@ public:
     optional(none_t) BOOST_NOEXCEPT : ptr_() {}  
 
     template <class U>
-        explicit optional(const optional<U&>& rhs) BOOST_NOEXCEPT : ptr_(rhs.ptr_) {}
-    optional(const optional& rhs) BOOST_NOEXCEPT : ptr_(rhs.ptr_) {}
+        explicit optional(const optional<U&>& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
+    optional(const optional& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
     
     // the following two implement a 'conditionally explicit' constructor: condition is a hack for buggy compilers with srewed conversion construction from const int
     template <class U>
@@ -139,9 +139,9 @@ public:
       optional(U& rhs, BOOST_DEDUCED_TYPENAME boost::enable_if_c<detail::is_same_decayed<T, U>::value && !detail::is_const_integral_bad_for_conversion<U>::value>::type* = 0) BOOST_NOEXCEPT
       : ptr_(boost::addressof(rhs)) {}
 
-    optional& operator=(const optional& rhs) BOOST_NOEXCEPT { ptr_ = rhs.ptr_; return *this; }
+    optional& operator=(const optional& rhs) BOOST_NOEXCEPT { ptr_ = rhs.get_ptr(); return *this; }
     template <class U>
-        optional& operator=(const optional<U&>& rhs) BOOST_NOEXCEPT { ptr_ = rhs.ptr_; return *this; }
+        optional& operator=(const optional<U&>& rhs) BOOST_NOEXCEPT { ptr_ = rhs.get_ptr(); return *this; }
     optional& operator=(none_t) BOOST_NOEXCEPT { ptr_ = 0; return *this; }
     
     
