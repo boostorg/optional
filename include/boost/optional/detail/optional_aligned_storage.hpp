@@ -32,6 +32,9 @@ class aligned_storage
 #endif
     dummy_u
     {
+        // empty_initiliazer_ is used only to shut down gcc warnings about
+        // data "may be used unitialized"
+        char empty_initiliazer_;
         char data[ sizeof(T) ];
         BOOST_DEDUCED_TYPENAME type_with_alignment<
           ::boost::alignment_of<T>::value >::type aligner_;
@@ -46,6 +49,11 @@ class aligned_storage
     void const* address() const { return dummy_.data; }
     void      * address()       { return dummy_.data; }
 #endif
+
+    void construct_empty()
+    {
+        dummy_.empty_initiliazer_ = '\0';
+    }
 
 #if defined(BOOST_OPTIONAL_DETAIL_USE_ATTRIBUTE_MAY_ALIAS)
 	// This workaround is supposed to silence GCC warnings about broken strict aliasing rules

@@ -89,13 +89,19 @@ class optional_base : public optional_tag
     // No-throw
     optional_base()
       :
-      m_initialized(false) {}
+      m_initialized(false)
+    {
+      construct_empty();
+    }
 
     // Creates an optional<T> uninitialized.
     // No-throw
     optional_base ( none_t )
       :
-      m_initialized(false) {}
+      m_initialized(false)
+    {
+      construct_empty();
+    }
 
     // Creates an optional<T> initialized with 'val'.
     // Can throw if T::T(T const&) does
@@ -125,6 +131,8 @@ class optional_base : public optional_tag
     {
       if ( cond )
         construct(val);
+      else
+        construct_empty();
     }
 
     // Creates a deep copy of another optional<T>
@@ -135,6 +143,8 @@ class optional_base : public optional_tag
     {
       if ( rhs.is_initialized() )
         construct(rhs.get_impl());
+      else
+        construct_empty();
     }
 
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
@@ -146,6 +156,8 @@ class optional_base : public optional_tag
     {
       if ( rhs.is_initialized() )
         construct( boost::move(rhs.get_impl()) );
+      else
+        construct_empty();
     }
 #endif
 
@@ -319,6 +331,11 @@ class optional_base : public optional_tag
     bool is_initialized() const { return m_initialized ; }
 
   protected :
+
+    void construct_empty ()
+     {
+      m_storage.construct_empty();
+     }
 
     void construct ( argument_type val )
      {
