@@ -12,6 +12,11 @@
 [section:relnotes Release Notes]
 
 
+[heading Boost Release 1.62]
+
+* Fixed [@https://svn.boost.org/trac/boost/ticket/12179 Trac #12179].
+
+
 [heading Boost Release 1.61]
 
 * Now `boost::optional` is specialized for reference parameters. This addresses a couple of issues:
