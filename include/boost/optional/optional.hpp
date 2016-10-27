@@ -59,11 +59,21 @@ namespace boost {
   
 namespace optional_ns {
   
-class in_place_init_t {};            // a tag for in-place initialization
-const in_place_init_t in_place_init; // of contained value
+// a tag for in-place initialization of contained value
+class in_place_init_t
+{
+  struct init_tag{};
+  explicit in_place_init_t(init_tag){}
+};            
+const in_place_init_t in_place_init ((in_place_init_t::init_tag()));
 
-class in_place_init_if_t {};               // a tag for conditional in-place
-const in_place_init_if_t in_place_init_if; // init of contained value
+// a tag for conditional in-place initialization of contained value	
+class in_place_init_if_t
+{
+  struct init_tag{};
+  explicit in_place_init_if_t(init_tag){}
+};
+const in_place_init_if_t in_place_init_if ((in_place_init_if_t::init_tag()));
   
 } // namespace optional_ns
 
