@@ -60,7 +60,7 @@ namespace boost {
 namespace optional_ns {
   
 // a tag for in-place initialization of contained value
-class in_place_init_t
+struct in_place_init_t
 {
   struct init_tag{};
   explicit in_place_init_t(init_tag){}
@@ -68,7 +68,7 @@ class in_place_init_t
 const in_place_init_t in_place_init ((in_place_init_t::init_tag()));
 
 // a tag for conditional in-place initialization of contained value	
-class in_place_init_if_t
+struct in_place_init_if_t
 {
   struct init_tag{};
   explicit in_place_init_if_t(init_tag){}
