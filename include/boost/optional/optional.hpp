@@ -420,7 +420,8 @@ class optional_base : public optional_tag
        construct(in_place_init) ;
      }
      
-    explicit optional_base ( in_place_init_t, Arg&& args )
+    template<class Arg>
+    explicit optional_base ( in_place_init_t, Arg&& arg )
       :
       m_initialized(false)
     {
@@ -434,7 +435,8 @@ class optional_base : public optional_tag
       construct(in_place_init);
     }
     
-    explicit optional_base ( in_place_init_if_t, bool cond, Arg&& args )
+    template<class Arg>
+    explicit optional_base ( in_place_init_if_t, bool cond, Arg&& arg )
       :
       m_initialized(false)
     {
