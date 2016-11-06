@@ -1,7 +1,7 @@
 # Boost.Optional Library test Jamfile
 #
 # Copyright (C) 2003, Fernando Luis Cacciola Carballal.
-# Copyright (C) 2014, 2015 Andrzej Krzemienski
+# Copyright (C) 2014 - 2016 Andrzej Krzemienski
 #
 # Use, modification, and distribution is subject to the Boost Software
 # License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -64,7 +64,6 @@ import testing ;
     [ compile-fail optional_test_fail_io_without_io.cpp ]
     [ compile-fail optional_test_fail_none_io_without_io.cpp ]
     [ compile-fail optional_test_fail_convert_assign_of_enums.cpp ]
-    [ run optional_xconfig_HACK_TO_LIST_PREDEFINED_MACROS.cpp ]
     [ run optional_xconfig_NO_PROPER_ASSIGN_FROM_CONST_INT_pass.cpp ]
     [ run-fail optional_xconfig_NO_PROPER_ASSIGN_FROM_CONST_INT_fail.cpp ]
     [ run optional_xconfig_NO_PROPER_CONVERT_FROM_CONST_INT_pass.cpp ]
