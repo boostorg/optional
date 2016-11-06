@@ -224,6 +224,53 @@ assert( *y == 123 ) ;
 
 __SPACE__
 
+[#reference_optional_in_place_init]
+
+[: `template<class... Args> explicit optional<T>::optional( in_place_init_t, Args&&... ars );`]
+
+* [*Requires:] `is_constructible_v<T, Args&&...>` is `true`.
+* [*Effect:] Initializes the contained value as if direct-non-list-initializing an object of type `T` with the
+arguments `std::forward<Args>(args)...`.
+* [*Postconditions:] `*this` is initialized.
+* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Notes: ] `T` need not be __MOVE_CONSTRUCTIBLE__. On compilers that do not suppor variadic templates or rvalue references, this constuctor is available in limited functionality. For details [link optional_emplace_workaround see here]. 
+
+* [*Example:]
+``
+// creates an std::mutex using its default constructor
+optional<std::mutex> om {in_place_init};
+assert (om);
+
+// creates a unique_lock by calling unique_lock(*om, std::defer_lock)
+optional<std::unique_lock<std::mutex>> ol {in_place_init, *om, std::defer_lock};
+assert (ol);
+assert (!ol->owns_lock());
+``
+
+__SPACE__
+
+[#reference_optional_in_place_init_if]
+
+[: `template<class... Args> explicit optional<T>::optional( in_place_init_if_t, bool condition, Args&&... ars );`]
+
+* [*Requires:] `is_constructible_v<T, Args&&...>` is `true`.
+* [*Effect:] If `condition` is `true`, initializes the contained value as if direct-non-list-initializing an object of type `T` with the arguments `std::forward<Args>(args)...`.
+* [*Postconditions:] `bool(*this) == condition`.
+* [*Throws:] Any exception thrown by the selected constructor of `T`.
+* [*Notes: ] `T` need not be __MOVE_CONSTRUCTIBLE__. On compilers that do not suppor variadic templates or rvalue references, this constuctor is available in limited functionality. For details [link optional_emplace_workaround see here]. 
+
+* [*Example:]
+``
+optional<std::vector<std::string>> ov1 {in_place_init_if, false, 3, "A"};
+assert (!ov1);
+
+optional<std::vector<std::string>> ov2 {in_place_init_if, true, 3, "A"};
+assert (ov2);
+assert (ov2->size() == 3);
+``
+
+__SPACE__
+
 [#reference_optional_constructor_factory]
 
 [: `template<InPlaceFactory> explicit optional<T>::optional( InPlaceFactory const& f );`]
@@ -455,9 +502,7 @@ __SPACE__
 * [*Postconditions: ] `*this` is [_initialized].
 * [*Throws:] Whatever the selected `T`'s  constructor throws.
 * [*Exception Safety:] If an exception is thrown during the initialization of `T`, `*this` is ['uninitialized].
-* [*Notes:] `T` need not be __MOVE_CONSTRUCTIBLE__ or `MoveAssignable`. 
- On compilers that do not support variadic templates, the signature falls back to two overloads:`template<class Arg> void emplace(Arg&& arg)` and `void emplace()`. 
- On compilers that do not support rvalue references, the signature falls back to three overloads: taking `const` and non-`const` lvalue reference, and third with empty function argument list. 
+* [*Notes:] `T` need not be __MOVE_CONSTRUCTIBLE__ or `MoveAssignable`. On compilers that do not suppor variadic templates or rvalue references, this function is available in limited functionality. For details [link optional_emplace_workaround see here].  
 * [*Example:]
 ``
 T v;

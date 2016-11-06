@@ -15,6 +15,12 @@
 
     namespace boost {
 
+    class in_place_init_t { /* see below */ } ; ``[link reference_in_place_init __GO_TO__]``
+    const in_place_init_t in_place_init ( /* see below */ ) ;
+    
+    class in_place_init_if_t { /*see below*/ } ; ``[link reference_in_place_init_if __GO_TO__]``
+    const in_place_init_if_t in_place_init_if ( /*see below*/ ) ;
+    
     template <class T>
     class optional ; ``[link reference_operator_template __GO_TO__]``
     
@@ -67,6 +73,26 @@
 [endsect]
 
 
+[section:header_optional_in_place_init Initialization tags]
+
+[#reference_in_place_init]
+[#reference_in_place_init_if]
+
+    namespace boost {
+
+    class in_place_init_t { /* see below */ } ;
+    const in_place_init_t in_place_init ( /* see below */ ) ;
+    
+    class in_place_init_if_t { /*see below*/ } ;
+    const in_place_init_if_t in_place_init_if ( /*see below*/ ) ;
+    
+    }
+
+Classes `in_place_init_t` and `in_place_init_if_t` are empty clsses. Their purpose is to control overload resolution in the initialization of optional objects. 
+They are empty, trivially copyable classes with disabled default constructor.  
+
+[endsect]
+
 [section:header_optional_optional_values Optional Values]
 
 [#reference_operator_template]
@@ -91,7 +117,6 @@
         
         optional ( T&& v ) ; ``[link reference_optional_constructor_move_value __GO_TO__]``
 
-        // [new in 1.34]
         optional ( bool condition, T const& v ) ; ``[link reference_optional_constructor_bool_value __GO_TO__]`` 
 
         optional ( optional const& rhs ) ; ``[link reference_optional_constructor_optional __GO_TO__]``
@@ -101,6 +126,10 @@
         template<class U> explicit optional ( optional<U> const& rhs ) ; ``[link reference_optional_constructor_other_optional __GO_TO__]``
         
         template<class U> explicit optional ( optional<U>&& rhs ) ; ``[link reference_optional_move_constructor_other_optional __GO_TO__]``
+        
+        template<class... Args> explicit optional ( in_place_init_t, Args&&... args ) ; ``[link reference_optional_in_place_init __GO_TO__]``
+        
+        template<class... Args> explicit optional ( in_place_init_if_t, bool condition, Args&&... args ) ; ``[link reference_optional_in_place_init_if __GO_TO__]``
 
         template<class InPlaceFactory> explicit optional ( InPlaceFactory const& f ) ; ``[link reference_optional_constructor_factory __GO_TO__]``
 

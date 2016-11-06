@@ -11,6 +11,10 @@
 
 [section:relnotes Release Notes]
 
+[heading Boost Release 1.63]
+* Added two new in-place constructors. They work similarly to `emplace()` functions: they initialize the contained value by perfect-forwarding the obtained arguments. One constructor always initializes the contained value, the other based on a boolean condition.
+* Fixed [@https://svn.boost.org/trac/boost/ticket/12203 Trac #12203].
+
 
 [heading Boost Release 1.62]
 

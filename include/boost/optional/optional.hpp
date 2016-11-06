@@ -1,5 +1,5 @@
 // Copyright (C) 2003, 2008 Fernando Luis Cacciola Carballal.
-// Copyright (C) 2014, 2015 Andrzej Krzemienski.
+// Copyright (C) 2014 - 2016 Andrzej Krzemienski.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -56,6 +56,31 @@
 #include <boost/optional/detail/old_optional_implementation.hpp>
 #else
 namespace boost {
+  
+namespace optional_ns {
+  
+// a tag for in-place initialization of contained value
+struct in_place_init_t
+{
+  struct init_tag{};
+  explicit in_place_init_t(init_tag){}
+};            
+const in_place_init_t in_place_init ((in_place_init_t::init_tag()));
+
+// a tag for conditional in-place initialization of contained value	
+struct in_place_init_if_t
+{
+  struct init_tag{};
+  explicit in_place_init_if_t(init_tag){}
+};
+const in_place_init_if_t in_place_init_if ((in_place_init_if_t::init_tag()));
+  
+} // namespace optional_ns
+
+using optional_ns::in_place_init_t;
+using optional_ns::in_place_init;
+using optional_ns::in_place_init_if_t;
+using optional_ns::in_place_init_if;
 
 namespace optional_detail {
 
@@ -339,50 +364,178 @@ class optional_base : public optional_tag
     // Constructs in-place
     // upon exception *this is always uninitialized
     template<class... Args>
+    void construct ( in_place_init_t, Args&&... args )
+    {
+      ::new (m_storage.address()) value_type( boost::forward<Args>(args)... ) ;
+      m_initialized = true ;
+    }
+
+    template<class... Args>
     void emplace_assign ( Args&&... args )
-     {
-       destroy();
-       ::new (m_storage.address()) value_type( boost::forward<Args>(args)... );
-       m_initialized = true ;
-     }
+    {
+      destroy();
+      construct(in_place_init, boost::forward<Args>(args)...);
+    }
+     
+    template<class... Args>
+    explicit optional_base ( in_place_init_t, Args&&... args )
+      :
+      m_initialized(false)
+    {
+      construct(in_place_init, boost::forward<Args>(args)...);
+    }
+    
+    template<class... Args>
+    explicit optional_base ( in_place_init_if_t, bool cond, Args&&... args )
+      :
+      m_initialized(false)
+    {
+      if ( cond )
+        construct(in_place_init, boost::forward<Args>(args)...);
+    }
 #elif (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES)
     template<class Arg>
-    void emplace_assign ( Arg&& arg )
+    void construct ( in_place_init_t, Arg&& arg )
      {
-       destroy();
        ::new (m_storage.address()) value_type( boost::forward<Arg>(arg) );
        m_initialized = true ;
      }
      
-    void emplace_assign ()
+    void construct ( in_place_init_t )
      {
-       destroy();
        ::new (m_storage.address()) value_type();
        m_initialized = true ;
      }
-#else
+     
     template<class Arg>
-    void emplace_assign ( const Arg& arg )
+    void emplace_assign ( Arg&& arg )
      {
        destroy();
+       construct(in_place_init, boost::forward<Arg>(arg)) ;
+     }
+     
+    void emplace_assign ()
+     {
+       destroy();
+       construct(in_place_init) ;
+     }
+     
+    template<class Arg>
+    explicit optional_base ( in_place_init_t, Arg&& arg )
+      :
+      m_initialized(false)
+    {
+      construct(in_place_init, boost::forward<Arg>(arg));
+    }
+    
+    explicit optional_base ( in_place_init_t )
+      :
+      m_initialized(false)
+    {
+      construct(in_place_init);
+    }
+    
+    template<class Arg>
+    explicit optional_base ( in_place_init_if_t, bool cond, Arg&& arg )
+      :
+      m_initialized(false)
+    {
+      if ( cond )
+        construct(in_place_init, boost::forward<Arg>(arg));
+    }
+    
+    explicit optional_base ( in_place_init_if_t, bool cond )
+      :
+      m_initialized(false)
+    {
+      if ( cond )
+        construct(in_place_init);
+    }
+
+#else
+     
+    template<class Arg>
+    void construct ( in_place_init_t, const Arg& arg )
+     {
        ::new (m_storage.address()) value_type( arg );
        m_initialized = true ;
      }
+     
+    template<class Arg>
+    void construct ( in_place_init_t, Arg& arg )
+     {
+       ::new (m_storage.address()) value_type( arg );
+       m_initialized = true ;
+     }
+     
+    void construct ( in_place_init_t )
+     {
+       ::new (m_storage.address()) value_type();
+       m_initialized = true ;
+     }
+
+    template<class Arg>
+    void emplace_assign ( const Arg& arg )
+    {
+      destroy();
+      construct(in_place_init, arg);
+    }
      
     template<class Arg>
     void emplace_assign ( Arg& arg )
-     {
-       destroy();
-       ::new (m_storage.address()) value_type( arg );
-       m_initialized = true ;
-     }
+    {
+      destroy();
+      construct(in_place_init, arg);
+    }
      
     void emplace_assign ()
-     {
-       destroy();
-       ::new (m_storage.address()) value_type();
-       m_initialized = true ;
-     }
+    {
+      destroy();
+      construct(in_place_init);
+    }
+    
+    template<class Arg>
+    explicit optional_base ( in_place_init_t, const Arg& arg )
+      : m_initialized(false)
+    {
+      construct(in_place_init, arg);
+    }
+
+    template<class Arg>
+    explicit optional_base ( in_place_init_t, Arg& arg )
+      : m_initialized(false)
+    {
+      construct(in_place_init, arg);
+    }
+    
+    explicit optional_base ( in_place_init_t )
+      : m_initialized(false)
+    {
+      construct(in_place_init);
+    }
+    
+    template<class Arg>
+    explicit optional_base ( in_place_init_if_t, bool cond, const Arg& arg )
+      : m_initialized(false)
+    {
+      if ( cond )
+        construct(in_place_init, arg);
+    }
+    
+    template<class Arg>
+    explicit optional_base ( in_place_init_if_t, bool cond, Arg& arg )
+      : m_initialized(false)
+    {
+      if ( cond )
+        construct(in_place_init, arg);
+    } 
+    
+    explicit optional_base ( in_place_init_if_t, bool cond )
+      : m_initialized(false)
+    {
+      if ( cond )
+        construct(in_place_init);
+    }
 #endif
 
 #ifndef BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
@@ -574,7 +727,9 @@ class optional_base : public optional_tag
 template <typename U>
 struct is_optional_related
   : boost::conditional< boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
-                     || boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<U>::type, none_t>::value,
+                     || boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<U>::type, none_t>::value
+                     || boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<U>::type, in_place_init_t>::value
+                     || boost::is_same<BOOST_DEDUCED_TYPENAME boost::decay<U>::type, in_place_init_if_t>::value,
     boost::true_type, boost::false_type>::type
 {};
 
@@ -820,9 +975,20 @@ class optional : public optional_detail::optional_base<T>
     // upon exception *this is always uninitialized
     template<class... Args>
     void emplace ( Args&&... args )
-     {
-       this->emplace_assign( boost::forward<Args>(args)... );
-     }
+    {
+      this->emplace_assign( boost::forward<Args>(args)... );
+    }
+     
+    template<class... Args>
+    explicit optional ( in_place_init_t, Args&&... args )
+    : base( in_place_init, boost::forward<Args>(args)... )
+    {}
+    
+    template<class... Args>
+    explicit optional ( in_place_init_if_t, bool cond, Args&&... args )
+    : base( in_place_init_if, cond, boost::forward<Args>(args)... )
+    {}
+    
 #elif (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES)
     template<class Arg>
     void emplace ( Arg&& arg )
@@ -834,6 +1000,24 @@ class optional : public optional_detail::optional_base<T>
      {
        this->emplace_assign();
      }
+     
+    template<class Args>
+    explicit optional ( in_place_init_t, Args&& args )
+    : base( in_place_init, boost::forward<Args>(args) )
+    {}
+
+    explicit optional ( in_place_init_t )
+    : base( in_place_init )
+    {}
+    
+    template<class Args>
+    explicit optional ( in_place_init_if_t, bool cond, Args&& args )
+    : base( in_place_init_if, cond, boost::forward<Args>(args) )
+    {}
+    
+    explicit optional ( in_place_init_if_t, bool cond )
+    : base( in_place_init_if, cond )
+    {}
 #else
     template<class Arg>
     void emplace ( const Arg& arg )
@@ -851,6 +1035,34 @@ class optional : public optional_detail::optional_base<T>
      {
        this->emplace_assign();
      }
+     
+    template<class Arg>
+    explicit optional ( in_place_init_t, const Arg& arg )
+    : base( in_place_init, arg )
+    {}
+    
+    template<class Arg>
+    explicit optional ( in_place_init_t, Arg& arg )
+    : base( in_place_init, arg )
+    {}
+
+    explicit optional ( in_place_init_t )
+    : base( in_place_init )
+    {}
+    
+    template<class Arg>
+    explicit optional ( in_place_init_if_t, bool cond, const Arg& arg )
+    : base( in_place_init_if, cond, arg )
+    {}
+    
+    template<class Arg>
+    explicit optional ( in_place_init_if_t, bool cond, Arg& arg )
+    : base( in_place_init_if, cond, arg )
+    {} 
+    
+    explicit optional ( in_place_init_if_t, bool cond )
+    : base( in_place_init_if, cond )
+    {}
 #endif
 
     void swap( optional & arg )

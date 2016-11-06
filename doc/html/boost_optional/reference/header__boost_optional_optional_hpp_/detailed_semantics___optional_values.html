@@ -406,6 +406,94 @@
 <p>
           <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
         </p>
+<a name="reference_optional_in_place_init"></a><div class="blockquote"><blockquote class="blockquote"><p>
+            <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span>
+            <span class="keyword">explicit</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">in_place_init_t</span><span class="special">,</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">ars</span>
+            <span class="special">);</span></code>
+          </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">is_constructible_v</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...&gt;</span></code> is <code class="computeroutput"><span class="keyword">true</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Effect:</strong></span> Initializes the contained
+              value as if direct-non-list-initializing an object of type <code class="computeroutput"><span class="identifier">T</span></code> with the arguments <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">Args</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="special">*</span><span class="keyword">this</span></code> is initialized.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
+              selected constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Notes: </strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+              need not be <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>.
+              On compilers that do not suppor variadic templates or rvalue references,
+              this constuctor is available in limited functionality. For details
+              <a class="link" href="../../dependencies_and_portability/emplace_operations_in_older_compilers.html#optional_emplace_workaround">see here</a>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="comment">// creates an std::mutex using its default constructor</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">om</span> <span class="special">{</span><span class="identifier">in_place_init</span><span class="special">};</span>
+<span class="identifier">assert</span> <span class="special">(</span><span class="identifier">om</span><span class="special">);</span>
+
+<span class="comment">// creates a unique_lock by calling unique_lock(*om, std::defer_lock)</span>
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;&gt;</span> <span class="identifier">ol</span> <span class="special">{</span><span class="identifier">in_place_init</span><span class="special">,</span> <span class="special">*</span><span class="identifier">om</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">defer_lock</span><span class="special">};</span>
+<span class="identifier">assert</span> <span class="special">(</span><span class="identifier">ol</span><span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(!</span><span class="identifier">ol</span><span class="special">-&gt;</span><span class="identifier">owns_lock</span><span class="special">());</span>
+</pre>
+            </li>
+</ul></div>
+<p>
+          <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
+        </p>
+<a name="reference_optional_in_place_init_if"></a><div class="blockquote"><blockquote class="blockquote"><p>
+            <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span>
+            <span class="keyword">explicit</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">in_place_init_if_t</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">condition</span><span class="special">,</span>
+            <span class="identifier">Args</span><span class="special">&amp;&amp;...</span>
+            <span class="identifier">ars</span> <span class="special">);</span></code>
+          </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <span class="bold"><strong>Requires:</strong></span> <code class="computeroutput"><span class="identifier">is_constructible_v</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">Args</span><span class="special">&amp;&amp;...&gt;</span></code> is <code class="computeroutput"><span class="keyword">true</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Effect:</strong></span> If <code class="computeroutput"><span class="identifier">condition</span></code>
+              is <code class="computeroutput"><span class="keyword">true</span></code>, initializes the
+              contained value as if direct-non-list-initializing an object of type
+              <code class="computeroutput"><span class="identifier">T</span></code> with the arguments
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">Args</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Postconditions:</strong></span> <code class="computeroutput"><span class="keyword">bool</span><span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">condition</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Throws:</strong></span> Any exception thrown by the
+              selected constructor of <code class="computeroutput"><span class="identifier">T</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Notes: </strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
+              need not be <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>.
+              On compilers that do not suppor variadic templates or rvalue references,
+              this constuctor is available in limited functionality. For details
+              <a class="link" href="../../dependencies_and_portability/emplace_operations_in_older_compilers.html#optional_emplace_workaround">see here</a>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Example:</strong></span>
+<pre class="programlisting"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;&gt;</span> <span class="identifier">ov1</span> <span class="special">{</span><span class="identifier">in_place_init_if</span><span class="special">,</span> <span class="keyword">false</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="string">"A"</span><span class="special">};</span>
+<span class="identifier">assert</span> <span class="special">(!</span><span class="identifier">ov1</span><span class="special">);</span>
+
+<span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;&gt;</span> <span class="identifier">ov2</span> <span class="special">{</span><span class="identifier">in_place_init_if</span><span class="special">,</span> <span class="keyword">true</span><span class="special">,</span> <span class="number">3</span><span class="special">,</span> <span class="string">"A"</span><span class="special">};</span>
+<span class="identifier">assert</span> <span class="special">(</span><span class="identifier">ov2</span><span class="special">);</span>
+<span class="identifier">assert</span> <span class="special">(</span><span class="identifier">ov2</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">3</span><span class="special">);</span>
+</pre>
+            </li>
+</ul></div>
+<p>
+          <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
+        </p>
 <a name="reference_optional_constructor_factory"></a><div class="blockquote"><blockquote class="blockquote"><p>
             <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">InPlaceFactory</span><span class="special">&gt;</span>
             <span class="keyword">explicit</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">optional</span><span class="special">(</span> <span class="identifier">InPlaceFactory</span>
@@ -1037,15 +1125,8 @@
               <span class="bold"><strong>Notes:</strong></span> <code class="computeroutput"><span class="identifier">T</span></code>
               need not be <code class="computeroutput"><span class="identifier">MoveConstructible</span></code>
               or <code class="computeroutput"><span class="identifier">MoveAssignable</span></code>.
-              On compilers that do not support variadic templates, the signature
-              falls back to two overloads:<code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span>
-              <span class="identifier">Arg</span><span class="special">&gt;</span>
-              <span class="keyword">void</span> <span class="identifier">emplace</span><span class="special">(</span><span class="identifier">Arg</span><span class="special">&amp;&amp;</span> <span class="identifier">arg</span><span class="special">)</span></code> and <code class="computeroutput"><span class="keyword">void</span>
-              <span class="identifier">emplace</span><span class="special">()</span></code>.
-              On compilers that do not support rvalue references, the signature falls
-              back to three overloads: taking <code class="computeroutput"><span class="keyword">const</span></code>
-              and non-<code class="computeroutput"><span class="keyword">const</span></code> lvalue reference,
-              and third with empty function argument list.
+              On compilers that do not suppor variadic templates or rvalue references,
+              this function is available in limited functionality. For details <a class="link" href="../../dependencies_and_portability/emplace_operations_in_older_compilers.html#optional_emplace_workaround">see here</a>.
             </li>
 <li class="listitem">
               <span class="bold"><strong>Example:</strong></span>
