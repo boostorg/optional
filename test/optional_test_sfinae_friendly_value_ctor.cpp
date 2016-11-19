@@ -27,11 +27,20 @@ struct Resource
   explicit Resource(const X&) {}
 };
 
-BOOST_STATIC_ASSERT(( boost::is_constructible<Resource, const X&>::value));
-BOOST_STATIC_ASSERT((!boost::is_constructible<Resource, const Y&>::value));
+BOOST_STATIC_ASSERT((  boost::is_constructible<Resource, const X&>::value ));
+BOOST_STATIC_ASSERT(( !boost::is_constructible<Resource, const Y&>::value ));
 
-BOOST_STATIC_ASSERT(( boost::is_constructible<optional<Resource>, const X&>::value));
-BOOST_STATIC_ASSERT((!boost::is_constructible<optional<Resource>, const Y&>::value));
+BOOST_STATIC_ASSERT((  boost::is_constructible<optional<Resource>, const X&>::value ));
+BOOST_STATIC_ASSERT(( !boost::is_constructible<optional<Resource>, const Y&>::value ));
+
+BOOST_STATIC_ASSERT((  boost::is_constructible< optional< optional<int> >, optional<int> >::value ));
+BOOST_STATIC_ASSERT(( !boost::is_constructible< optional<int>, optional< optional<int> > >::value ));
+
+BOOST_STATIC_ASSERT((  boost::is_constructible< optional< optional<int> >, const optional<int>& >::value ));
+BOOST_STATIC_ASSERT(( !boost::is_constructible< optional<int>, const optional< optional<int> >& >::value ));
+
+BOOST_STATIC_ASSERT((  boost::is_constructible<optional<Resource>, const optional<X>&>::value ));
+BOOST_STATIC_ASSERT(( !boost::is_constructible<optional<Resource>, const optional<Y>&>::value ));
   
 #endif
 

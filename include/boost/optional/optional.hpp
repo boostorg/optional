@@ -745,12 +745,20 @@ struct is_convertible_to_T_or_factory
                       , boost::true_type, boost::false_type>::type
 {};
 
+template <typename T, typename U>
+struct is_optional_constructible : boost::is_constructible<T, U>
+{};
+
 #else
 
 #define BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT
 
 template <typename, typename>
 struct is_convertible_to_T_or_factory : boost::true_type
+{};
+
+template <typename T, typename U>
+struct is_optional_constructible : boost::true_type
 {};
 
 #endif // is_convertible condition
@@ -812,7 +820,8 @@ class optional : public optional_detail::optional_base<T>
     // Requires a valid conversion from U to T.
     // Can throw if T::T(U const&) does
     template<class U>
-    explicit optional ( optional<U> const& rhs )
+    explicit optional ( optional<U> const& rhs,
+                        typename boost::enable_if< optional_detail::is_optional_constructible<T, U const&> >::type* = 0)
       :
       base()
     {
@@ -825,7 +834,8 @@ class optional : public optional_detail::optional_base<T>
     // Requires a valid conversion from U to T.
     // Can throw if T::T(U&&) does
     template<class U>
-    explicit optional ( optional<U> && rhs )
+    explicit optional ( optional<U> && rhs,
+                        typename boost::enable_if< optional_detail::is_optional_constructible<T, U> >::type* = 0 )
       :
       base()
     {

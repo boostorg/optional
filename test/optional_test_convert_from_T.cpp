@@ -23,6 +23,29 @@
 using boost::optional;
 using boost::none;
 
+template <typename U>
+struct superconv
+{
+  #ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
+  template <typename T>
+    superconv(T&&) { BOOST_STATIC_ASSERT(sizeof(T) == 0); }
+  #else
+  template <typename T>
+    superconv(const T&) { BOOST_STATIC_ASSERT(sizeof(T) == 0); }
+  template <typename T>
+    superconv(      T&) { BOOST_STATIC_ASSERT(sizeof(T) == 0); }
+  #endif
+  
+  superconv() {}
+};
+
+void test_optional_of_superconverting_T() // compile-time test
+{
+  superconv<optional<int> > s;
+   superconv<optional<int> > & rs = s;
+  optional<superconv<optional<int> > > os = rs;
+}
+
 void test_optional_optional_T()
 {
   optional<int> oi1 (1), oiN;
@@ -39,6 +62,7 @@ void test_optional_optional_T()
 int main()
 {
     test_optional_optional_T();
-  
+    test_optional_of_superconverting_T();
+    
     return boost::report_errors();
 }
