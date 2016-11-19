@@ -741,7 +741,7 @@ template <typename T, typename U>
 struct is_convertible_to_T_or_factory
   : boost::conditional< boost::is_base_of<boost::in_place_factory_base, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
                      || boost::is_base_of<boost::typed_in_place_factory_base, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
-                     || boost::is_constructible<T, U&&>::value
+                     || (boost::is_constructible<T, U&&>::value && !boost::is_same<T, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value)
                       , boost::true_type, boost::false_type>::type
 {};
 
@@ -954,6 +954,19 @@ class optional : public optional_detail::optional_base<T>
       }
 #endif
 
+
+#ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
+
+    // Assigns from a T (deep-moves/copies the rhs value)
+    template <typename T_>
+    BOOST_DEDUCED_TYPENAME boost::enable_if<boost::is_same<T, BOOST_DEDUCED_TYPENAME boost::decay<T_>::type>, optional&>::type
+    operator= ( T_&& val )
+      {
+        this->assign( boost::forward<T_>(val) ) ;
+        return *this ;
+      }
+#else
+
     // Assigns from a T (deep-copies the rhs value)
     // Basic Guarantee: If T::( T const& ) throws, this is left UNINITIALIZED
     optional& operator= ( argument_type val )
@@ -961,16 +974,9 @@ class optional : public optional_detail::optional_base<T>
         this->assign( val ) ;
         return *this ;
       }
-
-#ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
-    // Assigns from a T (deep-moves the rhs value)
-    optional& operator= ( rval_reference_type val )
-      {
-        this->assign( boost::move(val) ) ;
-        return *this ;
-      }
+      
 #endif
-
+      
     // Assigns from a "none"
     // Which destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
