@@ -33,6 +33,7 @@ BOOST_STATIC_ASSERT(( !boost::is_constructible<Resource, const Y&>::value ));
 BOOST_STATIC_ASSERT((  boost::is_constructible<optional<Resource>, const X&>::value ));
 BOOST_STATIC_ASSERT(( !boost::is_constructible<optional<Resource>, const Y&>::value ));
 
+#ifdef BOOST_OPTIONAL_DETAIL_USE_SFINAE_FRIENDLY_CONSTRUCTORS
 BOOST_STATIC_ASSERT((  boost::is_constructible< optional< optional<int> >, optional<int> >::value ));
 BOOST_STATIC_ASSERT(( !boost::is_constructible< optional<int>, optional< optional<int> > >::value ));
 
@@ -41,6 +42,7 @@ BOOST_STATIC_ASSERT(( !boost::is_constructible< optional<int>, const optional< o
 
 BOOST_STATIC_ASSERT((  boost::is_constructible<optional<Resource>, const optional<X>&>::value ));
 BOOST_STATIC_ASSERT(( !boost::is_constructible<optional<Resource>, const optional<Y>&>::value ));
+#endif
   
 #endif
 
