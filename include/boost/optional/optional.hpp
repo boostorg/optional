@@ -817,7 +817,7 @@ class optional : public optional_detail::optional_base<T>
     // Can throw if T::T(U const&) does
     template<class U>
     explicit optional ( optional<U> const& rhs
-#ifdef BOOST_OPTIONAL_DETAIL_USE_SFINAE_FRIENDLY_CONSTRUCTORS
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
                         ,typename boost::enable_if< optional_detail::is_optional_constructible<T, U const&> >::type* = 0
 #endif
                       )
@@ -834,7 +834,7 @@ class optional : public optional_detail::optional_base<T>
     // Can throw if T::T(U&&) does
     template<class U>
     explicit optional ( optional<U> && rhs
-#ifdef BOOST_OPTIONAL_DETAIL_USE_SFINAE_FRIENDLY_CONSTRUCTORS
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
                         ,typename boost::enable_if< optional_detail::is_optional_constructible<T, U> >::type* = 0
 #endif
                       )
