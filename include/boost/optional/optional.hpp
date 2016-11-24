@@ -733,24 +733,28 @@ struct is_optional_related
     boost::true_type, boost::false_type>::type
 {};
 
-#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800) && !BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40500) && !defined(__SUNPRO_CC)
-  // this condition is a copy paste from is_constructible.hpp
-  // I also disable SUNPRO, as it seems not to support type_traits correctly
+#if !defined(BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT)
   
 template <typename T, typename U>
 struct is_convertible_to_T_or_factory
   : boost::conditional< boost::is_base_of<boost::in_place_factory_base, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
                      || boost::is_base_of<boost::typed_in_place_factory_base, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
-                     || boost::is_constructible<T, U&&>::value
+                     || (boost::is_constructible<T, U&&>::value && !boost::is_same<T, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value)
                       , boost::true_type, boost::false_type>::type
+{};
+
+template <typename T, typename U>
+struct is_optional_constructible : boost::is_constructible<T, U>
 {};
 
 #else
 
-#define BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT
-
 template <typename, typename>
 struct is_convertible_to_T_or_factory : boost::true_type
+{};
+
+template <typename T, typename U>
+struct is_optional_constructible : boost::true_type
 {};
 
 #endif // is_convertible condition
@@ -812,7 +816,11 @@ class optional : public optional_detail::optional_base<T>
     // Requires a valid conversion from U to T.
     // Can throw if T::T(U const&) does
     template<class U>
-    explicit optional ( optional<U> const& rhs )
+    explicit optional ( optional<U> const& rhs
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
+                        ,typename boost::enable_if< optional_detail::is_optional_constructible<T, U const&> >::type* = 0
+#endif
+                      )
       :
       base()
     {
@@ -825,7 +833,11 @@ class optional : public optional_detail::optional_base<T>
     // Requires a valid conversion from U to T.
     // Can throw if T::T(U&&) does
     template<class U>
-    explicit optional ( optional<U> && rhs )
+    explicit optional ( optional<U> && rhs
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
+                        ,typename boost::enable_if< optional_detail::is_optional_constructible<T, U> >::type* = 0
+#endif
+                      )
       :
       base()
     {
@@ -944,6 +956,19 @@ class optional : public optional_detail::optional_base<T>
       }
 #endif
 
+#ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
+
+    // Assigns from a T (deep-moves/copies the rhs value)
+    template <typename T_>
+    BOOST_DEDUCED_TYPENAME boost::enable_if<boost::is_same<T, BOOST_DEDUCED_TYPENAME boost::decay<T_>::type>, optional&>::type
+    operator= ( T_&& val )
+      {
+        this->assign( boost::forward<T_>(val) ) ;
+        return *this ;
+      }
+      
+#else
+
     // Assigns from a T (deep-copies the rhs value)
     // Basic Guarantee: If T::( T const& ) throws, this is left UNINITIALIZED
     optional& operator= ( argument_type val )
@@ -951,7 +976,7 @@ class optional : public optional_detail::optional_base<T>
         this->assign( val ) ;
         return *this ;
       }
-
+      
 #ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
     // Assigns from a T (deep-moves the rhs value)
     optional& operator= ( rval_reference_type val )
@@ -960,7 +985,9 @@ class optional : public optional_detail::optional_base<T>
         return *this ;
       }
 #endif
-
+      
+#endif // BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
+      
     // Assigns from a "none"
     // Which destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
