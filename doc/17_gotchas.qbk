@@ -102,7 +102,7 @@ Sometimes on GCC compilers below version 5.1 you may get an -Wmaybe-uninitialize
     
 This is a bug in the compiler. As a workaround (provided in [@http://stackoverflow.com/questions/21755206/how-to-get-around-gcc-void-b-4-may-be-used-uninitialized-in-this-funct this Stack Overflow question]) use the following way of initializing an optional containing no value:
 
-    boost::optional<int> b = std::make_optional(false, int());
+    boost::optional<int> b = boost::make_optional(false, int());
 
 This is obviously redundant, but makes the warning disappear.
 
