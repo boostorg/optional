@@ -29,7 +29,7 @@ class none_t {};
 struct none_t
 {
   struct init_tag{};
-  explicit none_t(init_tag){} // to disable default constructor
+  explicit constexpr none_t(init_tag){} // to disable default constructor
 };
 
 #endif // old implementation workarounds
