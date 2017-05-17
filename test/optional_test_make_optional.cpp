@@ -23,7 +23,6 @@
 
 using boost::optional;
 using boost::make_optional;
-
 using boost::core::is_same;
 
 template <typename Expected, typename Deduced>
