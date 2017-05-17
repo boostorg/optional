@@ -1099,6 +1099,15 @@ foo ( make_optional(1+1) ) ; // Creates an optional<int>
 
 __SPACE__
 
+[#reference_make_optional_rvalue]
+
+[: `optional<std::decay_t<T>> make_optional( T && v )`]
+
+* [*Returns: ] `optional<std::decay_t<T>>(std::move(v))` for the ['deduced] type `T` of `v`.
+
+
+__SPACE__
+
 [#reference_make_optional_bool_value]
 
 [: `optional<T> make_optional( bool condition, T const& v )`]
@@ -1116,6 +1125,15 @@ optional<double> v = calculate_foo();
 if ( !v )
   error("foo wasn't computed");
 ``
+
+__SPACE__
+
+[#reference_make_optional_bool_rvalue]
+
+[: `optional<std::decay_t<T>> make_optional( bool condition, T && v )`]
+
+* [*Returns: ] `optional<std::decay_t<T>>(condition, std::move(v))` for the ['deduced] type `T` of `v`.
+
 
 __SPACE__
 

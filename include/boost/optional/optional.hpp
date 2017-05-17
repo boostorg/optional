@@ -152,6 +152,18 @@ class optional_base : public optional_tag
         construct(val);
     }
 
+#ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
+    // Creates an optional<T> initialized with 'move(val)' IFF cond is true, otherwise creates an uninitialzed optional<T>.
+    // Can throw if T::T(T &&) does
+    optional_base ( bool cond, rval_reference_type val )
+      :
+      m_initialized(false)
+    {
+      if ( cond )
+        construct(boost::move(val));
+    }
+#endif
+
     // Creates a deep copy of another optional<T>
     // Can throw if T::T(T const&) does
     optional_base ( optional_base const& rhs )
@@ -809,6 +821,13 @@ class optional : public optional_detail::optional_base<T>
     // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialized optional.
     // Can throw if T::T(T const&) does
     optional ( bool cond, argument_type val ) : base(cond,val) {}
+
+#ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
+    /// Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialized optional.
+    // Can throw if T::T(T &&) does
+    optional ( bool cond, rval_reference_type val ) : base( cond, boost::forward<T>(val) ) 
+      {}
+#endif
 
     // NOTE: MSVC needs templated versions first
 

@@ -22,6 +22,7 @@ import testing ;
     [ run optional_test_conversions_from_U.cpp ]
     [ run optional_test_convert_from_T.cpp ]
     [ run optional_test_empty_braces.cpp ]
+    [ run optional_test_make_optional.cpp ]
     [ run optional_test_tie.cpp ]
     [ run optional_test_ref_assign_portable_minimum.cpp ]
     [ run optional_test_ref_assign_mutable_int.cpp ]
