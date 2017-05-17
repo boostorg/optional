@@ -44,8 +44,12 @@
     template<class T> inline bool operator != ( optional<T> const& x, none_t ) noexcept ; ``[link reference_operator_compare_not_equal_optional_none __GO_TO__]``
 
     template<class T> inline optional<T> make_optional ( T const& v ) ; ``[link reference_make_optional_value __GO_TO__]``
+    
+    template<class T> inline optional<std::decay_t<T>> make_optional ( T && v ) ; ``[link reference_make_optional_rvalue __GO_TO__]``
 
     template<class T> inline optional<T> make_optional ( bool condition, T const& v ) ; ``[link reference_make_optional_bool_value __GO_TO__]``
+    
+    template<class T> inline optional<std::decay_t<T>> make_optional ( bool condition, T && v ) ; ``[link reference_make_optional_bool_rvalue __GO_TO__]``
 
     template<class T> inline auto get_optional_value_or ( optional<T> const& opt, typename optional<T>::reference_const_type def ) -> typename optional<T>::reference_const_type; ``[link reference_free_get_value_or __GO_TO__]`` 
     

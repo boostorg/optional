@@ -50,6 +50,19 @@
 <p>
           <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
         </p>
+<a name="reference_make_optional_rvalue"></a><div class="blockquote"><blockquote class="blockquote"><p>
+            <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">decay_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span>
+            <span class="identifier">make_optional</span><span class="special">(</span>
+            <span class="identifier">T</span> <span class="special">&amp;&amp;</span>
+            <span class="identifier">v</span> <span class="special">)</span></code>
+          </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+              <span class="bold"><strong>Returns: </strong></span> <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">decay_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">v</span><span class="special">))</span></code> for the <span class="emphasis"><em>deduced</em></span>
+              type <code class="computeroutput"><span class="identifier">T</span></code> of <code class="computeroutput"><span class="identifier">v</span></code>.
+            </li></ul></div>
+<p>
+          <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
+        </p>
 <a name="reference_make_optional_bool_value"></a><div class="blockquote"><blockquote class="blockquote"><p>
             <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">make_optional</span><span class="special">(</span>
             <span class="keyword">bool</span> <span class="identifier">condition</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">v</span> <span class="special">)</span></code>
@@ -73,6 +86,19 @@
 </pre>
             </li>
 </ul></div>
+<p>
+          <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
+        </p>
+<a name="reference_make_optional_bool_rvalue"></a><div class="blockquote"><blockquote class="blockquote"><p>
+            <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">decay_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span>
+            <span class="identifier">make_optional</span><span class="special">(</span>
+            <span class="keyword">bool</span> <span class="identifier">condition</span><span class="special">,</span> <span class="identifier">T</span> <span class="special">&amp;&amp;</span> <span class="identifier">v</span>
+            <span class="special">)</span></code>
+          </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+              <span class="bold"><strong>Returns: </strong></span> <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">decay_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;(</span><span class="identifier">condition</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">v</span><span class="special">))</span></code> for the <span class="emphasis"><em>deduced</em></span>
+              type <code class="computeroutput"><span class="identifier">T</span></code> of <code class="computeroutput"><span class="identifier">v</span></code>.
+            </li></ul></div>
 <p>
           <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
         </p>
@@ -481,7 +507,8 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014-2016 Andrzej Krzemie&#324;ski<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014-2017 Andrzej
+      Krzemie&#324;ski<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
