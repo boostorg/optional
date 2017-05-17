@@ -1276,6 +1276,25 @@ class optional<T&&>
 
 namespace boost {
 
+#ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
+
+template<class T>
+inline
+optional<BOOST_DEDUCED_TYPENAME boost::decay<T>::type> make_optional ( T && v  )
+{
+  return optional<BOOST_DEDUCED_TYPENAME boost::decay<T>::type>(boost::forward<T>(v));
+}
+
+// Returns optional<T>(cond,v)
+template<class T>
+inline
+optional<BOOST_DEDUCED_TYPENAME boost::decay<T>::type> make_optional ( bool cond, T && v )
+{
+  return optional<BOOST_DEDUCED_TYPENAME boost::decay<T>::type>(cond,boost::forward<T>(v));
+}
+
+#else
+
 // Returns optional<T>(v)
 template<class T>
 inline
@@ -1291,6 +1310,8 @@ optional<T> make_optional ( bool cond, T const& v )
 {
   return optional<T>(cond,v);
 }
+
+#endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
 // Returns a reference to the value if this is initialized, otherwise, the behaviour is UNDEFINED.
 // No-throw
