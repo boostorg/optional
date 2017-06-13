@@ -24,6 +24,14 @@
 using boost::optional;
 using boost::make_optional;
 
+using boost::core::is_same;
+
+template <typename Expected, typename Deduced>
+void verify_type(Deduced)
+{
+  BOOST_TEST_TRAIT_TRUE(( is_same<Expected, Deduced> ));
+}
+  
 #if (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES)
 struct MoveOnly
 {
@@ -42,14 +50,6 @@ MoveOnly makeMoveOnly(int i)
   return MoveOnly(i);
 }
 
-using boost::core::is_same;
-
-template <typename Expected, typename Deduced>
-void verify_type(Deduced)
-{
-  BOOST_TEST_TRAIT_TRUE(( is_same<Expected, Deduced> ));
-}
-  
 void test_make_optional_for_move_only_type()
 {
   verify_type< optional<MoveOnly> >(make_optional(makeMoveOnly(2)));
@@ -66,6 +66,8 @@ void test_make_optional_for_move_only_type()
   optional<MoveOnly> oN = make_optional(false, makeMoveOnly(2));
   BOOST_TEST (!oN);
 }
+
+#endif // !defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
 void test_make_optional_for_optional()
 {
@@ -107,8 +109,6 @@ void test_nested_make_optional()
   optional< optional<int> > oo4 = make_optional(false, make_optional(true, 4));
   BOOST_TEST (!oo4);
 }
-
-#endif // !defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
 int main()
 {
