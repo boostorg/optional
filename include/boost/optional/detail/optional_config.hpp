@@ -44,7 +44,7 @@
 # define BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION
 #endif
 
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
+#if (defined(__GNUC__)  || defined(__SUNPROC_CC)) && !defined(__INTEL_COMPILER)
 // GCC since 3.3 has may_alias attribute that helps to alleviate optimizer issues with
 // regard to violation of the strict aliasing rules. The optional< T > storage type is marked
 // with this attribute in order to let the compiler know that it will alias objects of type T
@@ -96,16 +96,14 @@
 
 #endif // defined(__GNUC__)
 
-#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800) && !BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40500) && !defined(__SUNPRO_CC)
+#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800) && !BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40500)
   // this condition is a copy paste from is_constructible.hpp
-  // I also disable SUNPRO, as it seems not to support type_traits correctly
 #else
 # define BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT
 #endif
 
-#if defined __SUNPRO_CC
-# define BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
-#elif (defined _MSC_FULL_VER) && (_MSC_FULL_VER < 190023026)
+
+#if (defined _MSC_FULL_VER) && (_MSC_FULL_VER < 190023026)
 # define BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
 #elif defined BOOST_GCC && !defined BOOST_GCC_CXX11
 # define BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
