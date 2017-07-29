@@ -44,11 +44,11 @@
 # define BOOST_OPTIONAL_WEAK_OVERLOAD_RESOLUTION
 #endif
 
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER)
-// GCC since 3.3 has may_alias attribute that helps to alleviate optimizer issues with
-// regard to violation of the strict aliasing rules. The optional< T > storage type is marked
-// with this attribute in order to let the compiler know that it will alias objects of type T
-// and silence compilation warnings.
+#if !defined(BOOST_NO_MAY_ALIAS)
+// GCC since 3.3 and some other compilers have may_alias attribute that helps to alleviate
+// optimizer issues with regard to violation of the strict aliasing rules. The optional< T >
+// storage type is marked with this attribute in order to let the compiler know that it will
+// alias objects of type T and silence compilation warnings.
 # define BOOST_OPTIONAL_DETAIL_USE_ATTRIBUTE_MAY_ALIAS
 #endif
 

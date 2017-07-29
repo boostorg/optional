@@ -25,12 +25,8 @@ template <class T>
 class aligned_storage
 {
     // Borland ICEs if unnamed unions are used for this!
-    union
-    // This works around GCC warnings about breaking strict aliasing rules when casting storage address to T*
-#if defined(BOOST_OPTIONAL_DETAIL_USE_ATTRIBUTE_MAY_ALIAS)
-    __attribute__((__may_alias__))
-#endif
-    dummy_u
+    // BOOST_MAY_ALIAS works around GCC warnings about breaking strict aliasing rules when casting storage address to T*
+    union BOOST_MAY_ALIAS dummy_u
     {
         char data[ sizeof(T) ];
         BOOST_DEDUCED_TYPENAME type_with_alignment<
