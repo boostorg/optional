@@ -29,7 +29,8 @@
 </h3></div></div></div>
 <p>
         Technical details aside, the memory layout of <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-        is more-less this:
+        for a generic <code class="computeroutput"><span class="identifier">T</span></code> is more-less
+        this:
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">optional</span>
@@ -39,8 +40,50 @@
 <span class="special">};</span>
 </pre>
 <p>
-        But for the purpose of this analysis, considering memory layouts, we can
-        think of it as:
+        Lifetime of the <code class="computeroutput"><span class="identifier">T</span></code> inside
+        <code class="computeroutput"><span class="identifier">_storage</span></code> is manually controlled
+        with placement-<code class="computeroutput"><span class="keyword">new</span></code>s and pseudo-destructor
+        calls. However, for trivial <code class="computeroutput"><span class="identifier">T</span></code>s
+        we use a different way of storage, by simply holding a <code class="computeroutput"><span class="identifier">T</span></code>:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">optional</span>
+<span class="special">{</span>
+  <span class="keyword">bool</span> <span class="identifier">_initialized</span><span class="special">;</span>
+  <span class="identifier">T</span> <span class="identifier">_storage</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        We call it a <span class="emphasis"><em>direct</em></span> storage. This makes <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> a
+        trivially-copyable type for trivial <code class="computeroutput"><span class="identifier">T</span></code>s.
+        This only works for compilers that support defaulted functions and type traits.
+        On compilers without defaulted functions we still use the direct storage,
+        but <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
+        no longer recognized as trivially-copyable. On compilers that do not fully
+        support type traits, we still use the direct storage for scalar types, but
+        we leave the programmer a way of customizing her type, so that it is reconized
+        by <code class="computeroutput"><span class="identifier">optional</span></code> as trivial, by
+        specializing type trait <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">opitonal_config</span><span class="special">::</span><span class="identifier">is_type_trivial</span></code>:
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="comment">// not trivial</span>
+<span class="special">{</span>
+  <span class="identifier">X</span><span class="special">()</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">optional_config</span> <span class="special">{</span>
+
+  <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_type_trivial</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="special">{};</span>
+
+<span class="special">}}</span>
+</pre>
+<h5>
+<a name="boost_optional.tutorial.performance_considerations.h0"></a>
+        <span class="phrase"><a name="boost_optional.tutorial.performance_considerations.controlling_the_size"></a></span><a class="link" href="performance_considerations.html#boost_optional.tutorial.performance_considerations.controlling_the_size">Controlling
+        the size</a>
+      </h5>
+<p>
+        For the purpose of the followin analysis, considering memory layouts, we
+        can think of it as:
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">optional</span>
@@ -143,7 +186,7 @@
         <span class="inlinemediaobject"><img src="../../images/opt_align4.png" alt="opt_align4"></span>
       </p>
 <h5>
-<a name="boost_optional.tutorial.performance_considerations.h0"></a>
+<a name="boost_optional.tutorial.performance_considerations.h1"></a>
         <span class="phrase"><a name="boost_optional.tutorial.performance_considerations.optional_function_parameters"></a></span><a class="link" href="performance_considerations.html#boost_optional.tutorial.performance_considerations.optional_function_parameters">Optional
         function parameters</a>
       </h5>
