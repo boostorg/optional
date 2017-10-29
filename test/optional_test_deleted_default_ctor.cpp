@@ -15,25 +15,29 @@ int main()
 #else
 
 #include <boost/optional.hpp>
+#include <utility>
 
-template<class T1, class T2> struct pair
+class basic_multi_buffer;
+
+class const_buffers_type
 {
-    T1 first;
-    T2 second;
+    basic_multi_buffer const* b_;
 
-    pair(): first(), second()
-    {
-    }
-};
+    friend class basic_multi_buffer;
 
-struct A
-{
-    A() = delete;
+    explicit
+    const_buffers_type(basic_multi_buffer const& b);
+
+public:
+
+    const_buffers_type() = delete;
+    const_buffers_type(const_buffers_type const&) = default;
+    const_buffers_type& operator=(const_buffers_type const&) = default;
 };
 
 int main()
 {
-    boost::optional< pair<A, int> > opt, opt2;
+    boost::optional< std::pair<const_buffers_type, int> > opt, opt2;
     opt = opt2;
 }
 
