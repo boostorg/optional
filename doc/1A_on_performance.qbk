@@ -35,7 +35,7 @@ We call it a ['direct] storage. This makes `optional<T>` a trivially-copyable ty
 
 [heading Controlling the size]
   
-For the purpose of the followin analysis, considering memory layouts, we can think of it as:
+For the purpose of the following analysis, considering memory layouts, we can think of it as:
 
   template <typename T>
   class optional
