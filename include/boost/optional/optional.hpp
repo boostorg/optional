@@ -806,6 +806,7 @@ struct is_optional_val_init_candidate
 {};
 
 
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
 template <typename T>
 struct is_type_trivially_copyable
   : boost::conditional<(boost::has_trivial_copy_constructor<T>::value &&
@@ -815,6 +816,13 @@ struct is_type_trivially_copyable
                         boost::has_trivial_assign<T>::value),
                         boost::true_type, boost::false_type>::type
 {};
+#else
+template <typename T>
+struct is_type_trivially_copyable
+: boost::conditional<(boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value),
+                     boost::true_type, boost::false_type>::type
+{};
+#endif
 
 } // namespace optional_detail
 
@@ -822,7 +830,7 @@ namespace optional_config {
   
 template <typename T>
 struct is_type_trivial
-  : boost::conditional< (optional_detail::is_type_trivially_copyable<T>::value && boost::has_trivial_default_constructor<T>::value) ||
+  : boost::conditional< (optional_detail::is_type_trivially_copyable<T>::value && BOOST_HAS_TRIVIAL_CONSTRUCTOR(T)) ||
                         (boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
                       , boost::true_type, boost::false_type>::type
 {};
@@ -830,7 +838,7 @@ struct is_type_trivial
 } // namespace optional_config
 
 
-#ifndef BOOST_OPTIONAL_CONFIG_NO_SPEC_FOR_TRIVIAL_TYPES
+#ifndef BOOST_OPTIONAL_DETAIL_NO_POD_SPEC
 #  define BOOST_OPTIONAL_BASE_TYPE(T) boost::conditional< optional_config::is_type_trivial<T>::value, \
                                       optional_detail::tc_optional_base<T>, \
                                       optional_detail::optional_base<T> \
