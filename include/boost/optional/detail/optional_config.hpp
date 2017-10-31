@@ -1,5 +1,5 @@
 // Copyright (C) 2003, 2008 Fernando Luis Cacciola Carballal.
-// Copyright (C) 2015 Andrzej Krzemienski.
+// Copyright (C) 2015 - 2017 Andrzej Krzemienski.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -15,6 +15,7 @@
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/type_traits/intrinsics.hpp>
 
 #if (defined BOOST_NO_CXX11_RVALUE_REFERENCES) || (defined BOOST_OPTIONAL_CONFIG_NO_RVALUE_REFERENCES)
 # define BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
@@ -123,5 +124,31 @@
 // and they cannot be defaulted 
 # define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
 #endif
+
+
+// The condition to use POD implementation
+
+#ifdef BOOST_OPTIONAL_CONFIG_NO_POD_SPEC
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#elif defined BOOST_OPTIONAL_CONFIG_NO_SPEC_FOR_TRIVIAL_TYPES
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#elif !defined BOOST_HAS_TRIVIAL_CONSTRUCTOR
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#elif !defined BOOST_HAS_TRIVIAL_MOVE_ASSIGN
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#elif !defined BOOST_HAS_TRIVIAL_MOVE_CONSTRUCTOR
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#elif !defined BOOST_HAS_TRIVIAL_COPY
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#elif !defined BOOST_HAS_TRIVIAL_ASSIGN
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#elif !defined BOOST_HAS_TRIVIAL_DESTRUCTOR
+# define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+#endif
+
+#ifdef BOOST_OPTIONAL_CONFIG_NO_POD_SPEC
+# define BOOST_OPTIONAL_DETAIL_NO_POD_SPEC
+#endif
+
 
 #endif // header guard
