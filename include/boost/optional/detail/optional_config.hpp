@@ -113,4 +113,15 @@
 # define BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
 #endif
 
+
+// Detection of correctly implemented defaulted functions
+
+#ifdef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+# define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+#elif BOOST_WORKAROUND(BOOST_MSVC, < 1900)
+// on MSVC 12.0 move constructor and move assignment are not reconized as special functions
+// and they cannot be defaulted 
+# define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+#endif
+
 #endif // header guard
