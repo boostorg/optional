@@ -827,13 +827,21 @@ struct is_type_trivially_copyable
 } // namespace optional_detail
 
 namespace optional_config {
-  
+
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES  
 template <typename T>
 struct is_type_trivial
   : boost::conditional< (optional_detail::is_type_trivially_copyable<T>::value && BOOST_HAS_TRIVIAL_CONSTRUCTOR(T)) ||
                         (boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
                       , boost::true_type, boost::false_type>::type
 {};
+#else
+template <typename T>
+struct is_type_trivial
+  : boost::conditional<(boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
+                      , boost::true_type, boost::false_type>::type
+{};
+#endif
 
 } // namespace optional_config
 
