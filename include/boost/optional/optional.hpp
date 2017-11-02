@@ -20,6 +20,10 @@
 #include <new>
 #include <iosfwd>
 
+#ifdef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
+#  include <type_traits>
+#endif
+
 #include <boost/assert.hpp>
 #include <boost/core/addressof.hpp>
 #include <boost/core/enable_if.hpp>
@@ -828,10 +832,16 @@ struct is_type_trivially_copyable
 
 namespace optional_config {
 
+#ifndef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
+#  define BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T) BOOST_HAS_TRIVIAL_CONSTRUCTOR(T)
+#else
+#  define BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T) std::is_trivially_default_constructible<T>::value
+#endif
+
 #ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES  
 template <typename T>
 struct is_type_trivial
-  : boost::conditional< (optional_detail::is_type_trivially_copyable<T>::value && BOOST_HAS_TRIVIAL_CONSTRUCTOR(T)) ||
+  : boost::conditional< (optional_detail::is_type_trivially_copyable<T>::value && BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T)) ||
                         (boost::is_scalar<T>::value && !boost::is_const<T>::value && !boost::is_volatile<T>::value)
                       , boost::true_type, boost::false_type>::type
 {};
