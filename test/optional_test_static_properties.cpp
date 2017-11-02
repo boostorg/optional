@@ -36,6 +36,11 @@ struct CustomizedTrivial
   CustomizedTrivial() {}
 };
 
+struct DeletedDefault
+{
+  BOOST_DELETED_FUNCTION(DeletedDefault())
+};
+
 namespace boost { namespace optional_config {
   
 template <> struct is_type_trivial<CustomizedTrivial> : boost::true_type {};
@@ -72,7 +77,6 @@ void test_type_traits()
   // this only tests if type traits are implemented correctly
   BOOST_TEST_TRAIT_TRUE(( boost::optional_config::is_type_trivial<int> ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_config::is_type_trivial<double> ));
-
   
   BOOST_TEST_TRAIT_TRUE(( boost::optional_config::is_type_trivial<CustomizedTrivial> ));
   
@@ -103,8 +107,13 @@ void test_type_traits()
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<NoDefault> ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<CustDefault> ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<Aggregate<int, CustDefault> > )); 
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<DeletedDefault> ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<Aggregate<int, DeletedDefault> > ));
 #endif  
 
+  BOOST_TEST_TRAIT_FALSE(( boost::optional_config::is_type_trivial<DeletedDefault> ));
+  BOOST_TEST_TRAIT_FALSE(( boost::optional_config::is_type_trivial<Aggregate<int, DeletedDefault> > ));
+  
   BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<CustDtor> ));
   BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<CustAssign> ));
   BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<CustMove> ));
@@ -116,6 +125,7 @@ void test_trivial_copyability()
   BOOST_TEST_TRAIT_TRUE((boost::is_base_of<boost::optional_detail::tc_optional_base<int>, boost::optional<int> > ));
   BOOST_TEST_TRAIT_TRUE((boost::is_base_of<boost::optional_detail::tc_optional_base<double>, boost::optional<double> > ));
   BOOST_TEST_TRAIT_TRUE((boost::is_base_of<boost::optional_detail::tc_optional_base<CustomizedTrivial>, boost::optional<CustomizedTrivial> > ));
+  BOOST_TEST_TRAIT_FALSE((boost::is_base_of<boost::optional_detail::tc_optional_base<DeletedDefault>, boost::optional<DeletedDefault> > ));
   
 #ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<int> > ));
@@ -124,6 +134,8 @@ void test_trivial_copyability()
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Empty> > ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Aggregate<int, double> > > ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Aggregate<Aggregate<Empty, int>, double> > > ));
+  
+  BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<DeletedDefault> > ));
 #endif
 }
 
