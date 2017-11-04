@@ -14,7 +14,7 @@
 [heading Boost Release 1.66]
 
 * On newer compilers `optional` is now trivially-copyable for scalar `T`s. This uses a different storage (just `T` rather than `aligned_storage`). We require the compiler to support defaulted functions.
-
+* Changed the implementation of `operator==` to get rid of the `-Wmaybe-uninitialized` false-positive warning from GCC. 
 
 [heading Boost Release 1.63]
 * Added two new in-place constructors. They work similarly to `emplace()` functions: they initialize the contained value by perfect-forwarding the obtained arguments. One constructor always initializes the contained value, the other based on a boolean condition.

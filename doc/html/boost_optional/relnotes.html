@@ -31,13 +31,19 @@
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_66"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_66">Boost
       Release 1.66</a>
     </h4>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
           On newer compilers <code class="computeroutput"><span class="identifier">optional</span></code>
           is now trivially-copyable for scalar <code class="computeroutput"><span class="identifier">T</span></code>s.
           This uses a different storage (just <code class="computeroutput"><span class="identifier">T</span></code>
           rather than <code class="computeroutput"><span class="identifier">aligned_storage</span></code>).
           We require the compiler to support defaulted functions.
-        </li></ul></div>
+        </li>
+<li class="listitem">
+          Changed the implementation of <code class="computeroutput"><span class="keyword">operator</span><span class="special">==</span></code> to get rid of the <code class="computeroutput"><span class="special">-</span><span class="identifier">Wmaybe</span><span class="special">-</span><span class="identifier">uninitialized</span></code> false-positive warning
+          from GCC.
+        </li>
+</ul></div>
 <h4>
 <a name="boost_optional.relnotes.h1"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_63"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_63">Boost
