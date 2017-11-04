@@ -94,15 +94,22 @@ void test_type_traits()
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<int> ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<double> ));
 
-  BOOST_TEST_TRAIT_FALSE(( boost::optional_config::optional_uses_direct_storage_for<Empty> ));
-  BOOST_TEST_TRAIT_FALSE(( boost::optional_config::optional_uses_direct_storage_for<Aggregate<int, double> > ));
-  BOOST_TEST_TRAIT_FALSE(( boost::optional_config::optional_uses_direct_storage_for<Aggregate<Aggregate<Empty, int>, double> > ));
+ 
 #ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_config::optional_uses_direct_storage_for<Empty> ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_config::optional_uses_direct_storage_for<Aggregate<int, double> > ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_config::optional_uses_direct_storage_for<Aggregate<Aggregate<Empty, int>, double> > ));
   
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<Empty> ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<Aggregate<int, double> > ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<Aggregate<Aggregate<Empty, int>, double> > ));
   
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<PrivDefault> ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<NoDefault> ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<CustDefault> ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<Aggregate<int, CustDefault> > )); 
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<DeletedDefault> ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<Aggregate<int, DeletedDefault> > ));
 #endif  
 
   BOOST_TEST_TRAIT_FALSE(( boost::optional_config::optional_uses_direct_storage_for<DeletedDefault> ));
@@ -125,13 +132,12 @@ void test_trivial_copyability()
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<int> > ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<double> > ));
   BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<CustomizedTrivial> > ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Empty> > ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Aggregate<int, double> > > ));
+  BOOST_TEST_TRAIT_TRUE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Aggregate<Aggregate<Empty, int>, double> > > ));
   
   BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<DeletedDefault> > ));
 #endif
-
-  BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Empty> > ));
-  BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Aggregate<int, double> > > ));
-  BOOST_TEST_TRAIT_FALSE(( boost::optional_detail::is_type_trivially_copyable<boost::optional<Aggregate<Aggregate<Empty, int>, double> > > ));
 }
 
 #endif

@@ -13,7 +13,7 @@
 
 [heading Boost Release 1.66]
 
-* On newer compilers `optional` is now trivially-copyable for trivial `T`s. This uses a different storage (just `T` rather than `aligned_storage`). We require the compiler to support defaulted functions and type traits. Otherwise, we still use the the plain storage for scalar types.
+* On newer compilers `optional` is now trivially-copyable for scalar `T`s. This uses a different storage (just `T` rather than `aligned_storage`). We require the compiler to support defaulted functions.
 
 
 [heading Boost Release 1.63]

@@ -43,7 +43,7 @@
         Lifetime of the <code class="computeroutput"><span class="identifier">T</span></code> inside
         <code class="computeroutput"><span class="identifier">_storage</span></code> is manually controlled
         with placement-<code class="computeroutput"><span class="keyword">new</span></code>s and pseudo-destructor
-        calls. However, for trivial <code class="computeroutput"><span class="identifier">T</span></code>s
+        calls. However, for scalar <code class="computeroutput"><span class="identifier">T</span></code>s
         we use a different way of storage, by simply holding a <code class="computeroutput"><span class="identifier">T</span></code>:
       </p>
 <pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
@@ -55,15 +55,13 @@
 </pre>
 <p>
         We call it a <span class="emphasis"><em>direct</em></span> storage. This makes <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> a
-        trivially-copyable type for trivial <code class="computeroutput"><span class="identifier">T</span></code>s.
-        This only works for compilers that support defaulted functions and type traits.
-        On compilers without defaulted functions we still use the direct storage,
-        but <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
-        no longer recognized as trivially-copyable. On compilers that do not fully
-        support type traits, we still use the direct storage for scalar types, but
-        we leave the programmer a way of customizing her type, so that it is reconized
-        by <code class="computeroutput"><span class="identifier">optional</span></code> as trivial, by
-        specializing type trait <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">opitonal_config</span><span class="special">::</span><span class="identifier">is_type_trivial</span></code>:
+        trivially-copyable type for scalar <code class="computeroutput"><span class="identifier">T</span></code>s.
+        This only works for compilers that support defaulted functions. On compilers
+        without defaulted functions we still use the direct storage, but <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is
+        no longer recognized as trivially-copyable. Apart from scalar types, we leave
+        the programmer a way of customizing her type, so that it is reconized by
+        <code class="computeroutput"><span class="identifier">optional</span></code> as candidate for
+        optimized storage, by specializing type trait <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">opitonal_config</span><span class="special">::</span><span class="identifier">optional_uses_direct_storage_for</span></code>:
       </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="comment">// not trivial</span>
 <span class="special">{</span>
@@ -72,7 +70,7 @@
 
 <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">optional_config</span> <span class="special">{</span>
 
-  <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_type_trivial</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="special">{};</span>
+  <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">optional_uses_direct_storage_for</span><span class="special">&lt;</span><span class="identifier">X</span><span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">true_type</span> <span class="special">{};</span>
 
 <span class="special">}}</span>
 </pre>
