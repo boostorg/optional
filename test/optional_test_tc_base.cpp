@@ -25,6 +25,8 @@ int main()
 
 #else
 
+#include <utility>
+
 struct NotDefaultConstructible
 {
 	NotDefaultConstructible() = delete;
@@ -37,9 +39,37 @@ void test_tc_base()
   BOOST_TEST(boost::none == o);
 }
 
+struct S
+{
+
+};
+
+template<class T>
+struct W
+{
+	T& t_;
+
+	template<class... Args>
+	W(Args&&... args)
+		: t_(std::forward<Args>(args)...)
+	{
+	}
+};
+
+void test_value_init()
+{
+	{
+		S s;
+		W<S> w{s};
+	}
+	boost::optional<W<S&> > o;
+	BOOST_TEST(boost::none == o);
+}
+
 int main()
 {
   test_tc_base();
+  test_value_init();
   return boost::report_errors();
 }
 
