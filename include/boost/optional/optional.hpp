@@ -940,7 +940,7 @@ class optional
 
     // Creates a deep copy of another optional<T>
     // Can throw if T::T(T const&) does
-#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
     optional ( optional const& ) = default;
 #else
     optional ( optional const& rhs ) : base( static_cast<base const&>(rhs) ) {}
@@ -950,7 +950,7 @@ class optional
     // Creates a deep move of another optional<T>
     // Can throw if T::T(T&&) does
 
-#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
     optional ( optional && rhs ) = default;
 #else
     optional ( optional && rhs )
@@ -1015,7 +1015,7 @@ class optional
     // Assigns from another optional<T> (deep-copies the rhs value)
     // Basic Guarantee: If T::T( T const& ) throws, this is left UNINITIALIZED
     //  (NOTE: On BCB, this operator is not actually called and left is left UNMODIFIED in case of a throw)
-#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
     optional& operator= ( optional const& rhs ) = default;
 #else
     optional& operator= ( optional const& rhs )
@@ -1027,7 +1027,7 @@ class optional
 
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
     // Assigns from another optional<T> (deep-moves the rhs value)
-#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+#ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
     optional& operator= ( optional && ) = default;
 #else
     optional& operator= ( optional && rhs ) 
