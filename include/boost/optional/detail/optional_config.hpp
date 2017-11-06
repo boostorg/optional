@@ -114,14 +114,16 @@
 #endif
 
 
-// Detection of correctly implemented defaulted functions
+// Detect suport for defaulting move operations
+// (some older compilers implement rvalue references,
+// defaulted funcitons but move operations are not special members and cannot be defaulted)
 
 #ifdef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
-# define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+# define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
 #elif BOOST_WORKAROUND(BOOST_MSVC, < 1900)
-// on MSVC 12.0 move constructor and move assignment are not reconized as special functions
-// and they cannot be defaulted 
-# define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_FUNCTIONS
+# define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
+#elif BOOST_WORKAROUND(BOOST_GCC_VERSION, < 40600)
+# define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
 #endif
 
 
