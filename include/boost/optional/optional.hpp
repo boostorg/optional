@@ -816,7 +816,7 @@ struct optional_uses_direct_storage_for
 } // namespace optional_config
 
 
-#ifndef BOOST_OPTIONAL_DETAIL_NO_DIRECT_STORAE_SPEC
+#ifndef BOOST_OPTIONAL_DETAIL_NO_DIRECT_STORAGE_SPEC
 #  define BOOST_OPTIONAL_BASE_TYPE(T) boost::conditional< optional_config::optional_uses_direct_storage_for<T>::value, \
                                       optional_detail::tc_optional_base<T>, \
                                       optional_detail::optional_base<T> \
