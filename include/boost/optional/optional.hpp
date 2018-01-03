@@ -747,7 +747,7 @@ class optional_base : public optional_tag
 
   private :
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1600)
+#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1900))
     void destroy_impl ( ) { m_storage.ptr_ref()->~T() ; m_initialized = false ; }
 #else
     void destroy_impl ( ) { m_storage.ref().T::~T() ; m_initialized = false ; }
