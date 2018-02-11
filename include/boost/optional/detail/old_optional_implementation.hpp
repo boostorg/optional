@@ -147,7 +147,7 @@ class optional_base : public optional_tag
     }
 #endif
 
-    // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialzed optional<T>.
+    // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialized optional<T>.
     // Can throw if T::T(T const&) does
     optional_base ( bool cond, argument_type val )
       :

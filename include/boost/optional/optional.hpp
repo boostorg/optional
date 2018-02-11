@@ -149,7 +149,7 @@ class optional_base : public optional_tag
     }
 #endif
 
-    // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialzed optional<T>.
+    // Creates an optional<T> initialized with 'val' IFF cond is true, otherwise creates an uninitialized optional<T>.
     // Can throw if T::T(T const&) does
     optional_base ( bool cond, argument_type val )
       :
@@ -160,7 +160,7 @@ class optional_base : public optional_tag
     }
 
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
-    // Creates an optional<T> initialized with 'move(val)' IFF cond is true, otherwise creates an uninitialzed optional<T>.
+    // Creates an optional<T> initialized with 'move(val)' IFF cond is true, otherwise creates an uninitialized optional<T>.
     // Can throw if T::T(T &&) does
     optional_base ( bool cond, rval_reference_type val )
       :
