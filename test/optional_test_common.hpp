@@ -194,6 +194,9 @@ inline void check_uninitialized_const ( optional<T> const& opt )
   BOOST_TEST( !opt ) ;
   BOOST_TEST( !get_pointer(opt) ) ;
   BOOST_TEST( !opt.get_ptr() ) ;
+  BOOST_TEST( !opt.has_value() ) ;
+  BOOST_TEST( !opt.is_initialized() ) ;
+  BOOST_TEST( opt == boost::none ) ;
 }
 template<class T>
 inline void check_uninitialized ( optional<T>& opt )
@@ -204,6 +207,9 @@ inline void check_uninitialized ( optional<T>& opt )
   BOOST_TEST( !opt ) ;
   BOOST_TEST( !get_pointer(opt) ) ;
   BOOST_TEST( !opt.get_ptr() ) ;
+  BOOST_TEST( !opt.has_value() ) ;
+  BOOST_TEST( !opt.is_initialized() ) ;
+  BOOST_TEST( opt == boost::none ) ;
 
   check_uninitialized_const(opt);
 }
@@ -220,6 +226,9 @@ inline void check_initialized_const ( optional<T> const& opt )
   BOOST_TEST ( !!opt ) ;
   BOOST_TEST ( get_pointer(opt) ) ;
   BOOST_TEST ( opt.get_ptr() ) ;
+  BOOST_TEST ( opt.has_value() ) ;
+  BOOST_TEST ( opt.is_initialized() ) ;
+  BOOST_TEST ( opt != boost::none ) ;
 }
 
 template<class T>
@@ -234,6 +243,9 @@ inline void check_initialized ( optional<T>& opt )
   BOOST_TEST ( !!opt ) ;
   BOOST_TEST ( get_pointer(opt) ) ;
   BOOST_TEST ( opt.get_ptr() ) ;
+  BOOST_TEST ( opt.has_value() ) ;
+  BOOST_TEST ( opt.is_initialized() ) ;
+  BOOST_TEST ( opt != boost::none ) ;
 
   check_initialized_const(opt);
 }

@@ -159,6 +159,7 @@ public:
     void reset() BOOST_NOEXCEPT { ptr_ = 0; }
 
     bool is_initialized() const BOOST_NOEXCEPT { return ptr_ != 0; }
+    bool has_value() const BOOST_NOEXCEPT { return ptr_ != 0; }
     
 #ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES   
  

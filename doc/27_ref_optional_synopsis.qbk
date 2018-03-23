@@ -182,6 +182,8 @@ They are empty, trivially copyable classes with disabled default constructor.
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``
 
+        bool has_value() const noexcept ; ``[link reference_optional_operator_bool __GO_TO__]``
+        
         explicit operator bool() const noexcept ; ``[link reference_optional_operator_bool __GO_TO__]``
 
         bool operator!() const noexcept ; ``[link reference_optional_operator_not __GO_TO__]``
@@ -256,6 +258,8 @@ They are empty, trivially copyable classes with disabled default constructor.
 
         T* get_ptr() const noexcept ; ``[link reference_optional_ref_get_ptr __GO_TO__]``
 
+        bool has_value() const noexcept ; ``[link reference_optional_ref_operator_bool __GO_TO__]``
+        
         explicit operator bool() const noexcept ; ``[link reference_optional_ref_operator_bool __GO_TO__]``
 
         bool operator!() const noexcept ; ``[link reference_optional_ref_operator_not __GO_TO__]``

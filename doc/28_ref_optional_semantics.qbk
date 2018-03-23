@@ -754,6 +754,7 @@ __SPACE__
 [#reference_optional_operator_bool]
 
 [: `explicit optional<T>::operator bool() const noexcept ;`]
+[: `bool optional<T>::has_value() const noexcept ;`]
 
 * [*Returns:] `get_ptr() != 0`.
 * [*Notes:] On compilers that do not support explicit conversion operators this falls back to safe-bool idiom.
@@ -1040,6 +1041,7 @@ __SPACE__
 __SPACE__
 
 [#reference_optional_ref_operator_bool]
+[: `bool has_value() const noexcept;`]
 [: `optional<T&>::operator bool () const noexcept;`]
 * [*Returns:] `bool(ref)`.
 

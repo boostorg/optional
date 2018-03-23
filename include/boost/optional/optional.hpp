@@ -375,7 +375,7 @@ class optional_base : public optional_tag
     pointer_const_type get_ptr() const { return m_initialized ? get_ptr_impl() : 0 ; }
     pointer_type       get_ptr()       { return m_initialized ? get_ptr_impl() : 0 ; }
 
-    bool is_initialized() const { return m_initialized ; }
+    bool is_initialized() const BOOST_NOEXCEPT { return m_initialized ; }
 
   protected :
 
@@ -1333,6 +1333,8 @@ class optional
       }
 #endif
       
+    bool has_value() const BOOST_NOEXCEPT { return this->is_initialized() ; }
+    
     bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
     
     BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
