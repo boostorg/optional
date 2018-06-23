@@ -687,20 +687,20 @@ __SPACE__
 
 [#reference_optional_map]
 
-[: `template<class F> auto optional<T>::map(F f) const& -> ``['see below]`` ;`]
-[: `template<class F> auto optional<T>::map(F f) & -> ``['see below]`` ;`]
+[: `template<class F> auto optional<T>::map(F f) const& -> `['see below]` ;`]
+[: `template<class F> auto optional<T>::map(F f) & -> `['see below]` ;`]
 
 * [*Effects:] `if (*this) return f(**this); else return none;`
-* [*Notes:] The return type of these overloads is `optional<decltype(f(**this)>`. On compilers that do not support ref-qualifiers on member functions, these two (as well as the next one) overloads are replaced with good old const and non-const overloads. 
+* [*Notes:] The return type of these overloads is `optional<decltype(f(**this))>`. On compilers that do not support ref-qualifiers on member functions, these two (as well as the next one) overloads are replaced with good old const and non-const overloads. 
 
 __SPACE__
 
 [#reference_optional_map_move]
 
-[: `template<class F> auto optional<T>::map(F f) && -> ``['see below]`` ;`]
+[: `template<class F> auto optional<T>::map(F f) && -> `['see below]` ;`]
 
 * [*Effects:] `if (*this) return f(std::move(**this)); else return none;`
-* [*Notes:] The return type of this overload is `optional<decltype(f(istd::move(**this))>`.
+* [*Notes:] The return type of this overload is `optional<decltype(f(istd::move(**this)))>`.
 
 __SPACE__
 
@@ -1050,6 +1050,13 @@ __SPACE__
 [: `template<class F> T& optional<T&>::value_or( F f ) const ;`]
 * [*Effects:] Equivalent to `if (*this) return **this; else return f();`.
 * [*Remarks:] Unless `decltype(f())` is an lvalue reference, the program is ill-formed.
+
+__SPACE__
+
+[#reference_optional_ref_map]
+[: `template<class F> auto optional<T&>::map( F f ) const -> `['see below]`;`]
+* [*Effects:] Equivalent to `if (*this) return f(**this); else return none;`.
+* [*Remarks:] The return type of this function is `optional<decltype(f(**this))>`.
 
 __SPACE__
 

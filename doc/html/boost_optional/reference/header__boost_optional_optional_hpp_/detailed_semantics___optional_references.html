@@ -410,6 +410,21 @@
 <p>
           <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
         </p>
+<a name="reference_optional_ref_map"></a><div class="blockquote"><blockquote class="blockquote"><p>
+            <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">F</span><span class="special">&gt;</span> <span class="keyword">auto</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">map</span><span class="special">(</span> <span class="identifier">F</span> <span class="identifier">f</span> <span class="special">)</span> <span class="keyword">const</span> <span class="special">-&gt;</span> </code><span class="emphasis"><em>see below</em></span><code class="computeroutput"><span class="special">;</span></code>
+          </p></blockquote></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <span class="bold"><strong>Effects:</strong></span> Equivalent to <code class="computeroutput"><span class="keyword">if</span> <span class="special">(*</span><span class="keyword">this</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">f</span><span class="special">(**</span><span class="keyword">this</span><span class="special">);</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">none</span><span class="special">;</span></code>.
+            </li>
+<li class="listitem">
+              <span class="bold"><strong>Remarks:</strong></span> The return type of this function
+              is <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">f</span><span class="special">(**</span><span class="keyword">this</span><span class="special">))&gt;</span></code>.
+            </li>
+</ul></div>
+<p>
+          <span class="inlinemediaobject"><img src="../../../images/space.png" alt="space"></span>
+        </p>
 <a name="reference_optional_ref_get_ptr"></a><div class="blockquote"><blockquote class="blockquote"><p>
             <code class="computeroutput"><span class="identifier">T</span><span class="special">*</span>
             <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&amp;&gt;::</span><span class="identifier">get_ptr</span> <span class="special">()</span>

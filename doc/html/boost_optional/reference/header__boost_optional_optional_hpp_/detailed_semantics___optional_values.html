@@ -1476,10 +1476,10 @@
         </p>
 <a name="reference_optional_map"></a><div class="blockquote"><blockquote class="blockquote"><p>
             <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">F</span><span class="special">&gt;</span> <span class="keyword">auto</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">map</span><span class="special">(</span><span class="identifier">F</span> <span class="identifier">f</span><span class="special">)</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">-&gt;</span>
-            </code><code class="computeroutput"><span class="special">[</span><span class="error">'</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">]</span></code><code class="computeroutput"> <span class="special">;</span></code>
+            </code><span class="emphasis"><em>see below</em></span><code class="computeroutput"> <span class="special">;</span></code>
           </p></blockquote></div>
 <div class="blockquote"><blockquote class="blockquote"><p>
-            <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">F</span><span class="special">&gt;</span> <span class="keyword">auto</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">map</span><span class="special">(</span><span class="identifier">F</span> <span class="identifier">f</span><span class="special">)</span> <span class="special">&amp;</span> <span class="special">-&gt;</span> </code><code class="computeroutput"><span class="special">[</span><span class="error">'</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">]</span></code><code class="computeroutput">
+            <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">F</span><span class="special">&gt;</span> <span class="keyword">auto</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">map</span><span class="special">(</span><span class="identifier">F</span> <span class="identifier">f</span><span class="special">)</span> <span class="special">&amp;</span> <span class="special">-&gt;</span> </code><span class="emphasis"><em>see below</em></span><code class="computeroutput">
             <span class="special">;</span></code>
           </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
@@ -1490,7 +1490,7 @@
             </li>
 <li class="listitem">
               <span class="bold"><strong>Notes:</strong></span> The return type of these overloads
-              is <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">f</span><span class="special">(**</span><span class="keyword">this</span><span class="special">)&gt;</span></code>.
+              is <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">f</span><span class="special">(**</span><span class="keyword">this</span><span class="special">))&gt;</span></code>.
               On compilers that do not support ref-qualifiers on member functions,
               these two (as well as the next one) overloads are replaced with good
               old const and non-const overloads.
@@ -1501,7 +1501,7 @@
         </p>
 <a name="reference_optional_map_move"></a><div class="blockquote"><blockquote class="blockquote"><p>
             <code class="computeroutput"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">F</span><span class="special">&gt;</span> <span class="keyword">auto</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">map</span><span class="special">(</span><span class="identifier">F</span> <span class="identifier">f</span><span class="special">)</span> <span class="special">&amp;&amp;</span>
-            <span class="special">-&gt;</span> </code><code class="computeroutput"><span class="special">[</span><span class="error">'</span><span class="identifier">see</span> <span class="identifier">below</span><span class="special">]</span></code><code class="computeroutput">
+            <span class="special">-&gt;</span> </code><span class="emphasis"><em>see below</em></span><code class="computeroutput">
             <span class="special">;</span></code>
           </p></blockquote></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
@@ -1512,7 +1512,7 @@
             </li>
 <li class="listitem">
               <span class="bold"><strong>Notes:</strong></span> The return type of this overload
-              is <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">f</span><span class="special">(</span><span class="identifier">istd</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">))&gt;</span></code>.
+              is <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">f</span><span class="special">(</span><span class="identifier">istd</span><span class="special">::</span><span class="identifier">move</span><span class="special">(**</span><span class="keyword">this</span><span class="special">)))&gt;</span></code>.
             </li>
 </ul></div>
 <p>

@@ -106,6 +106,34 @@ void test_map()
   optional<Int> oI = oi.map(convert_t());
   BOOST_TEST(bool(oI));
   BOOST_TEST_EQ(1, oI->i);
+
+  optional<Int> o_ = optional<int>().map(convert_t());
+  BOOST_TEST(!o_);
+}
+
+optional<Int> make_opt_int(int i)
+{
+  if (i != 0)
+    return Int(i);
+  else
+    return boost::none;
+}
+
+void test_map_optional()
+{
+  optional<int> o9 (9), o0 (0), o_;
+  verify_type<optional<optional<Int>>>(o9.map(make_opt_int));
+  optional<optional<Int>> oo9 = o9.map(make_opt_int);
+  BOOST_TEST(bool(oo9));  
+  BOOST_TEST(bool(*oo9));  
+  BOOST_TEST_EQ(9, (**oo9).i);
+
+  optional<optional<Int>> oo0 = o0.map(make_opt_int);
+  BOOST_TEST(bool(oo0));  
+  BOOST_TEST(!*oo0);  
+  
+  optional<optional<Int>> oo_ = o_.map(make_opt_int);
+  BOOST_TEST(!oo_);  
 }
 
 void test_map_with_lambda()
@@ -153,7 +181,9 @@ int main()
 #endif
   test_map_with_lambda();
 	test_map();
+  test_map_optional();
   test_map_to_ref();
+  test_map_optional();
   test_map_optional_ref();
 
   return boost::report_errors();
