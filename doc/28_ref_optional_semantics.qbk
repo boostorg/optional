@@ -685,6 +685,25 @@ __SPACE__
 
 __SPACE__
 
+[#reference_optional_map]
+
+[: `template<class F> auto optional<T>::map(F f) const& -> ``['see below]`` ;`]
+[: `template<class F> auto optional<T>::map(F f) & -> ``['see below]`` ;`]
+
+* [*Effects:] `if (*this) return f(**this); else return none;`
+* [*Notes:] The return type of these overloads is `optional<decltype(f(**this)>`. On compilers that do not support ref-qualifiers on member functions, these two (as well as the next one) overloads are replaced with good old const and non-const overloads. 
+
+__SPACE__
+
+[#reference_optional_map_move]
+
+[: `template<class F> auto optional<T>::map(F f) && -> ``['see below]`` ;`]
+
+* [*Effects:] `if (*this) return f(std::move(**this)); else return none;`
+* [*Notes:] The return type of this overload is `optional<decltype(f(istd::move(**this))>`.
+
+__SPACE__
+
 [#reference_optional_get_value_or_value]
 
 [: `T const& optional<T>::get_value_or( T const& default) const ;`]

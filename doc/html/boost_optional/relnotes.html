@@ -31,10 +31,15 @@
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_68"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_68">Boost
       Release 1.68</a>
     </h4>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
           Added member function <code class="computeroutput"><span class="identifier">has_value</span><span class="special">()</span></code> for compatibility with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">optional</span></code> (<a href="https://github.com/boostorg/optional/issues/52" target="_top">issue
           #52</a>).
-        </li></ul></div>
+        </li>
+<li class="listitem">
+          Added member function <code class="computeroutput"><span class="identifier">map</span><span class="special">()</span></code> for transforming <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> into <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> using a function of type <code class="computeroutput"><span class="identifier">U</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>.
+        </li>
+</ul></div>
 <h4>
 <a name="boost_optional.relnotes.h1"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_67"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_67">Boost
@@ -271,8 +276,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014-2017 Andrzej
-      Krzemie&#324;ski<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014-2018 Andrzej Krzemie&#324;ski<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

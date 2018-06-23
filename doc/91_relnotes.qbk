@@ -14,6 +14,7 @@
 [heading Boost Release 1.68]
 
 * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
+* Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `U(T)`.
 
 
 [heading Boost Release 1.67]

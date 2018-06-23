@@ -1,5 +1,5 @@
 // Copyright (C) 2003, 2008 Fernando Luis Cacciola Carballal.
-// Copyright (C) 2014 - 2017 Andrzej Krzemienski.
+// Copyright (C) 2014 - 2018 Andrzej Krzemienski.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -53,6 +53,7 @@
 #include <boost/move/utility.hpp>
 #include <boost/none.hpp>
 #include <boost/utility/compare_pointees.hpp>
+#include <boost/utility/result_of.hpp>
 
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/optional/detail/optional_config.hpp>
@@ -1304,7 +1305,7 @@ class optional
 #endif
 
 
-#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
+#if (!defined BOOST_NO_CXX11_REF_QUALIFIERS) && (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES) 
     template <typename F>
     value_type value_or_eval ( F f ) const&
       {
@@ -1322,6 +1323,34 @@ class optional
         else
           return f();
       }
+
+    template <typename F>
+    optional<typename boost::result_of<F(reference_type)>::type> map(F f) &
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+
+    template <typename F>
+    optional<typename boost::result_of<F(reference_const_type)>::type> map(F f) const&
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+    
+    template <typename F>
+    optional<typename boost::result_of<F(reference_type_of_temporary_wrapper)>::type> map(F f) &&
+      {
+        if (this->has_value())
+          return f(boost::move(this->get()));
+        else
+          return none;
+      }
+    
 #else
     template <typename F>
     value_type value_or_eval ( F f ) const
@@ -1330,6 +1359,24 @@ class optional
           return get();
         else
           return f();
+      }
+
+    template <typename F>
+    optional<typename boost::result_of<F(reference_type)>::type> map(F f)
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+
+    template <typename F>
+    optional<typename boost::result_of<F(reference_const_type)>::type> map(F f) const
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
       }
 #endif
       

@@ -1,4 +1,4 @@
-// Copyright (C) 2015-2016 Andrzej Krzemienski.
+// Copyright (C) 2015-2018 Andrzej Krzemienski.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -161,6 +161,15 @@ public:
     bool is_initialized() const BOOST_NOEXCEPT { return ptr_ != 0; }
     bool has_value() const BOOST_NOEXCEPT { return ptr_ != 0; }
     
+    template <typename F>
+    optional<typename boost::result_of<F(T&)>::type> map(F f) const
+    {
+      if (this->has_value())
+        return f(this->get());
+      else
+        return none;
+    }
+
 #ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES   
  
     optional(T&& /* rhs */) BOOST_NOEXCEPT { detail::prevent_binding_rvalue<T&&>(); }
