@@ -62,7 +62,7 @@ int get_val(MoveOnly m)
 void test_map_move_only()
 {
   optional<MoveOnly> om (makeMoveOnly(7)), om2 (makeMoveOnly(8));
-  verify_type<optional<int>>(boost::move(om).map(get_val));
+  verify_type<optional<int> >(boost::move(om).map(get_val));
   optional<int> oi = boost::move(om2).map(get_val);
   BOOST_TEST(bool(oi));
   BOOST_TEST_EQ(8, *oi);
@@ -102,7 +102,7 @@ struct get_ref
 void test_map()
 {
   optional<int> oi (1);
-  verify_type<optional<Int>>(oi.map(convert_t()));
+  verify_type<optional<Int> >(oi.map(convert_t()));
   optional<Int> oI = oi.map(convert_t());
   BOOST_TEST(bool(oI));
   BOOST_TEST_EQ(1, oI->i);
@@ -122,17 +122,17 @@ optional<Int> make_opt_int(int i)
 void test_map_optional()
 {
   optional<int> o9 (9), o0 (0), o_;
-  verify_type<optional<optional<Int>>>(o9.map(make_opt_int));
-  optional<optional<Int>> oo9 = o9.map(make_opt_int);
+  verify_type<optional<optional<Int> > >(o9.map(make_opt_int));
+  optional<optional<Int> > oo9 = o9.map(make_opt_int);
   BOOST_TEST(bool(oo9));  
   BOOST_TEST(bool(*oo9));  
   BOOST_TEST_EQ(9, (**oo9).i);
 
-  optional<optional<Int>> oo0 = o0.map(make_opt_int);
+  optional<optional<Int> > oo0 = o0.map(make_opt_int);
   BOOST_TEST(bool(oo0));  
   BOOST_TEST(!*oo0);  
   
-  optional<optional<Int>> oo_ = o_.map(make_opt_int);
+  optional<optional<Int> > oo_ = o_.map(make_opt_int);
   BOOST_TEST(!oo_);  
 }
 
@@ -140,7 +140,7 @@ void test_map_with_lambda()
 {
 #ifndef BOOST_NO_CXX11_LAMBDAS
   optional<int> oi (1), oj(2);
-  verify_type<optional<bool>>(oi.map([](int i){ return i == 1; }));
+  verify_type<optional<bool> >(oi.map([](int i){ return i == 1; }));
   optional<bool> ob = oi.map([](int i){ return i == 1; });
   optional<bool> oc = oj.map([](int i){ return i == 1; });
   BOOST_TEST(bool(ob));
@@ -153,7 +153,7 @@ void test_map_with_lambda()
 void test_map_to_ref()
 {
   optional<int> oi (2);
-  verify_type<optional<int&>>(oi.map(get_ref()));
+  verify_type<optional<int&> >(oi.map(get_ref()));
   optional<int&> ori = oi.map(get_ref());
   BOOST_TEST(bool(ori));
   *ori = 3;
@@ -166,7 +166,7 @@ void test_map_optional_ref()
 {
   Int I (5);
   optional<Int&> ori (I);
-  verify_type<optional<int&>>(ori.map(get_int_ref));
+  verify_type<optional<int&> >(ori.map(get_int_ref));
   optional<int&> orii = ori.map(get_int_ref);
   BOOST_TEST(bool(orii));
   BOOST_TEST_EQ(5, *orii);
