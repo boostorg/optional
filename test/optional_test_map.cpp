@@ -86,6 +86,7 @@ struct Int
 
 struct convert_t
 {
+  typedef Int result_type;
   Int operator()(int i) { return Int(i); }
 };
 
@@ -96,6 +97,7 @@ int& get_int_ref(Int& i)
 
 struct get_ref
 {
+  typedef int& result_type;
   int& operator()(int& i) { return i; }
 };
 
