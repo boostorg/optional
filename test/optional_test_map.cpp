@@ -140,7 +140,7 @@ void test_map_optional()
 
 void test_map_with_lambda()
 {
-#ifndef BOOST_NO_CXX11_LAMBDAS
+#if !defined BOOST_NO_CXX11_LAMBDAS && !defined BOOST_NO_CXX11_DECLTYPE_N3276
   optional<int> oi (1), oj(2);
   verify_type<optional<bool> >(oi.map([](int i){ return i == 1; }));
   optional<bool> ob = oi.map([](int i){ return i == 1; });

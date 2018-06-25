@@ -15,8 +15,6 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/type_traits.hpp>
-
-namespace boost { namespace optional_detail {
   
 // The condition to use POD implementation
 
@@ -52,10 +50,12 @@ namespace boost { namespace optional_detail {
 #ifndef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
 #  define BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T) BOOST_HAS_TRIVIAL_CONSTRUCTOR(T)
 #else
+#  include <type_traits>
 #  define BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T) std::is_trivially_default_constructible<T>::value
 #endif
   
   
+namespace boost { namespace optional_detail {
   
 #ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
 template <typename T>
