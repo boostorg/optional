@@ -43,6 +43,7 @@ int main()
   BOOST_TEST_EQ(empty, BOOST_COMP_CLANG);
   BOOST_TEST_EQ(empty, BOOST_LANG_STDCPP);
   BOOST_TEST_EQ(empty, BOOST_LIB_C_GNU);
+  BOOST_TEST_EQ(empty, BOOST_LIB_STD_GNU);
   BOOST_TEST_EQ(empty, BOOST_LIB_STD_CXX);
 
   return boost::report_errors();
