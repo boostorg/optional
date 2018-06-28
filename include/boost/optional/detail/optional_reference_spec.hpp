@@ -170,6 +170,15 @@ public:
         return none;
     }
 
+    template <typename F>
+    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(T&)>::type>::type> flat_map(F f) const
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+    
 #ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES   
  
     optional(T&& /* rhs */) BOOST_NOEXCEPT { detail::prevent_binding_rvalue<T&&>(); }

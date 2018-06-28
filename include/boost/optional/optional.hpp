@@ -758,7 +758,16 @@ class optional_base : public optional_tag
     storage_type m_storage ;
 } ;
 
+template <typename T>
+struct optional_value_type
+{
+};
 
+template <typename T>
+struct optional_value_type< ::boost::optional<T> >
+{
+  typedef T type;
+};
 
 #include <boost/optional/detail/optional_trivially_copyable_base.hpp>
 
@@ -1351,6 +1360,33 @@ class optional
           return none;
       }
     
+    template <typename F>
+    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type)>::type>::type> flat_map(F f) &
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+    
+    template <typename F>
+    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_const_type)>::type>::type> flat_map(F f) const&
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+    
+    template <typename F>
+    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type_of_temporary_wrapper)>::type>::type> flat_map(F f) &&
+      {
+        if (this->has_value())
+          return f(boost::move(get()));
+        else
+          return none;
+      }
+    
 #else
     template <typename F>
     value_type value_or_eval ( F f ) const
@@ -1378,6 +1414,25 @@ class optional
         else
           return none;
       }
+
+    template <typename F>
+    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type)>::type>::type> flat_map(F f)
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+    
+    template <typename F>
+    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_const_type)>::type>::type> flat_map(F f) const
+      {
+        if (this->has_value())
+          return f(get());
+        else
+          return none;
+      }
+    
 #endif
       
     bool has_value() const BOOST_NOEXCEPT { return this->is_initialized() ; }
