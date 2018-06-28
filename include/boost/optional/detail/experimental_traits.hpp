@@ -14,6 +14,7 @@
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/predef.h>
 #include <boost/type_traits.hpp>
   
 // The condition to use POD implementation
@@ -38,11 +39,16 @@
 # define BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
 #endif
 
+// GCC 5 or higher, or clang with libc++ or clang with libstdc++ 5 or higher
 #if __cplusplus >= 201103L
 #  if BOOST_WORKAROUND(BOOST_GCC, >= 50000)
 #    define BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
 #  elif (defined BOOST_CLANG)
-#    define BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
+#    if BOOST_LIB_STD_CXX > 0
+#      define BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
+#    elif BOOST_LIB_STD_GNU >= 441200023 && BOOST_LIB_STD_GNU != 450600023 && BOOST_LIB_STD_GNU != 450600026 && BOOST_LIB_STD_GNU != 460800003
+#      define BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
+#    endif
 #  endif
 #endif  
 
