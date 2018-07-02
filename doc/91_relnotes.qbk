@@ -14,7 +14,8 @@
 [heading Boost Release 1.68]
 
 * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
-* Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `U(T)`.
+* Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> U`.
+* Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optonal<U>`.
 
 
 [heading Boost Release 1.67]
@@ -26,7 +27,7 @@
 [heading Boost Release 1.66]
 
 * On newer compilers `optional` is now trivially-copyable for scalar `T`s. This uses a different storage (just `T` rather than `aligned_storage`). We require the compiler to support defaulted functions.
-* Changed the implementation of `operator==` to get rid of the `-Wmaybe-uninitialized` false-positive warning from GCC. 
+* Changed the implementation of `operator==` to get rid of the `-Wmaybe-uninitialized` false-positive warning from GCC.
 
 [heading Boost Release 1.63]
 * Added two new in-place constructors. They work similarly to `emplace()` functions: they initialize the contained value by perfect-forwarding the obtained arguments. One constructor always initializes the contained value, the other based on a boolean condition.
@@ -70,7 +71,7 @@
 * IOStream operators are now mentioned in documentation.
 * Added a way to manually disable move semantics: just define macro `BOOST_OPTIONAL_CONFIG_NO_RVALUE_REFERENCES`. This can be used to work around [@https://svn.boost.org/trac/boost/ticket/10399 Trac #10399].
 * It is no longer possible to assign `optional<U>` to `optional<T>` when `U` is not assignable or convertible to `T` ([@https://svn.boost.org/trac/boost/ticket/11087 Trac #11087]).
-* Value accessors now work correctly on rvalues of `optional<T&>` ([@https://svn.boost.org/trac/boost/ticket/10839 Trac #10839]).  
+* Value accessors now work correctly on rvalues of `optional<T&>` ([@https://svn.boost.org/trac/boost/ticket/10839 Trac #10839]).
 
 
 [heading Boost Release 1.57]
