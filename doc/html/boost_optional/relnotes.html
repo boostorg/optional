@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Release Notes</title>
 <link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="../index.html" title="Boost.Optional">
 <link rel="up" href="../index.html" title="Boost.Optional">
 <link rel="prev" href="dependencies_and_portability/optional_reference_binding.html" title="Optional Reference Binding">
@@ -28,6 +28,37 @@
 </h2></div></div></div>
 <h4>
 <a name="boost_optional.relnotes.h0"></a>
+      <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_68"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_68">Boost
+      Release 1.68</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          Added member function <code class="computeroutput"><span class="identifier">has_value</span><span class="special">()</span></code> for compatibility with <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">optional</span></code> (<a href="https://github.com/boostorg/optional/issues/52" target="_top">issue
+          #52</a>).
+        </li>
+<li class="listitem">
+          Added member function <code class="computeroutput"><span class="identifier">map</span><span class="special">()</span></code> for transforming <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> into <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> using a function of type <code class="computeroutput"><span class="identifier">T</span> <span class="special">-&gt;</span> <span class="identifier">U</span></code>.
+        </li>
+<li class="listitem">
+          Added member function <code class="computeroutput"><span class="identifier">flat_map</span><span class="special">()</span></code> for transforming <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> into <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> using a function of type <code class="computeroutput"><span class="identifier">T</span> <span class="special">-&gt;</span> <span class="identifier">optonal</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code>.
+        </li>
+</ul></div>
+<h4>
+<a name="boost_optional.relnotes.h1"></a>
+      <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_67"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_67">Boost
+      Release 1.67</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          Fixed <a href="https://github.com/boostorg/optional/issues/46" target="_top">issue
+          #46</a>.
+        </li>
+<li class="listitem">
+          Fixed <code class="computeroutput"><span class="special">-</span><span class="identifier">Wzero</span><span class="special">-</span><span class="identifier">as</span><span class="special">-</span><span class="identifier">null</span><span class="special">-</span><span class="identifier">pointer</span><span class="special">-</span><span class="identifier">constant</span></code> warnings.
+        </li>
+</ul></div>
+<h4>
+<a name="boost_optional.relnotes.h2"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_66"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_66">Boost
       Release 1.66</a>
     </h4>
@@ -45,7 +76,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="boost_optional.relnotes.h1"></a>
+<a name="boost_optional.relnotes.h3"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_63"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_63">Boost
       Release 1.63</a>
     </h4>
@@ -69,7 +100,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="boost_optional.relnotes.h2"></a>
+<a name="boost_optional.relnotes.h4"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_62"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_62">Boost
       Release 1.62</a>
     </h4>
@@ -77,7 +108,7 @@
           Fixed <a href="https://svn.boost.org/trac/boost/ticket/12179" target="_top">Trac #12179</a>.
         </li></ul></div>
 <h4>
-<a name="boost_optional.relnotes.h3"></a>
+<a name="boost_optional.relnotes.h5"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_61"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_61">Boost
       Release 1.61</a>
     </h4>
@@ -120,7 +151,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="boost_optional.relnotes.h4"></a>
+<a name="boost_optional.relnotes.h6"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_60"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_60">Boost
       Release 1.60</a>
     </h4>
@@ -131,7 +162,7 @@
           #11203</a>.
         </li></ul></div>
 <h4>
-<a name="boost_optional.relnotes.h5"></a>
+<a name="boost_optional.relnotes.h7"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_59"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_59">Boost
       Release 1.59</a>
     </h4>
@@ -145,7 +176,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="boost_optional.relnotes.h6"></a>
+<a name="boost_optional.relnotes.h8"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_58"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_58">Boost
       Release 1.58</a>
     </h4>
@@ -181,7 +212,7 @@
         </li>
 </ul></div>
 <h4>
-<a name="boost_optional.relnotes.h7"></a>
+<a name="boost_optional.relnotes.h9"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_57"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_57">Boost
       Release 1.57</a>
     </h4>
@@ -191,7 +222,7 @@
           to fix C++03 compile error on <code class="computeroutput"><span class="identifier">logic_error</span><span class="special">(</span><span class="string">"..."</span><span class="special">)</span></code>"</em></span>.
         </li></ul></div>
 <h4>
-<a name="boost_optional.relnotes.h8"></a>
+<a name="boost_optional.relnotes.h10"></a>
       <span class="phrase"><a name="boost_optional.relnotes.boost_release_1_56"></a></span><a class="link" href="relnotes.html#boost_optional.relnotes.boost_release_1_56">Boost
       Release 1.56</a>
     </h4>
@@ -248,8 +279,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014-2017 Andrzej
-      Krzemie&#324;ski<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2003-2007 Fernando Luis Cacciola Carballal<br>Copyright &#169; 2014-2018 Andrzej Krzemie&#324;ski<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
