@@ -1197,8 +1197,14 @@ class optional
     // Returns a reference to the value if this is initialized, otherwise,
     // the behaviour is UNDEFINED
     // No-throw
+#if (!defined BOOST_NO_CXX11_REF_QUALIFIERS) && (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES)
+    reference_const_type get() const& { BOOST_ASSERT(this->is_initialized()) ; return this->get_impl(); }
+    reference_type       get() &      { BOOST_ASSERT(this->is_initialized()) ; return this->get_impl(); }
+    reference_type_of_temporary_wrapper get() && { BOOST_ASSERT(this->is_initialized()) ; return boost::move(this->get_impl()); }
+#else
     reference_const_type get() const { BOOST_ASSERT(this->is_initialized()) ; return this->get_impl(); }
     reference_type       get()       { BOOST_ASSERT(this->is_initialized()) ; return this->get_impl(); }
+#endif // !defined BOOST_NO_CXX11_REF_QUALIFIERS
 
     // Returns a copy of the value if this is initialized, 'v' otherwise
     reference_const_type get_value_or ( reference_const_type v ) const { return this->is_initialized() ? get() : v ; }
