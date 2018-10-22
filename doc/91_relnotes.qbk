@@ -11,6 +11,10 @@
 
 [section:relnotes Release Notes]
 
+[heading Boost Release 1.69]
+
+* Remove deprecation mark from `reset()` method (without arguments).
+
 [heading Boost Release 1.68]
 
 * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
