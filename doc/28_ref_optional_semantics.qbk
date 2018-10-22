@@ -541,7 +541,7 @@ __SPACE__
 [#reference_optional_reset]
 
 [: `void optional<T>::reset() noexcept ;`]
-* [*Deprecated:] Same as `operator=( none_t );`
+* [*Effects:] Same as `operator=( none_t );`
 
 __SPACE__
 
@@ -1129,8 +1129,7 @@ __SPACE__
 
 [#reference_optional_ref_reset]
 [: `void optional<T&>::reset() noexcept;`]
-* [*Effects:] Use `*this = none` instead.
-* [*Remarks:] This function is depprecated.
+* [*Effects:] Same as `*this = none`.
 
 __SPACE__
 

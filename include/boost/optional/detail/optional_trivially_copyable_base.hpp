@@ -127,7 +127,7 @@ class tc_optional_base : public optional_tag
 
   public :
 
-    // **DEPPRECATED** Destroys the current value, if any, leaving this UNINITIALIZED
+    // Destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
     void reset() BOOST_NOEXCEPT { destroy(); }
 
