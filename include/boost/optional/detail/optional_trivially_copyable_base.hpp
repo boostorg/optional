@@ -71,7 +71,7 @@ class tc_optional_base : public optional_tag
     // Assigns from another optional<T> (deep-copies the rhs value)
     void assign ( tc_optional_base const& rhs ) 
     {
-      this->operator=(rhs);
+      *this = rhs;
     }
 
     // Assigns from another _convertible_ optional<U> (deep-copies the rhs value)
@@ -127,7 +127,7 @@ class tc_optional_base : public optional_tag
 
   public :
 
-    // **DEPPRECATED** Destroys the current value, if any, leaving this UNINITIALIZED
+    // Destroys the current value, if any, leaving this UNINITIALIZED
     // No-throw (assuming T::~T() doesn't)
     void reset() BOOST_NOEXCEPT { destroy(); }
 

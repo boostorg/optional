@@ -1,7 +1,7 @@
 [/
     Boost.Optional
 
-    Copyright (c) 2015, 2016 Andrzej Krzemienski
+    Copyright (c) 2015 - 2018 Andrzej Krzemienski
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,6 +10,11 @@
 
 
 [section:relnotes Release Notes]
+
+[heading Boost Release 1.69]
+
+* Remove deprecation mark from `reset()` method (without arguments).
+* Fixed [@https://github.com/boostorg/optional/issues/59 issue #59].
 
 [heading Boost Release 1.68]
 
