@@ -15,6 +15,7 @@
 
 * Remove deprecation mark from `reset()` method (without arguments).
 * Fixed [@https://github.com/boostorg/optional/issues/59 issue #59].
+* Fixed bug with initialization of certain wrapper types in clang with -std=c++03. See [@https://github.com/boostorg/optional/pull/64 pr #64]. 
 
 [heading Boost Release 1.68]
 
