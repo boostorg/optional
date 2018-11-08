@@ -58,10 +58,20 @@ struct W
 
 void test_value_init()
 {
+#ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
 	{
 		S s;
 		W<S> w{s};
 	}
+#endif
+	{
+		S s;
+		W<S> w(s);
+	}
+}
+
+void test_optoinal_reference_wrapper()
+{
 	boost::optional<W<S&> > o;
 	BOOST_TEST(boost::none == o);
 }
@@ -70,6 +80,7 @@ int main()
 {
   test_tc_base();
   test_value_init();
+  test_optoinal_reference_wrapper();
   return boost::report_errors();
 }
 

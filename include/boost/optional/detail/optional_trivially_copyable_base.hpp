@@ -30,7 +30,7 @@ class tc_optional_base : public optional_tag
       :
       m_initialized(false) {}
 
-    tc_optional_base ( argument_type val )
+    tc_optional_base ( init_value_tag, argument_type val )
       :
       m_initialized(true), m_storage(val) {}
 
