@@ -49,16 +49,21 @@ void test_ctor()
   boost::optional<Guard> og1 ( boost::in_place(1.0, "one") );
   boost::optional<Guard> og1_( boost::in_place(1.0, "one") );
   boost::optional<Guard> og2 ( boost::in_place<Guard>(2.0, "two") );
+  boost::optional<Guard> og3 ( true, boost::in_place() );
+  boost::optional<Guard> og4 ( false, boost::in_place() );
   
   BOOST_TEST(og0);
   BOOST_TEST(og1);
   BOOST_TEST(og1_);
   BOOST_TEST(og2);
+  BOOST_TEST(og3);
+  BOOST_TEST(!og4);
   
   BOOST_TEST(*og0  == g0);
   BOOST_TEST(*og1  == g1);
   BOOST_TEST(*og1_ == g1);
   BOOST_TEST(*og2  == g2);
+  BOOST_TEST(*og3  == g0);
   
   BOOST_TEST(og1_ == og1);
   BOOST_TEST(og1_ != og2);

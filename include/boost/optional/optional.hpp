@@ -222,6 +222,15 @@ class optional_base : public optional_tag
       construct(boost::forward<Expr>(expr),tag);
     }
 
+    template<class Expr, class PtrExpr>
+    optional_base ( bool cond, Expr&& expr, PtrExpr const* tag )
+      :
+      m_initialized(false)
+    {
+      if ( cond )
+        construct(boost::forward<Expr>(expr),tag);
+    }
+
 #else
     // This is used for both converting and in-place constructions.
     // Derived classes use the 'tag' to select the appropriate
@@ -232,6 +241,15 @@ class optional_base : public optional_tag
       m_initialized(false)
     {
       construct(expr,tag);
+    }
+
+    template<class Expr>
+    optional_base ( bool cond, Expr const& expr, Expr const* tag )
+      :
+      m_initialized(false)
+    {
+      if ( cond )
+        construct(expr,tag);
     }
 
 #endif
@@ -948,9 +966,20 @@ class optional
     : base(boost::forward<Expr>(expr),boost::addressof(expr))
     {}
 
+  template<class Expr>
+  optional ( bool cond,
+             Expr&& expr,
+             BOOST_DEDUCED_TYPENAME boost::enable_if< optional_detail::is_optional_val_init_candidate<T, Expr>, bool>::type = true
+  )
+    : base(cond,boost::forward<Expr>(expr),boost::addressof(expr))
+    {}
+
 #else
     template<class Expr>
     explicit optional ( Expr const& expr ) : base(expr,boost::addressof(expr)) {}
+
+    template<class Expr>
+    optional ( bool cond, Expr const& expr ) : base(cond,expr,boost::addressof(expr)) {}
 #endif // !defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 #endif // !defined BOOST_OPTIONAL_NO_INPLACE_FACTORY_SUPPORT
 
