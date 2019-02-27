@@ -967,7 +967,7 @@ class optional
     // Can throw if T::T(T&&) does
 
 #ifndef BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
-    optional ( optional && rhs ) = default;
+    optional ( optional && ) = default;
 #else
     optional ( optional && rhs )
       BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value)
