@@ -894,7 +894,7 @@ class optional : public optional_detail::optional_base<T>
       BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)
       {
         // allow for Koenig lookup
-        boost::swap(*this, arg);
+        boost::adl_move_swap(*this, arg);
       }
 
 

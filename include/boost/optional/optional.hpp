@@ -28,7 +28,6 @@
 #include <boost/core/addressof.hpp>
 #include <boost/core/enable_if.hpp>
 #include <boost/core/explicit_operator_bool.hpp>
-#include <boost/core/swap.hpp>
 #include <boost/optional/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/throw_exception.hpp>
@@ -50,7 +49,8 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_scalar.hpp>
-#include <boost/move/utility.hpp>
+#include <boost/move/adl_move_swap.hpp> // for boost::adl_move_swap
+#include <boost/move/utility_core.hpp> // for boost::move, boost::forward
 #include <boost/none.hpp>
 #include <boost/utility/compare_pointees.hpp>
 #include <boost/utility/result_of.hpp>
@@ -1196,7 +1196,7 @@ class optional
       BOOST_NOEXCEPT_IF(::boost::is_nothrow_move_constructible<T>::value && ::boost::is_nothrow_move_assignable<T>::value)
       {
         // allow for Koenig lookup
-        boost::swap(*this, arg);
+        boost::adl_move_swap(*this, arg);
       }
 
 
