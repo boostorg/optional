@@ -14,6 +14,7 @@
 [heading Boost Release 1.73]
 
 * Fixed [@https://github.com/boostorg/optional/issues/78 issue #78].
+* `boost::none` is now declared as an inline variable (on compilers taht support it): there is only one instance of `boost::none` across all translation units. 
 
 [heading Boost Release 1.69]
 
