@@ -777,7 +777,7 @@ class optional_base : public optional_tag
 
 #include <boost/optional/detail/optional_trivially_copyable_base.hpp>
 
-// definition of metafunciton is_optional_val_init_candidate
+// definition of metafunction is_optional_val_init_candidate
 template <typename U>
 struct is_optional_related
   : boost::conditional< boost::is_base_of<optional_detail::optional_tag, BOOST_DEDUCED_TYPENAME boost::decay<U>::type>::value
@@ -813,9 +813,14 @@ struct is_optional_constructible : boost::true_type
 
 #endif // is_convertible condition
 
-template <typename T, typename U>
+template <typename T, typename U, bool = is_optional_related<U>::value>
 struct is_optional_val_init_candidate
-  : boost::conditional< !is_optional_related<U>::value && is_convertible_to_T_or_factory<T, U>::value
+  : boost::false_type
+{};
+
+template <typename T, typename U>
+struct is_optional_val_init_candidate<T, U, false>
+  : boost::conditional< is_convertible_to_T_or_factory<T, U>::value
                       , boost::true_type, boost::false_type>::type
 {};
 
