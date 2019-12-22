@@ -63,6 +63,9 @@ void test_ctor()
   BOOST_TEST(og1_ == og1);
   BOOST_TEST(og1_ != og2);
   BOOST_TEST(og1_ != og0);
+
+  boost::optional<unsigned int> o( boost::in_place(5) );
+  BOOST_TEST(o && (*o == 5));
 #endif 
 }
 
@@ -92,6 +95,10 @@ void test_assign()
   BOOST_TEST(og1_ == og1);
   BOOST_TEST(og1_ != og2);
   BOOST_TEST(og1_ != og0);
+
+  boost::optional<unsigned int> o;
+  o = boost::in_place(5);
+  BOOST_TEST(o && (*o == 5));
 #endif
 #endif
 }
