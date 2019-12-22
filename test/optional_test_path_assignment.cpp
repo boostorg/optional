@@ -15,6 +15,8 @@
 #pragma hdrstop
 #endif
 
+#ifndef BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
 template <typename, typename>
 struct void_t
 {
@@ -42,6 +44,8 @@ struct Path
     template <typename T, typename = BOOST_DEDUCED_TYPENAME trait<T>::value_type>
         Path(T const&);
 };
+#endif
+#endif
 
 
 int main()
