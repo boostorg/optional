@@ -151,6 +151,7 @@ matrix:
             - llvm-toolchain-precise-3.9
 
     - os: linux
+      dist: trusty
       compiler: clang++-4.0
       env: TOOLSET=clang COMPILER=clang++-4.0 CXXSTD=03,11,14,1z
       addons:
@@ -162,6 +163,7 @@ matrix:
             - llvm-toolchain-trusty-4.0
 
     - os: linux
+      dist: trusty
       compiler: clang++-5.0
       env: TOOLSET=clang COMPILER=clang++-5.0 CXXSTD=03,11,14,1z
       addons:
