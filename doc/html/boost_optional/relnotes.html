@@ -40,6 +40,14 @@
           <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code> is now declared as an inline variable
           (on compilers taht support it): there is only one instance of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code> across all translation units.
         </li>
+<li class="listitem">
+          Fixed a number of compilation errors in GCC 4.4.7 in <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> for trivial <code class="computeroutput"><span class="identifier">T</span></code>s.
+          Thanks to Robert Leahy for the fix. For details see <a href="https://github.com/boostorg/optional/pull/80" target="_top">pr
+          #78</a>.
+        </li>
+<li class="listitem">
+          Now surpressing warning <code class="computeroutput"><span class="special">-</span><span class="identifier">Wweak</span><span class="special">-</span><span class="identifier">vtables</span></code>.
+        </li>
 </ul></div>
 <h4>
 <a name="boost_optional.relnotes.h1"></a>
