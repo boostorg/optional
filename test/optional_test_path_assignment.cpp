@@ -15,6 +15,8 @@
 #pragma hdrstop
 #endif
 
+#ifndef BOOST_OPTIONAL_DETAIL_NO_IS_CONSTRUCTIBLE_TRAIT
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SFINAE_FRIENDLY_CONSTRUCTORS
 template <typename, typename>
 struct void_t
 {
@@ -49,6 +51,8 @@ struct Path
 #endif
 
 };
+#endif
+#endif
 
 
 int main()
