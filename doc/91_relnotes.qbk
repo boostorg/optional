@@ -11,6 +11,10 @@
 
 [section:relnotes Release Notes]
 
+[heading Boost Release 1.76]
+
+* Fixed MSVC warning C4702.
+
 [heading Boost Release 1.75]
 
 * `boost::none` is `constexpr`-declared.
