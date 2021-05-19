@@ -18,7 +18,9 @@
 #define BOOST_OPTIONAL_OPTIONAL_FLC_19NOV2002_HPP
 
 #include <new>
+#ifndef BOOST_NO_IOSTREAM
 #include <iosfwd>
+#endif // BOOST_NO_IOSTREAM
 
 #ifdef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
 #  include <type_traits>
@@ -1586,6 +1588,7 @@ get_pointer ( optional<T>& opt )
 
 } // namespace boost
 
+#ifndef BOOST_NO_IOSTREAM
 namespace boost {
 
 // The following declaration prevents a bug where operator safe-bool is used upon streaming optional object if you forget the IO header.
@@ -1598,6 +1601,7 @@ operator<<(std::basic_ostream<CharType, CharTrait>& os, optional_detail::optiona
 }
 
 } // namespace boost
+#endif // BOOST_NO_IOSTREAM
 
 #include <boost/optional/detail/optional_relops.hpp>
 #include <boost/optional/detail/optional_swap.hpp>

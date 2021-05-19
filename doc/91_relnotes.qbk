@@ -11,6 +11,10 @@
 
 [section:relnotes Release Notes]
 
+[heading Boost Release 1.77]
+
+* Fixed [@https://github.com/boostorg/optional/issues/92 issue #92].
+
 [heading Boost Release 1.76]
 
 * Fixed MSVC warning C4702.
