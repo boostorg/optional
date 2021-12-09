@@ -33,7 +33,7 @@ template <typename To, typename From>
 void test_convert_assign()
 {
   optional<To> oi;
-  oi = From{};
+  oi = From();
   BOOST_TEST(oi);
 }
 
