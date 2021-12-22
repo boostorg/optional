@@ -20,7 +20,7 @@ using boost::optional;
 
 struct implicit_bool_conv
 {
-  operator bool() { return true; }
+  operator bool() const { return false; }
 };
 
 struct explicit_bool_conv
