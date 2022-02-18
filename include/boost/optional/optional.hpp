@@ -129,6 +129,7 @@ class optional_base : public optional_tag
   protected :
 
     typedef T value_type ;
+    typedef typename boost::remove_const<T>::type unqualified_value_type;
 
   protected:
     typedef T &       reference_type ;
@@ -405,14 +406,14 @@ class optional_base : public optional_tag
 
     void construct ( argument_type val )
      {
-       ::new (m_storage.address()) value_type(val) ;
+       ::new (m_storage.address()) unqualified_value_type(val) ;
        m_initialized = true ;
      }
 
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
     void construct ( rval_reference_type val )
      {
-       ::new (m_storage.address()) value_type( boost::move(val) ) ;
+       ::new (m_storage.address()) unqualified_value_type( boost::move(val) ) ;
        m_initialized = true ;
      }
 #endif
@@ -424,7 +425,7 @@ class optional_base : public optional_tag
     template<class... Args>
     void construct ( in_place_init_t, Args&&... args )
     {
-      ::new (m_storage.address()) value_type( boost::forward<Args>(args)... ) ;
+      ::new (m_storage.address()) unqualified_value_type( boost::forward<Args>(args)... ) ;
       m_initialized = true ;
     }
 
@@ -455,13 +456,13 @@ class optional_base : public optional_tag
     template<class Arg>
     void construct ( in_place_init_t, Arg&& arg )
      {
-       ::new (m_storage.address()) value_type( boost::forward<Arg>(arg) );
+       ::new (m_storage.address()) unqualified_value_type( boost::forward<Arg>(arg) );
        m_initialized = true ;
      }
 
     void construct ( in_place_init_t )
      {
-       ::new (m_storage.address()) value_type();
+       ::new (m_storage.address()) unqualified_value_type();
        m_initialized = true ;
      }
 
@@ -515,20 +516,20 @@ class optional_base : public optional_tag
     template<class Arg>
     void construct ( in_place_init_t, const Arg& arg )
      {
-       ::new (m_storage.address()) value_type( arg );
+       ::new (m_storage.address()) unqualified_value_type( arg );
        m_initialized = true ;
      }
 
     template<class Arg>
     void construct ( in_place_init_t, Arg& arg )
      {
-       ::new (m_storage.address()) value_type( arg );
+       ::new (m_storage.address()) unqualified_value_type( arg );
        m_initialized = true ;
      }
 
     void construct ( in_place_init_t )
      {
-       ::new (m_storage.address()) value_type();
+       ::new (m_storage.address()) unqualified_value_type();
        m_initialized = true ;
      }
 
@@ -673,7 +674,7 @@ class optional_base : public optional_tag
     template<class Expr>
     void construct ( Expr&& expr, void const* )
     {
-      new (m_storage.address()) value_type(boost::forward<Expr>(expr)) ;
+      new (m_storage.address()) unqualified_value_type(boost::forward<Expr>(expr)) ;
       m_initialized = true ;
     }
 
@@ -694,7 +695,7 @@ class optional_base : public optional_tag
     template<class Expr>
     void construct ( Expr const& expr, void const* )
      {
-       new (m_storage.address()) value_type(expr) ;
+       new (m_storage.address()) unqualified_value_type(expr) ;
        m_initialized = true ;
      }
 
@@ -732,7 +733,7 @@ class optional_base : public optional_tag
        {
          // An exception can be thrown here.
          // It it happens, THIS will be left uninitialized.
-         new (m_storage.address()) value_type(boost::move(expr.get())) ;
+         new (m_storage.address()) unqualified_value_type(boost::move(expr.get())) ;
          m_initialized = true ;
        }
      }
@@ -745,7 +746,7 @@ class optional_base : public optional_tag
        {
          // An exception can be thrown here.
          // It it happens, THIS will be left uninitialized.
-         new (m_storage.address()) value_type(expr.get()) ;
+         new (m_storage.address()) unqualified_value_type(expr.get()) ;
          m_initialized = true ;
        }
      }
