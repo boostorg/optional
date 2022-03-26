@@ -12,7 +12,9 @@
 // Revisions:
 // 12 May 2008 (added more swap tests)
 //
+#ifndef BOOST_NO_IOSTREAM
 #include<iostream>
+#endif // BOOST_NO_IOSTREAM
 #include<stdexcept>
 #include<string>
 
@@ -908,7 +910,7 @@ void test_no_implicit_conversions()
 
 
 // Test for support for classes with overridden operator&
-class CustomAddressOfClass  
+class CustomAddressOfClass
 {
     int n;
 
@@ -950,5 +952,3 @@ int main()
 
   return boost::report_errors();
 }
-
-

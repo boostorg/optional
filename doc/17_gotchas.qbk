@@ -61,12 +61,12 @@ When an optional object that contains a value is moved from (is a source of move
     assert (opi);
     assert (*opi == nullptr);
 
-Quite a lot of people expect that when an object that contains a value is moved from, its contained value should be destroyed. This is not so, for performance reasons. Current semantics allow the implementation of `boost::opiotnal<T>` to be trivially copyable when `T` is trivial.
+Quite a lot of people expect that when an object that contains a value is moved from, its contained value should be destroyed. This is not so, for performance reasons. Current semantics allow the implementation of `boost::optional<T>` to be trivially copyable when `T` is trivial.
 [endsect]
 
 [section Mixed relational comparisons]
 
-Because `T` is convertible to `optional<T>` and because `opiotnal<T>` is __SGI_LESS_THAN_COMPARABLE__ when `T` is __SGI_LESS_THAN_COMPARABLE__,
+Because `T` is convertible to `optional<T>` and because `optional<T>` is __SGI_LESS_THAN_COMPARABLE__ when `T` is __SGI_LESS_THAN_COMPARABLE__,
 you can sometimes get an unexpected runtime result where you would rather expect a compiler error:
 
     optional<double> Flight_plan::weight(); // sometimes no weight can be returned
