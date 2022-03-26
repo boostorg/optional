@@ -22,10 +22,10 @@
 [heading Boost Release 1.79]
 
 * Fixed [@https://github.com/boostorg/optional/issues/98 issue #98].
-
-[heading Boost Release 1.77]
-
 * Fixed [@https://github.com/boostorg/optional/issues/92 issue #92].
+* Added support for `BOOST_NO_IOSTREAM`.
+* Now aligned storage uses `unsigned char` rather than `char` to avoid UB.
+* Now using cv-unqualified `value_type` with placement `new` to avoid UB.
 
 [heading Boost Release 1.76]
 
