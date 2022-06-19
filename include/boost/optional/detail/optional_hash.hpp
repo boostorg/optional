@@ -24,7 +24,7 @@ namespace std
   template <typename T>
   struct hash<boost::optional<T> >
   {
-    typedef typename hash<T>::result_type result_type;
+    typedef std::size_t result_type;
     typedef boost::optional<T> argument_type;
 
     BOOST_CONSTEXPR result_type operator()(const argument_type& arg) const {
@@ -35,7 +35,7 @@ namespace std
   template <typename T>
   struct hash<boost::optional<T&> >
   {
-    typedef typename hash<T>::result_type result_type;
+    typedef std::size_t result_type;
     typedef boost::optional<T&> argument_type;
 
     BOOST_CONSTEXPR result_type operator()(const argument_type& arg) const {
