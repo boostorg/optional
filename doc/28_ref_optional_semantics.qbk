@@ -1408,3 +1408,37 @@ assert (addressof(*opt0) == addressof(y));
 ``
 
 [endsect]
+
+
+[section Detailed Semantics - std::hash Specializations]
+
+__SPACE__
+[#reference_std_hash_spec]
+
+``
+namespace std {
+
+template <typename T>
+struct hash<boost::optional<T> > ;
+
+template <typename T>
+struct hash<boost::optional<T&> > ;
+
+} // namespace std
+``
+
+The specialization `hash<optional<T>>` is enabled if and only if
+`hash<remove_­const_­t<T>>` is enabled. When enabled, for an object `o`
+of type `optional<T>`, if `o.has_­value() == true`, then `hash<optional<T>>()(o)`
+ evaluates to the same value as `hash<remove_­const_­t<T>>()(*o)`; otherwise it
+evaluates to an unspecified value.
+The member functions are not guaranteed to be `noexcept`.
+
+[caution
+You may get compiler errors when your program provides specializations for
+`std::hash<boost::optional<T>>`. If this happens, define macro
+`BOOST_OPTIONAL_CONFIG_DO_NOT_SPECIALIZE_STD_HASH` to suppress the specializations
+of `std::hash` in this library.
+]
+
+[endsect]
