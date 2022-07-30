@@ -66,7 +66,7 @@ __SPACE__
  std::basic_ostream<CharType, CharTrait>&` [br]
  operator>>(std::basic_istream<CharType, CharTrait>& in, optional<T>& v);`
 
-* [*Requires:] `T` is __SGI_DEFAULT_CONSTRUCTIBLE__ and __MOVE_CONSTRUCTIBLE__.
+* [*Requires:] `T` is __STD_DEFAULT_CONSTRUCTIBLE__ and __MOVE_CONSTRUCTIBLE__.
 * [*Effect:] Reads the value of optional object from `in`. If the string representation indicates that the optional object should contain a value, `v` contains a value and its contained value is obtained as if by default-constructing an object `o` of type `T` and then calling `in >> o`; otherwise `v` does not contain a value, and the previously contained value (if any) has been destroyed.
 * [*Returns:] `out`.
 
