@@ -70,7 +70,7 @@ void test_value_init()
 	}
 }
 
-void test_optoinal_reference_wrapper()
+void test_optional_reference_wrapper()
 {
 	boost::optional<W<S&> > o;
 	BOOST_TEST(boost::none == o);
@@ -80,7 +80,7 @@ int main()
 {
   test_tc_base();
   test_value_init();
-  test_optoinal_reference_wrapper();
+  test_optional_reference_wrapper();
   return boost::report_errors();
 }
 

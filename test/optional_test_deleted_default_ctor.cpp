@@ -22,7 +22,7 @@ int main()
 class basic_multi_buffer;
 
 class const_buffers_type // a similar declaration in boost.beast had problem
-{                        // with boost opitonal
+{                        // with boost optional
     basic_multi_buffer const* b_;
 
     friend class basic_multi_buffer;
