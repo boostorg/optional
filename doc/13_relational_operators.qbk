@@ -13,7 +13,7 @@ Type `optional<T>` is __STD_EQUALITY_COMPARABLE__ whenever `T` is __STD_EQUALITY
     assert(oN == oN);
     assert(o0 == o0);
 
-The converting constructor from `T` as well as from `boost::none` implies the existence and semantics of the mixed comparison between `T` and `optional<T>` as well as between `none_t` and `optionl<T>`:
+The converting constructor from `T` as well as from `boost::none` implies the existence and semantics of the mixed comparison between `T` and `optional<T>` as well as between `none_t` and `optional<T>`:
 
     assert(oN != 0);
     assert(o1 != boost::none);

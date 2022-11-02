@@ -60,9 +60,9 @@
         defaulted move assignment and constructor). On compilers without defaulted
         functions we still use the direct storage, but <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
         is no longer recognized as trivially-copyable. Apart from scalar types, we
-        leave the programmer a way of customizing her type, so that it is reconized
+        leave the programmer a way of customizing her type, so that it is recognized
         by <code class="computeroutput"><span class="identifier">optional</span></code> as candidate
-        for optimized storage, by specializing type trait <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">opitonal_config</span><span class="special">::</span><span class="identifier">optional_uses_direct_storage_for</span></code>:
+        for optimized storage, by specializing type trait <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">optional_config</span><span class="special">::</span><span class="identifier">optional_uses_direct_storage_for</span></code>:
       </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="comment">// not trivial</span>
 <span class="special">{</span>
@@ -165,7 +165,7 @@
         Sometimes it requires detailed consideration what data we make optional.
         In our case above, if we determine that both minimum and maximum value can
         be provided or not provided together, but one is never provided without the
-        other, we can make only one optional memebr:
+        other, we can make only one optional member:
       </p>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">Limits</span>
 <span class="special">{</span>

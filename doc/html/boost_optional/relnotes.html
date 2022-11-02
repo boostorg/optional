@@ -78,7 +78,7 @@
         </li>
 <li class="listitem">
           <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code> is now declared as an inline variable
-          (on compilers taht support it): there is only one instance of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code> across all translation units.
+          (on compilers that support it): there is only one instance of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">none</span></code> across all translation units.
         </li>
 <li class="listitem">
           Fixed a number of compilation errors in GCC 4.4.7 in <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> for trivial <code class="computeroutput"><span class="identifier">T</span></code>s.
@@ -86,7 +86,7 @@
           #78</a>.
         </li>
 <li class="listitem">
-          Now surpressing warning <code class="computeroutput"><span class="special">-</span><span class="identifier">Wweak</span><span class="special">-</span><span class="identifier">vtables</span></code>.
+          Now suppressing warning <code class="computeroutput"><span class="special">-</span><span class="identifier">Wweak</span><span class="special">-</span><span class="identifier">vtables</span></code>.
         </li>
 </ul></div>
 <h4>
@@ -121,7 +121,7 @@
           Added member function <code class="computeroutput"><span class="identifier">map</span><span class="special">()</span></code> for transforming <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> into <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> using a function of type <code class="computeroutput"><span class="identifier">T</span> <span class="special">-&gt;</span> <span class="identifier">U</span></code>.
         </li>
 <li class="listitem">
-          Added member function <code class="computeroutput"><span class="identifier">flat_map</span><span class="special">()</span></code> for transforming <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> into <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> using a function of type <code class="computeroutput"><span class="identifier">T</span> <span class="special">-&gt;</span> <span class="identifier">optonal</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code>.
+          Added member function <code class="computeroutput"><span class="identifier">flat_map</span><span class="special">()</span></code> for transforming <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> into <code class="computeroutput"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code> using a function of type <code class="computeroutput"><span class="identifier">T</span> <span class="special">-&gt;</span> <span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span></code>.
         </li>
 </ul></div>
 <h4>
@@ -210,7 +210,7 @@
                 are now turned into compile-time errors,
               </li>
 <li class="listitem">
-                you can swap optional references: it is like swapping pointers: shalow,
+                you can swap optional references: it is like swapping pointers: shallow,
                 underlying objects are not affected,
               </li>
 <li class="listitem">

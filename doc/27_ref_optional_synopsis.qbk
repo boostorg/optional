@@ -102,7 +102,7 @@
 
     }
 
-Classes `in_place_init_t` and `in_place_init_if_t` are empty clsses. Their purpose is to control overload resolution in the initialization of optional objects.
+Classes `in_place_init_t` and `in_place_init_if_t` are empty classes. Their purpose is to control overload resolution in the initialization of optional objects.
 They are empty, trivially copyable classes with disabled default constructor.
 
 [endsect]
@@ -228,7 +228,7 @@ They are empty, trivially copyable classes with disabled default constructor.
 
 [#reference_operator_template_spec]
     template <class T>
-    class optional<T&> // specilization for lvalue references
+    class optional<T&> // specialization for lvalue references
     {
     public :
 

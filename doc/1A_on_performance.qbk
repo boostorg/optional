@@ -19,7 +19,7 @@ Lifetime of the `T` inside `_storage` is manually controlled with placement-`new
     T _storage;
   };
 
-We call it a ['direct] storage. This makes `optional<T>` a trivially-copyable type for scalar `T`s. This only works for compilers that support defaulted functions (including defaulted move assignment and constructor). On compilers without defaulted functions we still use the direct storage, but `optional<T>` is no longer recognized as trivially-copyable. Apart from scalar types, we leave the programmer a way of customizing her type, so that it is reconized by `optional` as candidate for optimized storage, by specializing type trait `boost::opitonal_config::optional_uses_direct_storage_for`:
+We call it a ['direct] storage. This makes `optional<T>` a trivially-copyable type for scalar `T`s. This only works for compilers that support defaulted functions (including defaulted move assignment and constructor). On compilers without defaulted functions we still use the direct storage, but `optional<T>` is no longer recognized as trivially-copyable. Apart from scalar types, we leave the programmer a way of customizing her type, so that it is recognized by `optional` as candidate for optimized storage, by specializing type trait `boost::optional_config::optional_uses_direct_storage_for`:
 
   struct X // not trivial
   {
@@ -86,7 +86,7 @@ Which gives us the following layout (and smaller total size):
 
 [$images/opt_align3.png]
 
-Sometimes it requires detailed consideration what data we make optional. In our case above, if we determine that both minimum and maximum value can be provided or not provided together, but one is never provided without the other, we can make only one optional memebr:
+Sometimes it requires detailed consideration what data we make optional. In our case above, if we determine that both minimum and maximum value can be provided or not provided together, but one is never provided without the other, we can make only one optional member:
 
   struct Limits
   {

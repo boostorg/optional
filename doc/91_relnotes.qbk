@@ -13,7 +13,7 @@
 
 [heading Boost Release 1.80]
 
-* [*Breaking change:] Added specializations for `std::hash<boost::opitonal<T>>`. This fixes [@https://github.com/boostorg/optional/issues/55 issue #55]. You may get compiler errors when your program provides specializations for `std::hash<boost::optional<T>>`. If this happens, define macro `BOOST_OPTIONAL_CONFIG_DO_NOT_SPECIALIZE_STD_HASH` to suppress the specializations of `std::hash` in this library.
+* [*Breaking change:] Added specializations for `std::hash<boost::optional<T>>`. This fixes [@https://github.com/boostorg/optional/issues/55 issue #55]. You may get compiler errors when your program provides specializations for `std::hash<boost::optional<T>>`. If this happens, define macro `BOOST_OPTIONAL_CONFIG_DO_NOT_SPECIALIZE_STD_HASH` to suppress the specializations of `std::hash` in this library.
 
 [heading Boost Release 1.79]
 
@@ -36,9 +36,9 @@
 [heading Boost Release 1.73]
 
 * Fixed [@https://github.com/boostorg/optional/issues/78 issue #78].
-* `boost::none` is now declared as an inline variable (on compilers taht support it): there is only one instance of `boost::none` across all translation units.
+* `boost::none` is now declared as an inline variable (on compilers that support it): there is only one instance of `boost::none` across all translation units.
 * Fixed a number of compilation errors in GCC 4.4.7 in `optional<T>` for trivial `T`s. Thanks to Robert Leahy for the fix. For details see [@https://github.com/boostorg/optional/pull/80 pr #78].
-* Now surpressing warning `-Wweak-vtables`.
+* Now suppressing warning `-Wweak-vtables`.
 
 [heading Boost Release 1.69]
 
@@ -50,7 +50,7 @@
 
 * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
 * Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> U`.
-* Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optonal<U>`.
+* Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optional<U>`.
 
 
 [heading Boost Release 1.67]
@@ -82,7 +82,7 @@
   * the `sizeof` of optional reference is that of a pointer,
   * some bugs connected to copying optional references are gone,
   * all run-time bugs caused by incorrect reference binding on some compilers are now turned into compile-time errors,
-  * you can swap optional references: it is like swapping pointers: shalow, underlying objects are not affected,
+  * you can swap optional references: it is like swapping pointers: shallow, underlying objects are not affected,
   * optional references to abstract types work.
 * Documented nested typedefs ([@https://svn.boost.org/trac/boost/ticket/5193 Trac #5193]).
 * Made the perfect-forwarding constructor SFINAE-friendly, which fixes [@https://svn.boost.org/trac/boost/ticket/12002 Trac #12002]. However, this only works in the newer platforms that correctly implement C++11 `<type_traits>`.

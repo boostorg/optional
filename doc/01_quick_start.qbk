@@ -44,7 +44,7 @@ This is because we know that string value `"100"` converts to a valid value of `
       // deal with it
     }
 
-This version throws an exception upon an attempt to access a non-existent contained value. If your way of dealing with the missing value is to use some default, like `0`, there exists a yet another alternative:
+This version throws an exception upon an attempt to access a nonexistent contained value. If your way of dealing with the missing value is to use some default, like `0`, there exists a yet another alternative:
 
     int k = convert(text).value_or(0);
 
@@ -91,7 +91,7 @@ We could write function `convert` in a slightly different manner, so that it has
       return ans;
     }
 
-The default constructor of `optional` creates an unitialized optional object. Unlike with `int`s you cannot have an `optional<int>` in an indeterminate state. Its state is always well defined. Instruction `ans = i` initializes the optional object. It uses the 'mixed' assignment from `int`. In general, for `optional<T>`, when an assignment from `T` is invoked, it can do two things. If the optional object is not initialized (our case here), it initializes the contained value using `T`'s copy constructor. If the optional object is already initialized, it assigns the new value to it using `T`'s copy assignment.
+The default constructor of `optional` creates an uninitialized optional object. Unlike with `int`s you cannot have an `optional<int>` in an indeterminate state. Its state is always well defined. Instruction `ans = i` initializes the optional object. It uses the 'mixed' assignment from `int`. In general, for `optional<T>`, when an assignment from `T` is invoked, it can do two things. If the optional object is not initialized (our case here), it initializes the contained value using `T`'s copy constructor. If the optional object is already initialized, it assigns the new value to it using `T`'s copy assignment.
 [endsect]
 
 [section Optional data members]

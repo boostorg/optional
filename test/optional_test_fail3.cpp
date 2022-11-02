@@ -15,7 +15,7 @@
 // THIS TEST SHOULD FAIL TO COMPILE
 //
 #if BOOST_WORKAROUND( BOOST_INTEL_CXX_VERSION, <= 700) // Intel C++ 7.0
-// Interl C++ 7.0 incorrectly accepts the initialization "boost::optional<int> opt = 3"
+// Intel C++ 7.0 incorrectly accepts the initialization "boost::optional<int> opt = 3"
 // even though the ctor is explicit (c.f. 12.3.1.2), so the test uses another form of
 // copy-initialization: argument-passing (8.5.12)
 void helper ( boost::optional<int> ) ;

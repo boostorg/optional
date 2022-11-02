@@ -80,7 +80,7 @@ you can sometimes get an unexpected runtime result where you would rather expect
 
 [section False positive with -Wmaybe-uninitialized]
 
-Sometimes on GCC compilers below version 5.1 you may get an -Wmaybe-uninitialized warning when copiling with option -02 on a perfectly valid `boost::optional` usage. For instance in this program:
+Sometimes on GCC compilers below version 5.1 you may get an -Wmaybe-uninitialized warning when compiling with option -02 on a perfectly valid `boost::optional` usage. For instance in this program:
 
     #include <boost/optional.hpp>
 
