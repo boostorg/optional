@@ -82,7 +82,7 @@
   * the `sizeof` of optional reference is that of a pointer,
   * some bugs connected to copying optional references are gone,
   * all run-time bugs caused by incorrect reference binding on some compilers are now turned into compile-time errors,
-  * you can swap optional references: it is like swapping pointers: shalow, underlying objects are not affected,
+  * you can swap optional references: it is like swapping pointers: shallow, underlying objects are not affected,
   * optional references to abstract types work.
 * Documented nested typedefs ([@https://svn.boost.org/trac/boost/ticket/5193 Trac #5193]).
 * Made the perfect-forwarding constructor SFINAE-friendly, which fixes [@https://svn.boost.org/trac/boost/ticket/12002 Trac #12002]. However, this only works in the newer platforms that correctly implement C++11 `<type_traits>`.
