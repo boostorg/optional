@@ -9,7 +9,7 @@
 // You are welcome to contact the author at:
 //  akrzemi1@gmail.com
 
-// trivilally-copyable version of the storage
+// trivially-copyable version of the storage
 
 template<class T>
 class tc_optional_base : public optional_tag
