@@ -392,7 +392,7 @@ class optional_base : public optional_tag
     // No-throw (assuming T::~T() doesn't)
     void reset() BOOST_NOEXCEPT { destroy(); }
 
-    // **DEPPRECATED** Replaces the current value -if any- with 'val'
+    // **DEPRECATED** Replaces the current value -if any- with 'val'
     void reset ( argument_type val ) { assign(val); }
 
     // Returns a pointer to the value if this is initialized, otherwise,
