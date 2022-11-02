@@ -58,7 +58,7 @@ using boost::get_pointer ;
 #define ARG(T) (static_cast< T const* >(0))
 
 //
-// Helper class used to verify the lifetime managment of the values held by optional
+// Helper class used to verify the lifetime management of the values held by optional
 //
 class X
 {
