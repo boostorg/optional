@@ -13,7 +13,7 @@
 
 [heading Boost Release 1.80]
 
-* [*Breaking change:] Added specializations for `std::hash<boost::opitonal<T>>`. This fixes [@https://github.com/boostorg/optional/issues/55 issue #55]. You may get compiler errors when your program provides specializations for `std::hash<boost::optional<T>>`. If this happens, define macro `BOOST_OPTIONAL_CONFIG_DO_NOT_SPECIALIZE_STD_HASH` to suppress the specializations of `std::hash` in this library.
+* [*Breaking change:] Added specializations for `std::hash<boost::optional<T>>`. This fixes [@https://github.com/boostorg/optional/issues/55 issue #55]. You may get compiler errors when your program provides specializations for `std::hash<boost::optional<T>>`. If this happens, define macro `BOOST_OPTIONAL_CONFIG_DO_NOT_SPECIALIZE_STD_HASH` to suppress the specializations of `std::hash` in this library.
 
 [heading Boost Release 1.79]
 
@@ -50,7 +50,7 @@
 
 * Added member function `has_value()` for compatibility with `std::optional` ([@https://github.com/boostorg/optional/issues/52 issue #52]).
 * Added member function `map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> U`.
-* Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optonal<U>`.
+* Added member function `flat_map()` for transforming `optional<T>` into `optional<U>` using a function of type `T -> optional<U>`.
 
 
 [heading Boost Release 1.67]

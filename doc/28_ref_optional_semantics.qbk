@@ -1249,7 +1249,7 @@ __SPACE__
 * [*Returns:] `(!y) ? false : (!x) ? true : *x < *y`.
 * [*Notes:] This definition guarantees that `optional<T>` not containing a value is ordered as less than any `optional<T>` containing any value, and equivalent to any other `optional<T>` not containing a value.
 Pointers have shallow relational operators while `optional` has deep relational operators. Do not use `operator<` directly in generic code
-which expect to be given either an `optional<T>` or a pointer; use __FUNCTION_LESS_POINTEES__ instead. `T` need not be __STD_LESS_THAN_COMPARABLE__. Only single `operator<` is required. Other relational operations are defined in terms of this one. If `T`'s `operator<` satisfies the axioms of __STD_LESS_THAN_COMPARABLE__ (transitivity, antisymmetry and irreflexivity), `optinal<T>` is __STD_LESS_THAN_COMPARABLE__.
+which expect to be given either an `optional<T>` or a pointer; use __FUNCTION_LESS_POINTEES__ instead. `T` need not be __STD_LESS_THAN_COMPARABLE__. Only single `operator<` is required. Other relational operations are defined in terms of this one. If `T`'s `operator<` satisfies the axioms of __STD_LESS_THAN_COMPARABLE__ (transitivity, antisymmetry and irreflexivity), `optional<T>` is __STD_LESS_THAN_COMPARABLE__.
 * [*Example:]
 ``
 optional<T> oN, oN_;
