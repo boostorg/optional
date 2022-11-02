@@ -1136,21 +1136,21 @@ __SPACE__
 [#reference_optional_ref_reset_value]
 [: `template<class R> void optional<T&>::reset ( R&& r) noexcept;`]
 * [*Effects:] Equivalent to `*this = std::forward<R>(r)`.
-* [*Remarks:] This function is depprecated.
+* [*Remarks:] This function is deprecated.
 
 __SPACE__
 
 [#reference_optional_ref_is_initialized]
 [: `bool optional<T&>::is_initialized() const noexcept;`]
 * [*Effects:] Equivalent to `return bool(*this)`.
-* [*Remarks:] This function is depprecated.
+* [*Remarks:] This function is deprecated.
 
 __SPACE__
 
 [#reference_optional_ref_get_value_or_value]
 [: `template<class R> T& optional<T&>::get_value_or( R&& r ) const noexcept;`]
 * [*Effects:] Equivalent to `return value_or(std::forward<R>(r);`.
-* [*Remarks:] This function is depprecated.
+* [*Remarks:] This function is deprecated.
 
 [endsect]
 
