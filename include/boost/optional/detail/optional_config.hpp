@@ -114,7 +114,7 @@
 #endif
 
 
-// Detect suport for defaulting move operations
+// Detect support for defaulting move operations
 // (some older compilers implement rvalue references,
 // defaulted functions but move operations are not special members and cannot be defaulted)
 
