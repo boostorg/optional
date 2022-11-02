@@ -44,7 +44,7 @@ This is because we know that string value `"100"` converts to a valid value of `
       // deal with it
     }
 
-This version throws an exception upon an attempt to access a non-existent contained value. If your way of dealing with the missing value is to use some default, like `0`, there exists a yet another alternative:
+This version throws an exception upon an attempt to access a nonexistent contained value. If your way of dealing with the missing value is to use some default, like `0`, there exists a yet another alternative:
 
     int k = convert(text).value_or(0);
 
