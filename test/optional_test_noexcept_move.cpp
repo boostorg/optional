@@ -105,7 +105,7 @@ void test_noexcept_optional_with_operator() // compile-time test
   BOOST_STATIC_ASSERT(!BOOST_NOEXCEPT_EXPR( onx0 = ONx0() ));
 }
 
-#endif // !defned BOOST_NO_CXX11_NOEXCEPT
+#endif // !defined BOOST_NO_CXX11_NOEXCEPT
 #endif // !defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
 int main()
