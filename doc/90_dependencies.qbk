@@ -46,7 +46,7 @@ On compilers that do not support variadic templates, each of these functions is 
     template<class Arg> void emplace(Arg&& arg);
     void emplace();
 
-On compilers that do not support rvalue references, each of these functions is substituted with three overloadss: taking `const` and non-`const` lvalue reference, and third forwarding zero arguments. This forms the following set:
+On compilers that do not support rvalue references, each of these functions is substituted with three overloads: taking `const` and non-`const` lvalue reference, and third forwarding zero arguments. This forms the following set:
 
     template<class Arg> optional(in_place_init_t, const Arg& arg);
     template<class Arg> optional(in_place_init_t, Arg& arg);
