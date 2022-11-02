@@ -163,7 +163,7 @@ assert (!uninit);
 optional<std::unique_ptr<T>> uinit2 ( std::move(uninit) ) ;
 assert ( uninit2 == uninit );
 
-optional<std::unique_ptr<T>> init( std::uniqye_ptr<T>(new T(2)) );
+optional<std::unique_ptr<T>> init( std::unique_ptr<T>(new T(2)) );
 assert ( **init == T(2) ) ;
 
 optional<std::unique_ptr<T>> init2 ( std::move(init) ) ;
