@@ -451,7 +451,7 @@ void test_throwing_val_assign_on_initialized( T const* )
     // This should:
     //   Attempt to assign 'a' and throw.
     //   opt is kept initialized but its value not neccesarily fully assigned
-    //   (in this test, incompletely assigned is flaged with the value -1 being set)
+    //   (in this test, incompletely assigned is flagged with the value -1 being set)
     set_pending_assign( ARG(T) ) ;
     opt.reset ( a ) ;
     passed = true ;
@@ -576,7 +576,7 @@ void test_throwing_assign_to_initialized( T const* )
     // This should:
     //   Attempt to copy construct 'opt1.value()' into opt0 and throw.
     //   opt0 is kept initialized but its value not neccesarily fully assigned
-    //   (in this test, incompletely assigned is flaged with the value -1 being set)
+    //   (in this test, incompletely assigned is flagged with the value -1 being set)
     set_pending_assign( ARG(T) ) ;
     opt0 = opt1 ;
     passed = true ;
