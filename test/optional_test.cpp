@@ -164,7 +164,7 @@ void test_basics( T const* )
 }
 
 template<class T>
-void test_conditional_ctor_and_get_valur_or ( T const* )
+void test_conditional_ctor_and_get_value_or ( T const* )
 {
   TRACE( std::endl << BOOST_CURRENT_FUNCTION  );
 
@@ -835,7 +835,7 @@ void test_with_builtin_types()
   TRACE( std::endl << BOOST_CURRENT_FUNCTION   );
 
   test_basics( ARG(double) );
-  test_conditional_ctor_and_get_valur_or( ARG(double) );
+  test_conditional_ctor_and_get_value_or( ARG(double) );
   test_uninitialized_access( ARG(double) );
   test_no_throwing_swap( ARG(double) );
   test_relops( ARG(double) ) ;
@@ -857,7 +857,7 @@ void test_with_class_type()
 
   test_basics( ARG(X) );
   test_basics( ARG(VBase) );
-  test_conditional_ctor_and_get_valur_or( ARG(X) );
+  test_conditional_ctor_and_get_value_or( ARG(X) );
   test_direct_value_manip( ARG(X) );
   test_uninitialized_access( ARG(X) );
   test_throwing_direct_init( ARG(X) );
