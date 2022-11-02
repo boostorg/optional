@@ -16,7 +16,7 @@ some operations are not available in this case:
 * Value-access via pointer
 
 Also, even though `optional<T&>` treats it wrapped pseudo-object much as
-a real value, a true real reference is stored so aliasing will ocurr:
+a real value, a true real reference is stored so aliasing will occur:
 
 * Copies of `optional<T&>` will copy the references but all these references
 will nonetheless refer to the same object.
