@@ -51,7 +51,7 @@ Operation `emplace` provides basic exception safety guarantee. If it throws, the
 
 Unless `swap` on optional is customized, its primary implementation forwards calls to `T`'s `swap` or move constructor (depending on the initialization state of the optional objects). Thus, if both `T`'s `swap` and move constructor never throw, `swap` on `optional<T>` never throws. similarly, if both `T`'s `swap` and move constructor offer strong guarantee, `swap` on `optional<T>` also offers a strong guarantee.
 
-In case `swap` on optional is customized, the call to `T`'s move constructor are replaced with the calls to `T`'s default constructor followed by `swap`. (This is more useful on older compilers that do not support move semantics, when one wants to acheive stronger exception safety guarantees.) In this case the exception safety guarantees for `swap` are reliant on the guarantees of `T`'s `swap` and default constructor
+In case `swap` on optional is customized, the call to `T`'s move constructor are replaced with the calls to `T`'s default constructor followed by `swap`. (This is more useful on older compilers that do not support move semantics, when one wants to achieve stronger exception safety guarantees.) In this case the exception safety guarantees for `swap` are reliant on the guarantees of `T`'s `swap` and default constructor
 [endsect]
 
 
