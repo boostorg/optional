@@ -13,7 +13,7 @@
 
 // THIS TEST SHOULD FAIL TO COMPILE
 
-void test_converitng_assignment_of_different_enums()
+void test_converting_assignment_of_different_enums()
 {
   const boost::optional<int> o1(1);
   const boost::optional<int> o2(2);
@@ -22,5 +22,5 @@ void test_converitng_assignment_of_different_enums()
 
 int main()
 {
-  test_converitng_assignment_of_different_enums();
+  test_converting_assignment_of_different_enums();
 }
