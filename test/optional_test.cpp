@@ -727,7 +727,7 @@ void test_relops( T const* )
   BOOST_TEST ( !(def0 != def0) ) ;
   BOOST_TEST ( !(opt0 != opt0) ) ;
 
-  // Check when both are uininitalized.
+  // Check when both are uninitialized.
   BOOST_TEST (   def0 == def1  ) ; // both uninitialized compare equal
   BOOST_TEST ( !(def0 <  def1) ) ; // uninitialized is never less    than uninitialized
   BOOST_TEST ( !(def0 >  def1) ) ; // uninitialized is never greater than uninitialized
