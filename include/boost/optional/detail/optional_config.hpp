@@ -116,7 +116,7 @@
 
 // Detect suport for defaulting move operations
 // (some older compilers implement rvalue references,
-// defaulted funcitons but move operations are not special members and cannot be defaulted)
+// defaulted functions but move operations are not special members and cannot be defaulted)
 
 #ifdef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
 # define BOOST_OPTIONAL_DETAIL_NO_DEFAULTED_MOVE_FUNCTIONS
