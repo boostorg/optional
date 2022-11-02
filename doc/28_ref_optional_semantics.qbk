@@ -1386,7 +1386,7 @@ __SPACE__
 [#reference_swap_optional_reference]
 [: `void swap ( optional<T&>& x, optional<T&>& y ) noexcept ;`]
 
-* [*Postconditions:] `x` refers to what `y` refererred to before the swap (if anything). `y` refers to whatever `x` referred to before the swap.
+* [*Postconditions:] `x` refers to what `y` referred to before the swap (if anything). `y` refers to whatever `x` referred to before the swap.
 
 * [*Example:]
 ``
