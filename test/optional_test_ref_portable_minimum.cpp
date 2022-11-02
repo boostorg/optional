@@ -431,7 +431,7 @@ void test_swap()
 }
 
 template <typename T, typename U>
-void test_convertability_of_compatible_reference_types()
+void test_convertibility_of_compatible_reference_types()
 {
   typename concrete_type_of<T>::type v1(1);
   optional<T&> oN, o1(v1);
@@ -489,11 +489,11 @@ int main()
   test_optional_const_ref<Abstract>();
   test_optional_const_ref< optional<int> >();
   
-  test_convertability_of_compatible_reference_types<int, const int>();
-  test_convertability_of_compatible_reference_types<Impl, Abstract>();
-  test_convertability_of_compatible_reference_types<Impl, const Abstract>();
-  test_convertability_of_compatible_reference_types<const Impl, const Abstract>();
-  test_convertability_of_compatible_reference_types<optional<int>, const optional<int> >();
+  test_convertibility_of_compatible_reference_types<int, const int>();
+  test_convertibility_of_compatible_reference_types<Impl, Abstract>();
+  test_convertibility_of_compatible_reference_types<Impl, const Abstract>();
+  test_convertibility_of_compatible_reference_types<const Impl, const Abstract>();
+  test_convertibility_of_compatible_reference_types<optional<int>, const optional<int> >();
   
   return boost::report_errors();
 }
