@@ -687,7 +687,7 @@ void test_throwing_swap( T const* )
   try
   {
     // This should attempt to swap optionals and fail at opt0.reset(*opt1)
-    // Both opt0 and op1 are left unchanged (unswaped)
+    // Both opt0 and op1 are left unchanged (unswapped)
     swap(opt0,opt1);
 
     passed = true ;
