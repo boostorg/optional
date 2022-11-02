@@ -130,7 +130,7 @@ public:
         explicit optional(const optional<U&>& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
     optional(const optional& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
     
-    // the following two implement a 'conditionally explicit' constructor: condition is a hack for buggy compilers with srewed conversion construction from const int
+    // the following two implement a 'conditionally explicit' constructor: condition is a hack for buggy compilers with screwed conversion construction from const int
     template <class U>
       explicit optional(U& rhs, BOOST_DEDUCED_TYPENAME boost::enable_if_c<detail::is_same_decayed<T, U>::value && detail::is_const_integral_bad_for_conversion<U>::value, bool>::type = true) BOOST_NOEXCEPT
       : ptr_(boost::addressof(rhs)) {}
