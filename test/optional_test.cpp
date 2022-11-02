@@ -77,7 +77,7 @@ void test_basics( T const* )
   check_uninitialized(def);
 
   // Implicit construction
-  // The first parameter is implicitely converted to optional<T>(a);
+  // The first parameter is implicitly converted to optional<T>(a);
   test_implicit_construction(a,a,z);
 
   // Direct initialization.
