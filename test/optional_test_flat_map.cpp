@@ -16,14 +16,14 @@
 #endif
 
 #include "boost/core/ignore_unused.hpp"
-#include "boost/core/is_same.hpp"
 #include "boost/core/lightweight_test.hpp"
 #include "boost/core/lightweight_test_trait.hpp"
+#include "boost/type_traits/is_same.hpp"
 
 
 using boost::optional;
 using boost::make_optional;
-using boost::core::is_same;
+using boost::is_same;
 
 template <typename Expected, typename Deduced>
 void verify_type(Deduced)
