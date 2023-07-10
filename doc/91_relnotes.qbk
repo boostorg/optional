@@ -11,6 +11,10 @@
 
 [section:relnotes Release Notes]
 
+[heading Boost Release 1.83]
+
+* Deprecated support for C++03 and earlier, C++11 will be required in release 1.86.
+
 [heading Boost Release 1.80]
 
 * [*Breaking change:] Added specializations for `std::hash<boost::optional<T>>`. This fixes [@https://github.com/boostorg/optional/issues/55 issue #55]. You may get compiler errors when your program provides specializations for `std::hash<boost::optional<T>>`. If this happens, define macro `BOOST_OPTIONAL_CONFIG_DO_NOT_SPECIALIZE_STD_HASH` to suppress the specializations of `std::hash` in this library.
