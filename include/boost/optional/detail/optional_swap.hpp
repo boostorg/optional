@@ -13,7 +13,7 @@
 #ifndef BOOST_OPTIONAL_DETAIL_OPTIONAL_SWAP_AJK_28JAN2015_HPP
 #define BOOST_OPTIONAL_DETAIL_OPTIONAL_SWAP_AJK_28JAN2015_HPP
 
-#include <boost/core/swap.hpp>
+#include <boost/core/invoke_swap.hpp>
 #include <boost/optional/optional_fwd.hpp>
 
 namespace boost {
@@ -39,8 +39,8 @@ struct swap_selector<true>
         else if ( !hasY )
             y.emplace();
 
-        // Boost.Utility.Swap will take care of ADL and workarounds for broken compilers
-        boost::swap(x.get(), y.get());
+        // will take care of ADL and workarounds for broken compilers
+        boost::core::invoke_swap(x.get(), y.get());
 
         if( !hasX )
             y = boost::none ;
@@ -70,7 +70,7 @@ struct swap_selector<false>
         {
             if (y)
             {
-                boost::swap(*x, *y);
+                boost::core::invoke_swap(*x, *y);
             }
             else
             {
