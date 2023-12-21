@@ -39,7 +39,7 @@ class tc_optional_base : public optional_tag
 
     tc_optional_base ( none_t )
       :
-      m_initialized(false) {}
+      m_initialized(false), m_storage() {}
 
     tc_optional_base ( init_value_tag, argument_type val )
       :
@@ -497,8 +497,8 @@ class tc_optional_base : public optional_tag
       m_initialized = false;
     }
 
-    reference_const_type get_impl() const { return m_storage ; }
-    reference_type       get_impl()       { return m_storage ; }
+    reference_const_type get_impl() const { return *boost::core::launder(&m_storage) ; }
+    reference_type       get_impl()       { return *boost::core::launder(&m_storage) ; }
 
     pointer_const_type get_ptr_impl() const { return boost::addressof(m_storage); }
     pointer_type       get_ptr_impl()       { return boost::addressof(m_storage); }

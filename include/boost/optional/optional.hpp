@@ -31,6 +31,7 @@
 #include <boost/core/enable_if.hpp>
 #include <boost/core/explicit_operator_bool.hpp>
 #include <boost/core/invoke_swap.hpp>
+#include <boost/core/launder.hpp>
 #include <boost/optional/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/throw_exception.hpp>
