@@ -35,11 +35,11 @@ class tc_optional_base : public optional_tag
 
     tc_optional_base()
       :
-      m_initialized(false) {}
+      m_initialized(false), m_storage() {}
 
     tc_optional_base ( none_t )
       :
-      m_initialized(false) {}
+      m_initialized(false), m_storage() {}
 
     tc_optional_base ( init_value_tag, argument_type val )
       :

@@ -20,6 +20,7 @@ import testing ;
     [ run optional_test.cpp ]
     [ run optional_test_assign.cpp ]
     [ run optional_test_swap.cpp ]
+    [ compile optional_test_wuninitialized.cpp ]
     [ run optional_test_conversions_from_U.cpp ]
     [ run optional_test_convert_from_T.cpp ]
     [ run optional_test_convert_assign.cpp ]
