@@ -1428,9 +1428,9 @@ struct hash<boost::optional<T&> > ;
 ``
 
 The specialization `hash<optional<T>>` is enabled if and only if
-`hash<remove_­const_­t<T>>` is enabled. When enabled, for an object `o`
-of type `optional<T>`, if `o.has_­value() == true`, then `hash<optional<T>>()(o)`
- evaluates to the same value as `hash<remove_­const_­t<T>>()(*o)`; otherwise it
+`hash<remove_const_t<T>>` is enabled. When enabled, for an object `o`
+of type `optional<T>`, if `o.has_value() == true`, then `hash<optional<T>>()(o)`
+ evaluates to the same value as `hash<remove_const_t<T>>()(*o)`; otherwise it
 evaluates to an unspecified value.
 The member functions are not guaranteed to be `noexcept`.
 
