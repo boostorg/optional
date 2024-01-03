@@ -28,6 +28,8 @@ class aligned_storage
     // BOOST_MAY_ALIAS works around GCC warnings about breaking strict aliasing rules when casting storage address to T*
     union BOOST_MAY_ALIAS dummy_u
     {
+        dummy_u(){}
+        ~dummy_u(){}
         unsigned char data[ sizeof(T) ];
         BOOST_DEDUCED_TYPENAME type_with_alignment<
           ::boost::alignment_of<T>::value >::type aligner_;
