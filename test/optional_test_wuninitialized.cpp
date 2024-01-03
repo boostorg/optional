@@ -123,6 +123,7 @@ void test_basics( )
 
 
   optional<T> oa ( a ) ;
+  optional<T> ob ( a );
   check_initialized(oa);
 
   oa = a ;
@@ -132,7 +133,7 @@ void test_basics( )
   optional<T> const oa2 ( oa ) ;
   check_initialized_const(oa2);
 
-  oa = oa ;
+  oa = ob ;
   check_initialized(oa);
 
   oa = def ;

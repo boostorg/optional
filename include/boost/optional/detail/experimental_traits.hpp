@@ -13,10 +13,10 @@
 #define BOOST_OPTIONAL_DETAIL_EXPERIMENTAL_TRAITS_04NOV2017_HPP
 
 #include <boost/config.hpp>
-#include <boost/detail/workaround.hpp>
+#include <boost/config/workaround.hpp>
 #include <boost/predef.h>
 #include <boost/type_traits.hpp>
-  
+
 // The condition to use POD implementation
 
 #ifdef BOOST_OPTIONAL_CONFIG_NO_POD_SPEC
@@ -50,7 +50,7 @@
 #      define BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
 #    endif
 #  endif
-#endif  
+#endif
 
 
 #ifndef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
@@ -59,10 +59,10 @@
 #  include <type_traits>
 #  define BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T) std::is_trivially_default_constructible<T>::value
 #endif
-  
-  
+
+
 namespace boost { namespace optional_detail {
-  
+
 #ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
 template <typename T>
 struct is_type_trivially_copyable
@@ -83,7 +83,7 @@ struct is_type_trivially_copyable
 
 
 
-#ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES  
+#ifndef BOOST_OPTIONAL_DETAIL_NO_SPEC_FOR_TRIVIAL_TYPES
 template <typename T>
 struct optional_uses_direct_storage_for_
   : boost::conditional< (is_type_trivially_copyable<T>::value && BOOST_OPTIONAL_DETAIL_HAS_TRIVIAL_CTOR(T)) ||

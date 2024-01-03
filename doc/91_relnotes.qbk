@@ -15,6 +15,7 @@
 
 * Fixed the implementation for trivial types. Now it is slower, because it always initializes the `T`, but it avoids undefined behavior when `optional<T>` is copied. This fixes [@https://github.com/boostorg/optional/issues/108 issue #108].
 * Fixed some `-Wmaybe-uninitialized` warnings in GCC 12. Thanks to Christian Mazakas for the fix.
+* Dropped dependency on Boost.Detail.
 
 [heading Boost Release 1.83]
 

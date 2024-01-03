@@ -83,9 +83,6 @@ struct optional_value_type< ::boost::optional<T> >
 
 }} // namespace boost::optional_detail
 
-#ifdef BOOST_OPTIONAL_CONFIG_USE_OLD_IMPLEMENTATION_OF_OPTIONAL
-#include <boost/optional/detail/old_optional_implementation.hpp>
-#else
 namespace boost {
 
 namespace optional_ns {
@@ -1513,11 +1510,6 @@ class optional
     BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
 } ;
 
-} // namespace boost
-
-#endif // BOOST_OPTIONAL_CONFIG_USE_OLD_IMPLEMENTATION_OF_OPTIONAL
-
-namespace boost {
 
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 template<class T>

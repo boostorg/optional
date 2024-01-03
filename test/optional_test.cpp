@@ -849,6 +849,8 @@ struct VBase : virtual X
     VBase(int v) : X(v) {}
     // MSVC 8.0 doesn't generate this correctly...
     VBase(const VBase& other) : X(static_cast<const X&>(other)) {}
+
+    VBase& operator=(VBase const& rhs) { X::operator=(rhs); return *this; }
 };
 
 void test_with_class_type()
@@ -917,6 +919,7 @@ class CustomAddressOfClass
 public:
     CustomAddressOfClass() : n(0) {}
     CustomAddressOfClass(CustomAddressOfClass const& that) : n(that.n) {}
+    CustomAddressOfClass& operator=(CustomAddressOfClass const& rhs) { n = rhs.n; return *this; }
     explicit CustomAddressOfClass(int m) : n(m) {}
     int* operator& () { return &n; }
     bool operator== (CustomAddressOfClass const& that) const { return n == that.n; }
