@@ -60,12 +60,14 @@ class aligned_storage
     T *      ptr_ref()       { return static_cast<T *>     (address()); }
 #endif
 
-#ifndef BOOST_MSVC // workaround for MSVC 14.1 compiler crash
-    T const& ref() const { return *boost::core::launder(ptr_ref()); }
-    T &      ref()       { return *boost::core::launder(ptr_ref()); }
-#else
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1920)
+    // workaround for VS2017 (32 bit) compiler crash
+    // toolset=msvc-14.1 cxxstd=17 variant=release address-model=32
     T const& ref() const { return *ptr_ref(); }
     T &      ref()       { return *ptr_ref(); }
+#else
+    T const& ref() const { return *boost::core::launder(ptr_ref()); }
+    T &      ref()       { return *boost::core::launder(ptr_ref()); }
 #endif
 
 } ;
