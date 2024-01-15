@@ -15,7 +15,6 @@ target_link_libraries( boost_optional
         Boost::assert
         Boost::config
         Boost::core
-        Boost::detail
         Boost::move
         Boost::predef
         Boost::static_assert
