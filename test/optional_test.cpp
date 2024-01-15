@@ -20,7 +20,10 @@
 
 #define BOOST_ENABLE_ASSERT_HANDLER
 
+#include "boost/config.hpp"
+#if !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 #include "boost/bind/apply.hpp" // Included just to test proper interaction with boost::apply<> as reported by Daniel Wallin
+#endif
 #include "boost/mpl/bool.hpp"
 #include "boost/mpl/bool_fwd.hpp"  // For mpl::true_ and mpl::false_
 
