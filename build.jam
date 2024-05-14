@@ -12,7 +12,6 @@ project /boost/optional
         <library>/boost/assert//boost_assert
         <library>/boost/config//boost_config
         <library>/boost/core//boost_core
-        <library>/boost/detail//boost_detail
         <library>/boost/move//boost_move
         <library>/boost/predef//boost_predef
         <library>/boost/static_assert//boost_static_assert
