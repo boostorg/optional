@@ -15,7 +15,7 @@
 
 import testing ;
 
-run optional_test.cpp : : : <source>/boost/bind//boost_bind <source>/boost/mpl//boost_mpl ;
+run optional_test.cpp : : : <library>/boost/bind//boost_bind <library>/boost/mpl//boost_mpl ;
 run optional_test_assign.cpp ;
 run optional_test_swap.cpp ;
 compile optional_test_wuninitialized.cpp ;
@@ -27,7 +27,7 @@ run optional_test_make_optional.cpp ;
 run optional_test_flat_map.cpp ;
 run optional_test_hash.cpp ;
 run optional_test_map.cpp ;
-run optional_test_tie.cpp : : : <source>/boost/tuple//boost_tuple ;
+run optional_test_tie.cpp : : : <library>/boost/tuple//boost_tuple ;
 run optional_test_ref_assign_portable_minimum.cpp ;
 run optional_test_ref_assign_mutable_int.cpp ;
 run optional_test_ref_assign_const_int.cpp ;
