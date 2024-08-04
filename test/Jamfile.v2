@@ -15,6 +15,8 @@
 
 import testing ;
 
+project : requirements <library>/boost/optional//boost_optional ;
+
 run optional_test.cpp : : : <library>/boost/bind//boost_bind <library>/boost/mpl//boost_mpl ;
 run optional_test_assign.cpp ;
 run optional_test_swap.cpp ;
