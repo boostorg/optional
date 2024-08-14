@@ -60,7 +60,6 @@
 #include <boost/move/utility.hpp>
 #include <boost/none.hpp>
 #include <boost/utility/compare_pointees.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/optional/detail/optional_config.hpp>
@@ -75,11 +74,14 @@ struct optional_value_type
 {
 };
 
-template <typename T>
-struct optional_value_type< ::boost::optional<T> >
+template <typename U>
+struct optional_value_type< ::boost::optional<U> >
 {
-  typedef T type;
+  typedef U type;
 };
+
+template <typename T>
+T declval();
 
 }} // namespace boost::optional_detail
 
@@ -1381,7 +1383,6 @@ class optional
       }
 #endif
 
-
 #if (!defined BOOST_NO_CXX11_REF_QUALIFIERS) && (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES)
     template <typename F>
     value_type value_or_eval ( F f ) const&
@@ -1402,7 +1403,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_type)>::type> map(F f) &
+    optional<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_type>()))> map(F f) &
       {
         if (this->has_value())
           return f(get());
@@ -1411,7 +1412,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_const_type)>::type> map(F f) const&
+    optional<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_const_type>()))> map(F f) const&
       {
         if (this->has_value())
           return f(get());
@@ -1420,7 +1421,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_type_of_temporary_wrapper)>::type> map(F f) &&
+    optional<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_type_of_temporary_wrapper>()))> map(F f) &&
       {
         if (this->has_value())
           return f(boost::move(this->get()));
@@ -1429,7 +1430,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type)>::type>::type> flat_map(F f) &
+    optional<typename optional_detail::optional_value_type<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_type>()))>::type> flat_map(F f) &
       {
         if (this->has_value())
           return f(get());
@@ -1438,7 +1439,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_const_type)>::type>::type> flat_map(F f) const&
+    optional<typename optional_detail::optional_value_type<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_const_type>()))>::type>flat_map(F f) const&
       {
         if (this->has_value())
           return f(get());
@@ -1447,7 +1448,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type_of_temporary_wrapper)>::type>::type> flat_map(F f) &&
+    optional<typename optional_detail::optional_value_type<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_type_of_temporary_wrapper>()))>::type>flat_map(F f) &&
       {
         if (this->has_value())
           return f(boost::move(get()));
@@ -1466,7 +1467,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_type)>::type> map(F f)
+    optional<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_type>()))> map(F f)
       {
         if (this->has_value())
           return f(get());
@@ -1475,7 +1476,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_const_type)>::type> map(F f) const
+    optional<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_const_type>()))> map(F f) const
       {
         if (this->has_value())
           return f(get());
@@ -1484,7 +1485,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type)>::type>::type> flat_map(F f)
+    optional<typename optional_detail::optional_value_type<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_type>()))>::type> flat_map(F f)
       {
         if (this->has_value())
           return f(get());
@@ -1493,7 +1494,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_const_type)>::type>::type> flat_map(F f) const
+    optional<typename optional_detail::optional_value_type<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_const_type>()))>::type> flat_map(F f) const
       {
         if (this->has_value())
           return f(get());
@@ -1505,9 +1506,7 @@ class optional
 
     bool has_value() const BOOST_NOEXCEPT { return this->is_initialized() ; }
 
-    bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
-
-    BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
+    explicit operator bool() const BOOST_NOEXCEPT { return this->has_value() ; }
 } ;
 
 
