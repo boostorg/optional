@@ -22,10 +22,6 @@
 #include <iosfwd>
 #endif // BOOST_NO_IOSTREAM
 
-#ifdef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
-#  include <type_traits>
-#endif
-
 #include <boost/assert.hpp>
 #include <boost/core/addressof.hpp>
 #include <boost/core/enable_if.hpp>
