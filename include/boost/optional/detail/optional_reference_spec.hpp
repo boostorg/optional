@@ -168,7 +168,8 @@ public:
     bool has_value() const BOOST_NOEXCEPT { return ptr_ != 0; }
 
     template <typename F>
-    auto map(F f) const -> optional<decltype(f(**this))>
+    optional<typename optional_detail::result_of<F, reference_const_type>::type>
+    map(F f) const
     {
       if (this->has_value())
         return f(this->get());
@@ -177,8 +178,8 @@ public:
     }
 
     template <typename F>
-    auto flat_map(F f) const ->
-      optional<typename optional_detail::optional_value_type<decltype(f(**this))>::type>
+    optional<typename optional_detail::result_value_type<F, reference_const_type>::type>
+    flat_map(F f) const
       {
         if (this->has_value())
           return f(get());
