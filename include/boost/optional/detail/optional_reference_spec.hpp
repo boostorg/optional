@@ -160,8 +160,7 @@ public:
         throw_exception(bad_optional_access());
     }
 
-    bool operator!() const BOOST_NOEXCEPT { return ptr_ == 0; }
-    BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
+    explicit operator bool() const BOOST_NOEXCEPT { return ptr_ != 0; }
 
     void reset() BOOST_NOEXCEPT { ptr_ = 0; }
 
