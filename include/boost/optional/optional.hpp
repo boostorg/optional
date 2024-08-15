@@ -30,7 +30,6 @@
 #include <boost/optional/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/throw_exception.hpp>
-#include <boost/type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/conditional.hpp>
 #include <boost/type_traits/conjunction.hpp>
