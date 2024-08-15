@@ -15,6 +15,7 @@
 
 * *Breaking change.* Dropped support for C++03. C++11 is now the required minimum.
 * Dropped dependency on Boost.Utility.
+* Dropped dependency on Boost.Predef.
 * A bit faster implementation of some relational operations.
 
 

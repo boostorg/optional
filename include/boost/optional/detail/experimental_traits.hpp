@@ -14,7 +14,6 @@
 
 #include <boost/config.hpp>
 #include <boost/config/workaround.hpp>
-#include <boost/predef.h>
 #include <boost/type_traits.hpp>
 
 // The condition to use POD implementation
