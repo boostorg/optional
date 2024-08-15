@@ -59,7 +59,6 @@
 #include <boost/type_traits/is_scalar.hpp>
 #include <boost/move/utility.hpp>
 #include <boost/none.hpp>
-#include <boost/utility/compare_pointees.hpp>
 
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/optional/detail/optional_config.hpp>

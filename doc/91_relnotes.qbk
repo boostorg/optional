@@ -14,6 +14,8 @@
 [heading Boost Release 1.87]
 
 * *Breaking change.* Dropped support for C++03. C++11 is now the required minimum.
+* Dropped dependency on Boost.Utility.
+* A bit faster implementation of some relational operations.
 
 
 [heading Boost Release 1.85]
