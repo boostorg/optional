@@ -2,6 +2,7 @@
 #
 # Copyright (C) 2003, Fernando Luis Cacciola Carballal.
 # Copyright (C) 2014 - 2017 Andrzej Krzemienski
+# Copyright (C) 2024 Alexander Grund
 #
 # Use, modification, and distribution is subject to the Boost Software
 # License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -13,7 +14,23 @@
 #  akrzemi1@gmail.com
 #
 
+import config : requires ;
 import testing ;
+
+project
+    : requirements
+        [ requires
+            cxx11_decltype
+            cxx11_defaulted_functions
+            cxx11_defaulted_moves
+            cxx11_deleted_functions
+            cxx11_explicit_conversion_operators
+            cxx11_noexcept
+            cxx11_rvalue_references
+            cxx11_variadic_templates
+        ]
+    ;
+
 
 run optional_test.cpp ;
 run optional_test_assign.cpp ;
