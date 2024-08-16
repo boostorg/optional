@@ -22,6 +22,7 @@ target_link_libraries(boost_optional
     Boost::throw_exception
     Boost::type_traits
 )
+target_compile_features(boost_optional INTERFACE cxx_std_11)
 
 if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
 
