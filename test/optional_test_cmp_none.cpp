@@ -1,4 +1,5 @@
 // Copyright (C) 2014 Andrzej Krzemienski.
+// Copyright (C) 2024 Alexander Grund
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -34,6 +35,45 @@ void test_equal_to_none_of_noncomparable_T()
   BOOST_TEST(boost::none != i);
   BOOST_TEST(o == boost::none);
   BOOST_TEST(boost::none == o);
+}
+
+void test_comparison_to_none()
+{
+    using boost::none;
+    boost::optional<SemiRegular> i = SemiRegular();
+    // the default ordering of optional<size_t> is{ boost::none, 0, 1, 2, ... }
+    // Hence boost::none < i for any engaged i
+    // and all others operators ( ==, !=, <, <=, >, >= ) follow
+
+    BOOST_TEST(!(i == none));
+    BOOST_TEST(i != none);
+    BOOST_TEST(!(i < none));
+    BOOST_TEST(!(i <= none));
+    BOOST_TEST(i > none);
+    BOOST_TEST(i >= none);
+    // Comparison is symmetric
+    BOOST_TEST(!(none == i));
+    BOOST_TEST(none != i);
+    BOOST_TEST(none < i);
+    BOOST_TEST(none <= i);
+    BOOST_TEST(!(none > i));
+    BOOST_TEST(!(none >= i));
+
+    // An un-engaged optional is always equal to none
+    boost::optional<SemiRegular> o;
+    BOOST_TEST(o == none);
+    BOOST_TEST(!(o != none));
+    BOOST_TEST(!(o < none));
+    BOOST_TEST(o <= none);
+    BOOST_TEST(!(o > none));
+    BOOST_TEST(o >= none);
+    // Comparison is symmetric
+    BOOST_TEST(none == o);
+    BOOST_TEST(!(none != o));
+    BOOST_TEST(!(none < o));
+    BOOST_TEST(none <= o);
+    BOOST_TEST(!(none > o));
+    BOOST_TEST(none >= o);
 }
 
 int main()
