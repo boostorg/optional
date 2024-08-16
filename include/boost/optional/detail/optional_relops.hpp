@@ -134,7 +134,7 @@ bool operator == ( optional<T> const& x, none_t ) BOOST_NOEXCEPT
 
 template<class T>
 inline
-bool operator < ( optional<T> const& x, none_t )
+bool operator < ( optional<T> const&, none_t )
 { return false; }
 
 template<class T>
