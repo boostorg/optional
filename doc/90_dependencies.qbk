@@ -18,11 +18,9 @@ The implementation uses the following other Boost modules:
 # config
 # core
 # move
-# mpl
 # static_assert
 # throw_exception
 # type_traits
-# utility
 
 [endsect]
 

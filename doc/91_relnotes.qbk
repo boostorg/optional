@@ -11,6 +11,14 @@
 
 [section:relnotes Release Notes]
 
+[heading Boost Release 1.87]
+
+* *Breaking change.* Dropped support for C++03. C++11 is now the required minimum.
+* Dropped dependency on Boost.Utility.
+* Dropped dependency on Boost.Predef.
+* A bit faster implementation of some relational operations.
+
+
 [heading Boost Release 1.85]
 
 * Fixed the implementation for trivial types. Now it is slower, because it always initializes the `T`, but it avoids undefined behavior when `optional<T>` is copied. This fixes [@https://github.com/boostorg/optional/issues/108 issue #108].

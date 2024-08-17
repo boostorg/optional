@@ -22,20 +22,14 @@
 #include <iosfwd>
 #endif // BOOST_NO_IOSTREAM
 
-#ifdef BOOST_OPTIONAL_DETAIL_USE_STD_TYPE_TRAITS
-#  include <type_traits>
-#endif
-
 #include <boost/assert.hpp>
 #include <boost/core/addressof.hpp>
 #include <boost/core/enable_if.hpp>
-#include <boost/core/explicit_operator_bool.hpp>
 #include <boost/core/invoke_swap.hpp>
 #include <boost/core/launder.hpp>
 #include <boost/optional/bad_optional_access.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/throw_exception.hpp>
-#include <boost/type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/conditional.hpp>
 #include <boost/type_traits/conjunction.hpp>
@@ -59,8 +53,6 @@
 #include <boost/type_traits/is_scalar.hpp>
 #include <boost/move/utility.hpp>
 #include <boost/none.hpp>
-#include <boost/utility/compare_pointees.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/optional/detail/optional_config.hpp>
@@ -75,11 +67,31 @@ struct optional_value_type
 {
 };
 
-template <typename T>
-struct optional_value_type< ::boost::optional<T> >
+template <typename U>
+struct optional_value_type< ::boost::optional<U> >
 {
-  typedef T type;
+  typedef U type;
 };
+
+template <typename T>
+T declval();
+
+
+// implementing my own result_of so that it works for C++11 (std::result_of)
+// and in C++20 (std::invoke_result).
+template <typename F, typename Ref, typename Rslt = decltype(declval<F>()(declval<Ref>()))>
+struct result_of
+{
+  typedef Rslt type;
+};
+
+template <typename F, typename Ref, typename Rslt = typename optional_value_type<typename result_of<F, Ref>::type>::type>
+struct result_value_type
+{
+  typedef Rslt type;
+};
+
+// optional<typename optional_detail::optional_value_type<decltype(optional_detail::declval<F>()(optional_detail::declval<reference_type>()))>::type>
 
 }} // namespace boost::optional_detail
 
@@ -1381,7 +1393,6 @@ class optional
       }
 #endif
 
-
 #if (!defined BOOST_NO_CXX11_REF_QUALIFIERS) && (!defined BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES)
     template <typename F>
     value_type value_or_eval ( F f ) const&
@@ -1402,7 +1413,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_type)>::type> map(F f) &
+    optional<typename optional_detail::result_of<F, reference_type>::type> map(F f) &
       {
         if (this->has_value())
           return f(get());
@@ -1411,7 +1422,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_const_type)>::type> map(F f) const&
+    optional<typename optional_detail::result_of<F, reference_const_type>::type> map(F f) const&
       {
         if (this->has_value())
           return f(get());
@@ -1420,7 +1431,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_type_of_temporary_wrapper)>::type> map(F f) &&
+    optional<typename optional_detail::result_of<F, reference_type_of_temporary_wrapper>::type> map(F f) &&
       {
         if (this->has_value())
           return f(boost::move(this->get()));
@@ -1429,7 +1440,8 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type)>::type>::type> flat_map(F f) &
+    optional<typename optional_detail::result_value_type<F, reference_type>::type>
+    flat_map(F f) &
       {
         if (this->has_value())
           return f(get());
@@ -1438,7 +1450,8 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_const_type)>::type>::type> flat_map(F f) const&
+    optional<typename optional_detail::result_value_type<F, reference_const_type>::type>
+    flat_map(F f) const&
       {
         if (this->has_value())
           return f(get());
@@ -1447,7 +1460,8 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type_of_temporary_wrapper)>::type>::type> flat_map(F f) &&
+    optional<typename optional_detail::result_value_type<F, reference_type_of_temporary_wrapper>::type>
+    flat_map(F f) &&
       {
         if (this->has_value())
           return f(boost::move(get()));
@@ -1466,7 +1480,8 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_type)>::type> map(F f)
+    optional<typename optional_detail::result_of<F, reference_type>::type>
+    map(F f)
       {
         if (this->has_value())
           return f(get());
@@ -1475,7 +1490,8 @@ class optional
       }
 
     template <typename F>
-    optional<typename boost::result_of<F(reference_const_type)>::type> map(F f) const
+    optional<typename optional_detail::result_of<F, reference_const_type>::type>
+    map(F f) const
       {
         if (this->has_value())
           return f(get());
@@ -1484,7 +1500,8 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_type)>::type>::type> flat_map(F f)
+    optional<typename optional_detail::result_value_type<F, reference_type>::type>
+    flat_map(F f)
       {
         if (this->has_value())
           return f(get());
@@ -1493,7 +1510,8 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::optional_value_type<typename boost::result_of<F(reference_const_type)>::type>::type> flat_map(F f) const
+    optional<typename optional_detail::result_value_type<F, reference_const_type>::type>
+    flat_map(F f) const
       {
         if (this->has_value())
           return f(get());
@@ -1505,9 +1523,7 @@ class optional
 
     bool has_value() const BOOST_NOEXCEPT { return this->is_initialized() ; }
 
-    bool operator!() const BOOST_NOEXCEPT { return !this->is_initialized() ; }
-
-    BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
+    explicit operator bool() const BOOST_NOEXCEPT { return this->has_value() ; }
 } ;
 
 
