@@ -10,19 +10,14 @@ constant boost_dependencies :
     /boost/config//boost_config
     /boost/core//boost_core
     /boost/move//boost_move
-    /boost/predef//boost_predef
     /boost/static_assert//boost_static_assert
     /boost/throw_exception//boost_throw_exception
-    /boost/type_traits//boost_type_traits
-    /boost/utility//boost_utility ;
+    /boost/type_traits//boost_type_traits ;
 
-project /boost/optional
-    : common-requirements
-        <include>include
-    ;
+project /boost/optional ;
 
 explicit
-    [ alias boost_optional : : : : <library>$(boost_dependencies) ]
+    [ alias boost_optional : : : : <library>$(boost_dependencies) <include>include ]
     [ alias all : boost_optional test ]
     ;
 
