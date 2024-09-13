@@ -101,5 +101,6 @@ This is how you solve it with `boost::optional`:
 [include 29_ref_optional_convenience.qbk]
 [endsect]
 [include 90_dependencies.qbk]
-[include 91_relnotes.qbk]
-[include 92_acknowledgments.qbk]
+[include 91_comparison_with_std.qbk]
+[include 92_relnotes.qbk]
+[include 93_acknowledgments.qbk]
