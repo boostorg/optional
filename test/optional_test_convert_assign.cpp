@@ -25,8 +25,7 @@ struct implicit_bool_conv
 
 struct explicit_bool_conv
 {
-  bool operator!() const BOOST_NOEXCEPT { return false; }
-  BOOST_EXPLICIT_OPERATOR_BOOL_NOEXCEPT()
+  explicit operator bool() const BOOST_NOEXCEPT { return true; }
 };
 
 template <typename To, typename From>

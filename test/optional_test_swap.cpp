@@ -53,6 +53,9 @@ namespace optional_swap_test
       throw assignment_exception();
     }
 
+    base_class_with_forbidden_assignment() {}
+    base_class_with_forbidden_assignment(base_class_with_forbidden_assignment const&) {}
+
     virtual ~base_class_with_forbidden_assignment() {}
   };
 
@@ -94,7 +97,8 @@ namespace optional_swap_test
 
     class_whose_default_ctor_should_be_used() : data('\0') { }
 
-    class_whose_default_ctor_should_be_used(const class_whose_default_ctor_should_be_used &)
+    class_whose_default_ctor_should_be_used(const class_whose_default_ctor_should_be_used & rhs)
+      : base_class_with_forbidden_assignment(rhs)
     {
       BOOST_TEST(!"This copy constructor should not be used while swapping!");
       throw copy_ctor_exception();
@@ -137,7 +141,8 @@ namespace optional_swap_test
       throw default_ctor_exception();
     }
 
-    class_whose_explicit_ctor_should_be_used(const class_whose_explicit_ctor_should_be_used &)
+    class_whose_explicit_ctor_should_be_used(const class_whose_explicit_ctor_should_be_used & rhs)
+      : base_class_with_forbidden_assignment(rhs)
     {
       BOOST_TEST(!"This copy constructor should not be used while swapping!");
       throw copy_ctor_exception();
