@@ -103,17 +103,17 @@ namespace optional_ns {
 struct in_place_init_t
 {
   struct init_tag{};
-  explicit in_place_init_t(init_tag){}
+  BOOST_CONSTEXPR explicit in_place_init_t(init_tag){}
 };
-const in_place_init_t in_place_init ((in_place_init_t::init_tag()));
+BOOST_INLINE_CONSTEXPR in_place_init_t in_place_init ((in_place_init_t::init_tag()));
 
 // a tag for conditional in-place initialization of contained value
 struct in_place_init_if_t
 {
   struct init_tag{};
-  explicit in_place_init_if_t(init_tag){}
+  BOOST_CONSTEXPR explicit in_place_init_if_t(init_tag){}
 };
-const in_place_init_if_t in_place_init_if ((in_place_init_if_t::init_tag()));
+BOOST_INLINE_CONSTEXPR in_place_init_if_t in_place_init_if ((in_place_init_if_t::init_tag()));
 
 } // namespace optional_ns
 

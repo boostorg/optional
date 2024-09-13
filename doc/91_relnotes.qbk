@@ -17,6 +17,7 @@
 * Dropped dependency on Boost.Utility.
 * Dropped dependency on Boost.Predef.
 * A bit faster implementation of some relational operations.
+* Tags `in_place_init` and `in_place_init_if` become `inline constexpr` and therewith leave smaller footprint in the executable. This addresses [@https://github.com/boostorg/optional/issues/103 issue #103].
 
 
 [heading Boost Release 1.85]
