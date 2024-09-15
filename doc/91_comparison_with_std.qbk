@@ -16,7 +16,9 @@
   [ [[*`boost::optional`]] [[*`std::optional`]] [] ]
   [ [`optional<int> o = none;`] [`optional<int> o = nullopt;`] [Different name for no-value tag.] ]
   [ [`optional<X> o {in_place_init, a, b};`] [`optional<int> o {in_place, a, b};`] [Different name for in-place initialization tag.] ]
-  [ [] [`optional<vector<int>> o {in_place, {1, 2, 3}};`] [No in-place initialization with initializer-list in `boost`.] ]
+  [ [] [`optional<vector<int>> o {in_place, {1, 2, 3}};`
+
+  `o.emplace({4, 5, 6});`] [No in-place initialization with initializer-list in `boost`.] ]
   [ [`optional<X> o {in_place_init_if, cond, a, b};`] [] [No syntax for conditional in-place initialization in `std`.] ]
   [ [`optional<X> o {cond, x};`] [] [No syntax for conditional initialization from `T` in `std`.] ]
   [ [`optional<T> o {U{}};`
@@ -39,6 +41,7 @@
   `optional<T>{} == optional<U>{}`] [No comparisons with `U` or `optional<U>` in `boost`.] ]
   [ [`make_optional(cond, v);`] [] [No `make_optional` with condition in `std`.] ]
   [ [] [`make_optional<T>(a, b);`] [No `make_optional` with specified `T` in `boost`.] ]
+  [ [`std::cout << optional<int>{};`] [] [No printing to IOStreams in `std`.]]
 ]
 
 
