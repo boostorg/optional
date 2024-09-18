@@ -57,7 +57,7 @@ On compilers that do not support rvalue references, each of these functions is s
     template<class Arg> void emplace(Arg& arg);
     void emplace();
 
-This workaround addresses about 40% of all use cases. If this is insufficient, you need to resort to using [link boost_optional.tutorial.in_place_factories In-Place Factories].
+This workaround addresses about 40% of all use cases. If this is insufficient, you need to resort to using [link boost_optional.design.in_place_factories In-Place Factories].
 [endsect]
 
 [section Optional Reference Binding][#optional_reference_binding]
