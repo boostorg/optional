@@ -838,7 +838,7 @@ class optional
       }
 #endif
 
-
+#ifndef BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
 
     // Assigns from a T (deep-moves/copies the rhs value)
     template <typename T_>
@@ -849,6 +849,24 @@ class optional
         return *this ;
       }
 
+#else
+
+    // Assigns from a T (deep-copies the rhs value)
+    // Basic Guarantee: If T::( T const& ) throws, this is left UNINITIALIZED
+    optional& operator= ( argument_type val )
+      {
+        this->assign( val ) ;
+        return *this ;
+      }
+
+    // Assigns from a T (deep-moves the rhs value)
+    optional& operator= ( rval_reference_type val )
+      {
+        this->assign( boost::move(val) ) ;
+        return *this ;
+      }
+
+#endif // BOOST_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
 
     // Assigns from a "none"
     // Which destroys the current value, if any, leaving this UNINITIALIZED
