@@ -233,7 +233,7 @@ __SPACE__
 arguments `std::forward<Args>(args)...`.
 * [*Postconditions:] `*this` is initialized.
 * [*Throws:] Any exception thrown by the selected constructor of `T`.
-* [*Notes: ] `T` need not be __MOVE_CONSTRUCTIBLE__. On compilers that do not support variadic templates or rvalue references, this constuctor is available in limited functionality. For details [link optional_emplace_workaround see here].
+* [*Notes: ] `T` need not be __MOVE_CONSTRUCTIBLE__.
 
 * [*Example:]
 ``
@@ -257,7 +257,7 @@ __SPACE__
 * [*Effect:] If `condition` is `true`, initializes the contained value as if direct-non-list-initializing an object of type `T` with the arguments `std::forward<Args>(args)...`.
 * [*Postconditions:] `bool(*this) == condition`.
 * [*Throws:] Any exception thrown by the selected constructor of `T`.
-* [*Notes: ] `T` need not be __MOVE_CONSTRUCTIBLE__. On compilers that do not support variadic templates or rvalue references, this constuctor is available in limited functionality. For details [link optional_emplace_workaround see here].
+* [*Notes: ] `T` need not be __MOVE_CONSTRUCTIBLE__.
 
 * [*Example:]
 ``
@@ -502,7 +502,7 @@ __SPACE__
 * [*Postconditions: ] `*this` is [_initialized].
 * [*Throws:] Whatever the selected `T`'s  constructor throws.
 * [*Exception Safety:] If an exception is thrown during the initialization of `T`, `*this` is ['uninitialized].
-* [*Notes:] `T` need not be __MOVE_CONSTRUCTIBLE__ or `MoveAssignable`. On compilers that do not support variadic templates or rvalue references, this function is available in limited functionality. For details [link optional_emplace_workaround see here].
+* [*Notes:] `T` need not be __MOVE_CONSTRUCTIBLE__ or `MoveAssignable`. 
 * [*Example:]
 ``
 T v;

@@ -15,7 +15,7 @@ deductions for class template parameters.
   std::optional<std::string> os2 = osv; // OK
   os2 == osv;                           // OK
 
-They are practical, ans sometimes stem from the argument for consistency:
+They are practical, and sometimes stem from the argument for consistency:
 if `(optT && *optT == u)` works then `(optT == u)` should also work.
 
 However, these intelligent convenience functions sometimes produce results
