@@ -64,7 +64,7 @@ operator>>(std::basic_istream<CharType, CharTrait>& in, optional<T>& v)
       T x;
       in >> x;
 #ifndef  BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
-      v = boost::move(x);
+      v = std::move(x);
 #else
       v = x;
 #endif

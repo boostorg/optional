@@ -17,7 +17,6 @@ The implementation uses the following other Boost modules:
 # assert
 # config
 # core
-# move
 # static_assert
 # throw_exception
 # type_traits

@@ -39,7 +39,7 @@ BOOST_DEDUCED_TYPENAME boost::remove_reference<T>::type& forward_reference(T&& r
 {
     BOOST_STATIC_ASSERT_MSG(boost::is_lvalue_reference<T>::value,
                             "binding rvalue references to optional lvalue references is disallowed");
-    return boost::forward<T>(r);
+    return optional_detail::forward<T>(r);
 }
 
 #endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
