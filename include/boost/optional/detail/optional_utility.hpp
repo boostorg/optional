@@ -1,4 +1,4 @@
-// Copyright (C) 2024 Andrzej Krzemienski.
+// Copyright (C) 2024 typenameTea.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -7,7 +7,7 @@
 // See http://www.boost.org/libs/optional for documentation.
 //
 // You are welcome to contact the author at:
-//  akrzemi1@gmail.com
+//  typenametea@gmail.com
 
 #ifndef BOOST_OPTIONAL_OPTIONAL_DETAIL_OPTIONAL_UTILITY_HPP
 #define BOOST_OPTIONAL_OPTIONAL_DETAIL_OPTIONAL_UTILITY_HPP
@@ -16,18 +16,21 @@ namespace boost {
 namespace optional_detail {
 
 // Workaround: forward and move aren't constexpr in C++11
-template <class T> inline constexpr T&& forward(typename boost::remove_reference<T>::type& t) noexcept
+template <class T>
+inline constexpr T&& forward(typename boost::remove_reference<T>::type& t) noexcept
 {
   return static_cast<T&&>(t);
 }
 
-template <class T> inline constexpr T&& forward(typename boost::remove_reference<T>::type&& t) noexcept
+template <class T>
+inline constexpr T&& forward(typename boost::remove_reference<T>::type&& t) noexcept
 {
   BOOST_STATIC_ASSERT_MSG(!boost::is_lvalue_reference<T>::value, "Can not forward an rvalue as an lvalue.");
   return static_cast<T&&>(t);
 }
 
-template <class T> inline constexpr typename boost::remove_reference<T>::type&& move(T&& t) noexcept
+template <class T>
+inline constexpr typename boost::remove_reference<T>::type&& move(T&& t) noexcept
 {
   return static_cast<typename boost::remove_reference<T>::type&&>(t);
 }
