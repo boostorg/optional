@@ -1,4 +1,4 @@
-// Copyright (C) 2024 typenameTea.
+// Copyright (C) 2024 Ryan Malcolm Underwood.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -9,8 +9,8 @@
 // You are welcome to contact the author at:
 //  typenametea@gmail.com
 
-#ifndef BOOST_OPTIONAL_OPTIONAL_DETAIL_OPTIONAL_UTILITY_TNT_05OCT2024_HPP
-#define BOOST_OPTIONAL_OPTIONAL_DETAIL_OPTIONAL_UTILITY_TNT_05OCT2024_HPP
+#ifndef BOOST_OPTIONAL_OPTIONAL_DETAIL_OPTIONAL_UTILITY_RMU_06OCT2024_HPP
+#define BOOST_OPTIONAL_OPTIONAL_DETAIL_OPTIONAL_UTILITY_RMU_06OCT2024_HPP
 
 namespace boost {
 namespace optional_detail {
@@ -25,7 +25,9 @@ inline constexpr T&& forward(typename boost::remove_reference<T>::type& t) noexc
 template <class T>
 inline constexpr T&& forward(typename boost::remove_reference<T>::type&& t) noexcept
 {
-  BOOST_STATIC_ASSERT_MSG(!boost::is_lvalue_reference<T>::value, "Can not forward an rvalue as an lvalue.");
+#ifndef BOOST_NO_CXX11_STATIC_ASSERT
+  static_assert(!boost::is_lvalue_reference<T>::value, "Can not forward an rvalue as an lvalue.");
+#endif
   return static_cast<T&&>(t);
 }
 
