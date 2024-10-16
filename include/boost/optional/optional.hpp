@@ -580,7 +580,6 @@ struct is_optional_constructible : boost::true_type
 #if !defined(BOOST_NO_CXX11_DECLTYPE) && !BOOST_WORKAROUND(BOOST_MSVC, < 1800)
 // for is_assignable
 
-#if (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
 // On some initial rvalue reference implementations GCC does it in a strange way,
 // preferring perfect-forwarding constructor to implicit copy constructor.
 
@@ -588,15 +587,6 @@ template <typename T, typename U>
 struct is_opt_assignable
   : boost::conjunction<boost::is_convertible<U&&, T>, boost::is_assignable<T&, U&&> >
 {};
-
-#else
-
-template <typename T, typename U>
-struct is_opt_assignable
-  : boost::conjunction<boost::is_convertible<U, T>, boost::is_assignable<T&, U> >
-{};
-
-#endif
 
 #else
 
@@ -922,11 +912,14 @@ class optional
     // Returns a reference to the value if this is initialized, otherwise,
     // the behaviour is UNDEFINED
     // No-throw
-    reference_const_type operator *() const& { return this->get() ; }
-    reference_type       operator *() &      { return this->get() ; }
+    reference_const_type operator *() BOOST_OPTIONAL_CONST_REF_QUAL { return this->get() ; }
+    reference_type       operator *() BOOST_OPTIONAL_REF_QUAL       { return this->get() ; }
+
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     reference_type_of_temporary_wrapper operator *() && { return optional_detail::move(this->get()) ; }
+#endif
 
-    reference_const_type value() const&
+    reference_const_type value() BOOST_OPTIONAL_CONST_REF_QUAL
       {
         if (this->is_initialized())
           return this->get() ;
@@ -934,7 +927,7 @@ class optional
           throw_exception(bad_optional_access());
       }
 
-    reference_type value() &
+    reference_type value() BOOST_OPTIONAL_REF_QUAL
       {
         if (this->is_initialized())
           return this->get() ;
@@ -942,23 +935,31 @@ class optional
           throw_exception(bad_optional_access());
       }
 
+    template <class U>
+    value_type value_or ( U&& v ) BOOST_OPTIONAL_CONST_REF_QUAL
+      {
+        if (this->is_initialized())
+          return get();
+        else
+          return optional_detail::forward<U>(v);
+      }
+
+    template <typename F>
+    value_type value_or_eval ( F f ) BOOST_OPTIONAL_CONST_REF_QUAL
+      {
+        if (this->is_initialized())
+          return get();
+        else
+          return f();
+      }
+
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     reference_type_of_temporary_wrapper value() &&
       {
         if (this->is_initialized())
           return optional_detail::move(this->get()) ;
         else
           throw_exception(bad_optional_access());
-      }
-
-
-
-    template <class U>
-    value_type value_or ( U&& v ) const&
-      {
-        if (this->is_initialized())
-          return get();
-        else
-          return optional_detail::forward<U>(v);
       }
 
     template <class U>
@@ -971,15 +972,6 @@ class optional
       }
 
     template <typename F>
-    value_type value_or_eval ( F f ) const&
-      {
-        if (this->is_initialized())
-          return get();
-        else
-          return f();
-      }
-
-    template <typename F>
     value_type value_or_eval ( F f ) &&
       {
         if (this->is_initialized())
@@ -987,9 +979,12 @@ class optional
         else
           return f();
       }
+#endif
+
+// Monadic interface
 
     template <typename F>
-    optional<typename optional_detail::result_of<F, reference_type>::type> map(F f) &
+    optional<typename optional_detail::result_of<F, reference_type>::type> map(F f) BOOST_OPTIONAL_REF_QUAL
       {
         if (this->has_value())
           return f(get());
@@ -998,7 +993,7 @@ class optional
       }
 
     template <typename F>
-    optional<typename optional_detail::result_of<F, reference_const_type>::type> map(F f) const&
+    optional<typename optional_detail::result_of<F, reference_const_type>::type> map(F f) BOOST_OPTIONAL_CONST_REF_QUAL
       {
         if (this->has_value())
           return f(get());
@@ -1006,6 +1001,7 @@ class optional
           return none;
       }
 
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     template <typename F>
     optional<typename optional_detail::result_of<F, reference_type_of_temporary_wrapper>::type> map(F f) &&
       {
@@ -1014,10 +1010,11 @@ class optional
         else
           return none;
       }
+#endif
 
     template <typename F>
     optional<typename optional_detail::result_value_type<F, reference_type>::type>
-    flat_map(F f) &
+    flat_map(F f) BOOST_OPTIONAL_REF_QUAL
       {
         if (this->has_value())
           return f(get());
@@ -1027,7 +1024,7 @@ class optional
 
     template <typename F>
     optional<typename optional_detail::result_value_type<F, reference_const_type>::type>
-    flat_map(F f) const&
+    flat_map(F f) BOOST_OPTIONAL_CONST_REF_QUAL
       {
         if (this->has_value())
           return f(get());
@@ -1035,6 +1032,7 @@ class optional
           return none;
       }
 
+#ifndef BOOST_NO_CXX11_REF_QUALIFIERS
     template <typename F>
     optional<typename optional_detail::result_value_type<F, reference_type_of_temporary_wrapper>::type>
     flat_map(F f) &&
@@ -1044,7 +1042,7 @@ class optional
         else
           return none;
       }
-
+#endif
 
     bool has_value() const BOOST_NOEXCEPT { return this->is_initialized() ; }
 
