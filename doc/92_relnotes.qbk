@@ -13,9 +13,10 @@
 
 [heading Boost Release 1.87]
 
-* *Breaking change.* Dropped support for C++03. C++11 is now the required minimum.
+* *Breaking change.* Dropped support for C++03. C++11 is now the required minimum; at least some C++11 features.
 * Dropped dependency on Boost.Utility.
 * Dropped dependency on Boost.Predef.
+* Dropped dependency on Boost.StaticAssert.
 * Dropped dependency on Boost.Move.
 * A bit faster implementation of some relational operations.
 * Tags `in_place_init` and `in_place_init_if` become `inline constexpr` and therewith leave smaller footprint in the executable. This addresses [@https://github.com/boostorg/optional/issues/103 issue #103].
