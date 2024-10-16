@@ -26,14 +26,14 @@ project
             cxx11_defaulted_moves
             cxx11_deleted_functions
             cxx11_explicit_conversion_operators
-            cxx11_noexcept
+#            cxx11_noexcept
             cxx11_rvalue_references
             cxx11_variadic_templates
         ]
     ;
 
 
-run optional_test.cpp : : : <library>/boost/bind//boost_bind <library>/boost/mpl//boost_mpl ;
+run optional_test.cpp : : : <library>/boost/bind//boost_bind ;
 run optional_test_assign.cpp ;
 run optional_test_swap.cpp ;
 compile optional_test_wuninitialized.cpp ;

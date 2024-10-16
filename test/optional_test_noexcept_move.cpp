@@ -9,7 +9,6 @@
 // You are welcome to contact the author at:
 //  akrzemi1@gmail.com
 
-#include "boost/static_assert.hpp"
 #include "boost/optional/optional.hpp"
 
 #ifdef BOOST_BORLANDC

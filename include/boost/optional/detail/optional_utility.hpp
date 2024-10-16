@@ -25,9 +25,7 @@ inline constexpr T&& forward(typename boost::remove_reference<T>::type& t) noexc
 template <class T>
 inline constexpr T&& forward(typename boost::remove_reference<T>::type&& t) noexcept
 {
-#ifndef BOOST_NO_CXX11_STATIC_ASSERT
   static_assert(!boost::is_lvalue_reference<T>::value, "Can not forward an rvalue as an lvalue.");
-#endif
   return static_cast<T&&>(t);
 }
 
