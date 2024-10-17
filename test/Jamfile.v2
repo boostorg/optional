@@ -28,6 +28,7 @@ project
             cxx11_explicit_conversion_operators
 #            cxx11_noexcept
             cxx11_rvalue_references
+            cxx11_static_assert
             cxx11_variadic_templates
         ]
     ;
