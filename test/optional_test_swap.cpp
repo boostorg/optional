@@ -15,7 +15,6 @@
 //
 
 #include "boost/optional/optional.hpp"
-#include "boost/utility/in_place_factory.hpp"
 
 #ifdef BOOST_BORLANDC
 #pragma hdrstop
@@ -189,9 +188,9 @@ namespace optional_swap_test
      return;
 
     if( !hasX )
-       x = boost::in_place('\0');
+       x.emplace('\0');
     else if ( !hasY )
-       y = boost::in_place('\0');
+       y.emplace('\0');
 
     optional_swap_test::swap(*x,*y);
 
