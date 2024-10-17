@@ -16,7 +16,7 @@
 #include <boost/config.hpp>
 #include <boost/config/workaround.hpp>
 
-#if (defined BOOST_NO_CXX11_RVALUE_REFERENCES) || (defined BOOST_OPTIONAL_CONFIG_NO_RVALUE_REFERENCES)
+#if (defined BOOST_OPTIONAL_CONFIG_NO_RVALUE_REFERENCES)
 # define BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 #endif
 
@@ -82,7 +82,7 @@
 
 #endif // defined(__GNUC__)
 
-#if (defined __GNUC__) && (!defined BOOST_NO_CXX11_RVALUE_REFERENCES)
+#if (defined __GNUC__)
 // On some initial rvalue reference implementations GCC does it in a strange way,
 // preferring perfect-forwarding constructor to implicit copy constructor.
 
@@ -129,6 +129,15 @@
 
 #ifdef BOOST_OPTIONAL_CONFIG_NO_DIRECT_STORAGE_SPEC
 # define BOOST_OPTIONAL_DETAIL_NO_DIRECT_STORAGE_SPEC
+#endif
+
+
+#ifdef BOOST_NO_CXX11_REF_QUALIFIERS
+# define BOOST_OPTIONAL_CONST_REF_QUAL const
+# define BOOST_OPTIONAL_REF_QUAL
+#else
+# define BOOST_OPTIONAL_CONST_REF_QUAL const&
+# define BOOST_OPTIONAL_REF_QUAL &
 #endif
 
 

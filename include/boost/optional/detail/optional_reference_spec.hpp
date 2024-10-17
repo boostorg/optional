@@ -29,17 +29,17 @@ template <class From>
 void prevent_binding_rvalue()
 {
 #ifndef BOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES
-    BOOST_STATIC_ASSERT_MSG(boost::is_lvalue_reference<From>::value,
-                            "binding rvalue references to optional lvalue references is disallowed");
+    static_assert(boost::is_lvalue_reference<From>::value,
+                  "binding rvalue references to optional lvalue references is disallowed");
 #endif
 }
 
 template <class T>
 BOOST_DEDUCED_TYPENAME boost::remove_reference<T>::type& forward_reference(T&& r)
 {
-    BOOST_STATIC_ASSERT_MSG(boost::is_lvalue_reference<T>::value,
-                            "binding rvalue references to optional lvalue references is disallowed");
-    return boost::forward<T>(r);
+    static_assert(boost::is_lvalue_reference<T>::value,
+                  "binding rvalue references to optional lvalue references is disallowed");
+    return optional_detail::forward<T>(r);
 }
 
 #endif // BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
@@ -68,8 +68,8 @@ void prevent_assignment_from_false_const_integral()
 #ifdef BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
     // MSVC compiler without rvalue references: we need to disable the assignment from
     // const integral lvalue reference, as it may be an invalid temporary
-    BOOST_STATIC_ASSERT_MSG(!is_const_integral<From>::value,
-                            "binding const lvalue references to integral types is disabled in this compiler");
+    static_assert(!is_const_integral<From>::value,
+                  "binding const lvalue references to integral types is disabled in this compiler");
 #endif
 #endif
 }
