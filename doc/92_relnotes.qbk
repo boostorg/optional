@@ -19,6 +19,10 @@
 * Dropped dependency on Boost.StaticAssert.
 * Dropped dependency on Boost.Move.
 * A bit faster implementation of some relational operations.
+* *Warning.* In the future releases we intend to introduce the range interface
+  into `optional`, so that `std::ranges::range<optional<T>>` will be `true`.
+  This may affect the overload resolution in programs that make decisions based
+  on predicates such as `std::ranges::range`. 
 * Tags `in_place_init` and `in_place_init_if` become `inline constexpr` and therewith leave smaller footprint in the executable. This addresses [@https://github.com/boostorg/optional/issues/103 issue #103].
 
 
