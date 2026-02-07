@@ -420,10 +420,10 @@ namespace boost {
     constexpr reference_const_type get() const { BOOST_ASSERT(this->is_initialized()) ; return this->contained_val(); }
     constexpr reference_type       get()       { BOOST_ASSERT(this->is_initialized()) ; return this->contained_val(); }
 
-    BOOST_DEPRECATED("use `value_or(v)` instead")
+    //BOOST_DEPRECATED("use `value_or(v)` instead")
     reference_const_type get_value_or (reference_const_type v) const { return this->is_initialized() ? this->contained_val() : v; }
 
-    BOOST_DEPRECATED("use `value_or(v)` instead")
+    //BOOST_DEPRECATED("use `value_or(v)` instead")
     reference_type       get_value_or (reference_type       v)       { return this->is_initialized() ? this->contained_val() : v; }
 
     pointer_const_type get_ptr() const { return is_initialized() ? dataptr() : nullptr; }
