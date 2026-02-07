@@ -11,16 +11,7 @@
 
 [section:relnotes Release Notes]
 
-[heading Boost Release 1.91]
 
-* All non-mutating and some mutating functions become `constexpr` in C++14 compilers.
-  This addresses [@https://github.com/boostorg/optional/issues/143 issue #143].
-* For C++14 applied a couple of small changes to get closer to the interface of `std::optional`:
-  * Enabled syntax `o = {}` for putting optional objects to no-value state.
-  * Enabled syntax `o.value_or({})`, which uses a default-constructed `T`.
-  * Construct `o = u`, where `o` is of type `optional<T>` and `u` is of type `U` convertible to `T`, does not create a temporary `T`.
-* *Breaking change.* For C++14 compilers abandoned the mechanism for customizing
-  `swap`. Hardly anyone knows about this mechanism and it was never documented.
 
 
 
