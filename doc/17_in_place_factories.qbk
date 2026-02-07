@@ -136,4 +136,6 @@ In-place factories can be used generically by the wrapper and user as follows:
 
 The factories are implemented in the headers: __IN_PLACE_FACTORY_HPP__ and __TYPED_IN_PLACE_FACTORY_HPP__
 
+[caution The support for in-place factories is deprecated. Use constructor taking `in_place_init` tag and function `.emplace()` instead.]
+
 [endsect]

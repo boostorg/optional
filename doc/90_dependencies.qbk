@@ -9,7 +9,20 @@
 ]
 
 
-[section Dependencies and Portability]
+[section Dependencies and Portability][#minimum_system_requirements]
+
+
+[section Minimum System Requirements]
+This library requires C++11 as minimum. However some features are disabled.
+
+For C++14 and higher this library provides a `constexpr` interface for non-mutable
+member functions and some mutable member functions.
+
+[note For types that overload unary `operator&` (address) some member functions in `optional`, like `operator->`,
+cannot be implemented as `constexpr` on some compilers.]
+
+[endsect]
+
 
 [section Dependencies]
 The implementation uses the following other Boost modules:
