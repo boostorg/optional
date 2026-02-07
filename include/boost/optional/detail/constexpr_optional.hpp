@@ -112,6 +112,8 @@ struct constexpr_guarded_storage
     constexpr explicit constexpr_guarded_storage(optional_ns::in_place_init_t, ::std::initializer_list<U> il, Args&&... args)
       : init_(true), storage_(il, forward_<Args>(args)...) {}
 
+    constexpr void reset () noexcept { init_ = false; }
+
     ~constexpr_guarded_storage() = default;
 };
 
@@ -134,6 +136,16 @@ struct fallback_guarded_storage
     template <class U, class... Args, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, ::std::initializer_list<U>>)>
     explicit fallback_guarded_storage(optional_ns::in_place_init_t, ::std::initializer_list<U> il, Args&&... args)
         : init_(true), storage_(il, forward_<Args>(args)...) {}
+
+    void reset() noexcept
+    {
+      if (init_)
+      {
+        storage_.value_.T::~T();
+        init_ = false;
+      }
+
+    }
 
     ~fallback_guarded_storage() { if (init_) storage_.value_.T::~T(); }
 };
@@ -260,8 +272,7 @@ namespace boost {
 
     constexpr void reset() noexcept
     {
-      if (is_initialized()) dataptr()->T::~T();
-      storage.init_ = false;
+      storage.reset();
     }
 
     BOOST_OPTIONAL_CXX20_CONSTEXPR void reset(const T& v)
