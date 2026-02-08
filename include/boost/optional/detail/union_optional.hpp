@@ -344,7 +344,7 @@ namespace boost {
     explicit optional (FT&& factory)
     : storage()
     {
-      factory.template apply<T>(this->dataptr());
+      boost_optional_detail::construct<value_type>(factory, this->dataptr());
       storage.init_ = true;
     }
 
@@ -479,7 +479,7 @@ namespace boost {
     optional& operator=(F&& factory)
     {
       reset();
-      factory.template apply<T>(this->dataptr());
+      boost_optional_detail::construct<value_type>(factory, this->dataptr());
       storage.init_ = true;
       return *this;
     }
