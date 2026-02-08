@@ -52,7 +52,7 @@ namespace test_int
   static_assert(o2 != o1, "");
   static_assert(o2 > o1, "");
 
-#ifndef BOOST_NO_CXX14_CONSTEXPR
+#ifdef BOOST_OPTIONAL_CONSTEXPR_COPY
   constexpr boost::optional<int> oNc = oN;
   constexpr boost::optional<int> oNd = boost::none;
   constexpr boost::optional<int> oNe = {};
