@@ -84,10 +84,8 @@ operator<<(std::basic_ostream<CharType, CharTrait>& os, optional_detail::optiona
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_scalar.hpp>
 
-
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/optional/detail/optional_config.hpp>
-#include <boost/optional/detail/optional_factory_support.hpp>
 #include <boost/optional/detail/optional_aligned_storage.hpp>
 
 

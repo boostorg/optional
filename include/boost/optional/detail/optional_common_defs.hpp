@@ -22,6 +22,7 @@
 #include <boost/config.hpp>
 #include <boost/core/addressof.hpp>
 #include <type_traits>
+#include <boost/optional/detail/optional_factory_support.hpp>
 
 #ifndef BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
 #include <boost/type_traits/decay.hpp>
