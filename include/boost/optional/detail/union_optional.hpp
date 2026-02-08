@@ -195,6 +195,31 @@ namespace boost {
       storage.init_ = true;
     }
 
+  #ifdef BOOST_OPTIONAL_CONSTEXPR_COPY
+    // The conditional initialization of storage needs to employ a factory
+    // function, so that we can utilize the guaranteed copy elision on the
+    // return type.
+    // an alternative -- using a conditional operator in the initializer --
+    // does not work in MSVC 14.2 and 14.3.
+    template <typename... U>
+    static constexpr storage_t conditional_storage_from_values(bool cond, U&&... v)
+    {
+      if (cond)
+        return storage_t(in_place_init, optional_detail::forward_<U>(v)...);
+      else
+        return storage_t();
+    }
+
+    template <typename OU>
+    static constexpr storage_t conditional_storage_from_optional(OU&& ou)
+    {
+      if (ou.has_value())
+        return storage_t(in_place_init, *optional_detail::forward_<OU>(ou));
+      else
+        return storage_t();
+    }
+  #endif
+
   public:
     using value_type = T;
     using unqualified_value_type = typename ::std::remove_const<T>::type;
@@ -218,35 +243,35 @@ namespace boost {
 
 #ifdef BOOST_OPTIONAL_CONSTEXPR_COPY
     constexpr optional(bool cond, const T& v)
-    : storage(cond ? storage_t(v) : storage_t())
+    : storage(conditional_storage_from_values(cond, v))
     {}
 
     constexpr optional(bool cond, T&& v)
-    : storage(cond ? storage_t(optional_detail::move_(v)) : storage_t())
+    : storage(conditional_storage_from_values(cond, optional_detail::move_(v)))
     {}
 
     constexpr optional(const optional& rhs)
-    : storage(rhs.is_initialized() ? storage_t(*rhs) : storage_t())
+    : storage(conditional_storage_from_optional(rhs))
     {}
 
     constexpr optional(optional&& rhs)
       noexcept(::std::is_nothrow_move_constructible<T>::value)
-    : storage(rhs.is_initialized() ? storage_t(*optional_detail::move_(rhs)) : storage_t())
+    : storage(conditional_storage_from_optional(optional_detail::move_(rhs)))
     {}
 
     template <typename U, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U const&>)>
     constexpr explicit optional(optional<U> const& rhs)
-    : storage(rhs.is_initialized() ? storage_t(in_place_init, *rhs) : storage_t())
+    : storage(conditional_storage_from_optional(rhs))
     {}
 
     template <typename U, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U&&>)>
     constexpr explicit optional(optional<U> && rhs)
-    : storage(rhs.is_initialized() ? storage_t(in_place_init, *optional_detail::move_(rhs)) : storage_t())
+    : storage(conditional_storage_from_optional(optional_detail::move_(rhs)))
     {}
 
     template <typename... Args>
     constexpr explicit optional( in_place_init_if_t, bool cond, Args&&... args )
-    : storage( cond ? storage_t(in_place_init, optional_detail::forward_<Args>(args)...) : storage_t() )
+    : storage(conditional_storage_from_values(cond, optional_detail::forward_<Args>(args)...))
     {}
 #else
     optional(bool cond, const T& v)
