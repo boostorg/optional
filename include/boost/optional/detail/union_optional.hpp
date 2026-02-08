@@ -13,12 +13,11 @@
 // This header provides definitions required by any specialization of
 // optional<>.
 
-#ifndef BOOST_OPTIONAL_DETAIL_CONSTEXPR_OPTIONAL_01FEB2026_HPP
-#define BOOST_OPTIONAL_DETAIL_CONSTEXPR_OPTIONAL_01FEB2026_HPP
+#ifndef BOOST_OPTIONAL_DETAIL_UNION_OPTIONAL_01FEB2026_HPP
+#define BOOST_OPTIONAL_DETAIL_UNION_OPTIONAL_01FEB2026_HPP
 
-#include <initializer_list>
+//#include <initializer_list>
 #include <boost/assert.hpp>
-#include <boost/core/invoke_swap.hpp>
 #include <boost/core/invoke_swap.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/optional/bad_optional_access.hpp>
@@ -30,11 +29,19 @@
 # define BOOST_OPTIONAL_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__::value, bool>::type = false
 
 
-// In C++20 we have `std::construct_at()` which is a constexpr equivalent of
-// placement-new. We can then make more functions constexpr.
-// TBD: This additional constexpr-ication is left for the future.
-# define BOOST_OPTIONAL_CXX20_CONSTEXPR
+# ifdef __cpp_guaranteed_copy_elision
+#   if __cpp_guaranteed_copy_elision
+#     define BOOST_OPTIONAL_CONSTEXPR_COPY
+#   endif
+# endif
 
+
+template <typename T, typename U>
+struct fail_hard_on_nonconvertible
+{
+  static_assert(::std::is_convertible<U&&, T>::value, "The argument must be convertible to T");
+  using type = bool;
+};
 
 // Missing C++17 type traits
 namespace boost { namespace optional_detail {
@@ -47,7 +54,7 @@ struct conjunction<B1> : B1 {};
 
 template <class B1, class... Bn>
 struct conjunction<B1, Bn...>
-    : ::std::conditional_t<bool(B1::value), conjunction<Bn...>, B1> {};
+    : ::std::conditional<bool(B1::value), conjunction<Bn...>, B1>::type {};
 
 }}
 
@@ -108,13 +115,13 @@ struct constexpr_guarded_storage
     template <class... Args> explicit constexpr constexpr_guarded_storage(optional_ns::in_place_init_t, Args&&... args)
       : init_(true), storage_(forward_<Args>(args)...) {}
 
-    template <class U, class... Args, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, ::std::initializer_list<U>>)>
-    constexpr explicit constexpr_guarded_storage(optional_ns::in_place_init_t, ::std::initializer_list<U> il, Args&&... args)
-      : init_(true), storage_(il, forward_<Args>(args)...) {}
+    // template <class U, class... Args, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, ::std::initializer_list<U>>)>
+    // constexpr explicit constexpr_guarded_storage(optional_ns::in_place_init_t, ::std::initializer_list<U> il, Args&&... args)
+    //   : init_(true), storage_(il, forward_<Args>(args)...) {}
 
-    constexpr void reset () noexcept { init_ = false; }
+    BOOST_CXX14_CONSTEXPR void reset () noexcept { init_ = false; }
 
-    ~constexpr_guarded_storage() = default;
+    //~constexpr_guarded_storage() = default;
 };
 
 
@@ -130,12 +137,12 @@ struct fallback_guarded_storage
 
     explicit constexpr fallback_guarded_storage(T&& v) : init_(true), storage_(move_(v)) {}
 
-    template <class... Args> explicit fallback_guarded_storage(optional_ns::in_place_init_t, Args&&... args)
+    template <class... Args> explicit constexpr fallback_guarded_storage(optional_ns::in_place_init_t, Args&&... args)
         : init_(true), storage_(forward_<Args>(args)...) {}
 
-    template <class U, class... Args, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, ::std::initializer_list<U>>)>
-    explicit fallback_guarded_storage(optional_ns::in_place_init_t, ::std::initializer_list<U> il, Args&&... args)
-        : init_(true), storage_(il, forward_<Args>(args)...) {}
+    // template <class U, class... Args, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, ::std::initializer_list<U>>)>
+    // explicit fallback_guarded_storage(optional_ns::in_place_init_t, ::std::initializer_list<U> il, Args&&... args)
+    //     : init_(true), storage_(il, forward_<Args>(args)...) {}
 
     void reset() noexcept
     {
@@ -169,16 +176,16 @@ namespace boost {
   {
     using storage_t = optional_detail::guarded_storage<T>;
     storage_t storage;
-    static_assert( !::std::is_same<typename std::decay<T>::type, none_t>::value, "bad T" );
-    static_assert( !::std::is_same<typename std::decay<T>::type, in_place_init_t>::value, "bad T" );
+    static_assert( !::std::is_same<typename std::decay<T>::type, none_t>::value, "optional<none_t> is illegal" );
+    static_assert( !::std::is_same<typename std::decay<T>::type, in_place_init_t>::value, "optional<in_place_init_t> is illegal" );
+    static_assert( !::std::is_same<typename std::decay<T>::type, in_place_init_if_t>::value, "optional<in_place_init_if_t> is illegal" );
 
-
-    constexpr typename ::std::remove_const<T>::type* dataptr() { return ::boost::addressof(storage.storage_.value_); }
+    BOOST_CXX14_CONSTEXPR typename ::std::remove_const<T>::type* dataptr() { return ::boost::addressof(storage.storage_.value_); }
     constexpr const T* dataptr() const { return ::boost::addressof(storage.storage_.value_); }
 
     constexpr const T& contained_val() const& { return storage.storage_.value_; }
-    constexpr T&& contained_val() && { return optional_detail::move_(storage.storage_.value_); }
-    constexpr T& contained_val() & { return storage.storage_.value_; }
+    BOOST_CXX14_CONSTEXPR T&& contained_val() && { return optional_detail::move_(storage.storage_.value_); }
+    BOOST_CXX14_CONSTEXPR T& contained_val() & { return storage.storage_.value_; }
 
     template <typename... Args>
     BOOST_OPTIONAL_CXX20_CONSTEXPR void initialize(Args&&... args)
@@ -209,6 +216,7 @@ namespace boost {
     constexpr optional(const T& v) : storage(v) {}
     constexpr optional(T&& v) : storage(optional_detail::move_(v)) {}
 
+#ifdef BOOST_OPTIONAL_CONSTEXPR_COPY
     constexpr optional(bool cond, const T& v)
     : storage(cond ? storage_t(v) : storage_t())
     {}
@@ -228,17 +236,77 @@ namespace boost {
 
     template <typename U, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U const&>)>
     constexpr explicit optional(optional<U> const& rhs)
-    : storage(rhs.is_initialized() ? storage_t(*rhs) : storage_t())
+    : storage(rhs.is_initialized() ? storage_t(in_place_init, *rhs) : storage_t())
     {}
 
     template <typename U, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U&&>)>
     constexpr explicit optional(optional<U> && rhs)
-    : storage(rhs.is_initialized() ? storage_t(*optional_detail::move_(rhs)) : storage_t())
+    : storage(rhs.is_initialized() ? storage_t(in_place_init, *optional_detail::move_(rhs)) : storage_t())
     {}
+
+    template <typename... Args>
+    constexpr explicit optional( in_place_init_if_t, bool cond, Args&&... args )
+    : storage( cond ? storage_t(in_place_init, optional_detail::forward_<Args>(args)...) : storage_t() )
+    {}
+#else
+    optional(bool cond, const T& v)
+    : storage()
+    {
+      if (cond)
+        initialize(v);
+    }
+
+    optional(bool cond, T&& v)
+    : storage()
+    {
+      if (cond)
+        initialize(optional_detail::move_(v));
+    }
+
+    optional(const optional& rhs)
+    : storage()
+    {
+      if (rhs.is_initialized())
+        initialize(*rhs);
+    }
+
+    optional(optional&& rhs)
+      noexcept(::std::is_nothrow_move_constructible<T>::value)
+    : storage()
+    {
+      if (rhs.is_initialized())
+        initialize(*optional_detail::move_(rhs));
+    }
+
+    template <typename U, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U const&>)>
+    explicit optional(optional<U> const& rhs)
+    : storage()
+    {
+      if (rhs.is_initialized())
+        initialize(*rhs);
+    }
+
+    template <typename U, BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U&&>)>
+    explicit optional(optional<U> && rhs)
+    : storage()
+    {
+      if (rhs.is_initialized())
+        initialize(*optional_detail::move_(rhs));
+    }
+
+    template <typename... Args>
+    explicit optional( in_place_init_if_t, bool cond, Args&&... args )
+    : storage()
+    {
+      if (cond)
+        initialize(optional_detail::forward_<Args>(args)...);
+    }
+#endif // BOOST_OPTIONAL_CONSTEXPR_COPY
 
     template <typename FT,
               BOOST_OPTIONAL_REQUIRES(optional_detail::is_typed_in_place_factory<FT>)>
-    constexpr explicit optional (FT&& factory)
+    /*non-constexpr (deprecated)*/
+    explicit optional (FT&& factory)
     : storage()
     {
       factory.apply(this->dataptr());
@@ -247,7 +315,8 @@ namespace boost {
 
     template <typename FT,
               BOOST_OPTIONAL_REQUIRES(optional_detail::is_in_place_factory<FT>)>
-    constexpr explicit optional (FT&& factory)
+    /*non-constexpr (deprecated)*/
+    explicit optional (FT&& factory)
     : storage()
     {
       factory.template apply<T>(this->dataptr());
@@ -265,12 +334,7 @@ namespace boost {
     : storage(in_place_init, optional_detail::forward_<Args>(args)...)
     {}
 
-    template <typename... Args>
-    constexpr explicit optional( in_place_init_if_t, bool cond, Args&&... args )
-    : storage( cond ? storage_t(in_place_init, optional_detail::forward_<Args>(args)...) : storage_t() )
-    {}
-
-    constexpr void reset() noexcept
+    BOOST_CXX14_CONSTEXPR void reset() noexcept
     {
       storage.reset();
     }
@@ -283,13 +347,13 @@ namespace boost {
     template <typename... Args>
     BOOST_OPTIONAL_CXX20_CONSTEXPR void emplace(Args&&... args)
     {
-      reset(); static_assert(noexcept(reset()));
+      reset();
       // <-- now we are not containing a value
       initialize(optional_detail::forward_<Args>(args)...);
     }
 
 
-    constexpr optional& operator=(none_t) noexcept
+    BOOST_CXX14_CONSTEXPR optional& operator=(none_t) noexcept
     {
       reset();
       return *this;
@@ -386,6 +450,7 @@ namespace boost {
     }
 
     template <class F, BOOST_OPTIONAL_REQUIRES(optional_detail::is_in_place_factory<F>)>
+    /*non-constexpr (deprecated)*/
     optional& operator=(F&& factory)
     {
       reset();
@@ -395,6 +460,7 @@ namespace boost {
     }
 
     template <class F, BOOST_OPTIONAL_REQUIRES(optional_detail::is_typed_in_place_factory<F>)>
+    /*non-constexpr (deprecated)*/
     optional& operator=(F&& factory)
     {
       reset();
@@ -406,7 +472,6 @@ namespace boost {
     BOOST_OPTIONAL_CXX20_CONSTEXPR
     void swap(optional& rhs)
       noexcept(::std::is_nothrow_move_constructible<T>::value && noexcept(boost::core::invoke_swap(*rhs, *rhs)))
-      // I am cheating here. I need "swapabe" not "assignnable" trait. But this is best I can do in C++14
     {
       if (is_initialized())
       {
@@ -428,8 +493,8 @@ namespace boost {
     constexpr bool has_value() const noexcept { return this->is_initialized(); }
     constexpr explicit operator bool() const noexcept { return this->is_initialized(); }
 
-    constexpr reference_const_type get() const { BOOST_ASSERT(this->is_initialized()) ; return this->contained_val(); }
-    constexpr reference_type       get()       { BOOST_ASSERT(this->is_initialized()) ; return this->contained_val(); }
+    constexpr             reference_const_type get() const { return BOOST_OPTIONAL_ASSERTED_EXPRESSION(this->is_initialized(), this->contained_val()); }
+    BOOST_CXX14_CONSTEXPR reference_type       get()       { BOOST_ASSERT(this->is_initialized()) ; return this->contained_val(); }
 
     //BOOST_DEPRECATED("use `value_or(v)` instead")
     reference_const_type get_value_or (reference_const_type v) const { return this->is_initialized() ? this->contained_val() : v; }
@@ -440,22 +505,19 @@ namespace boost {
     pointer_const_type get_ptr() const { return is_initialized() ? dataptr() : nullptr; }
     pointer_type       get_ptr()       { return is_initialized() ? dataptr() : nullptr; }
 
-    constexpr reference_const_type operator*() const& { return this->get(); }
-    constexpr reference_type       operator*() &      { return this->get(); }
-    constexpr reference_type_of_temporary_wrapper operator*() && { return optional_detail::move_(this->get()); }
+    constexpr             reference_const_type operator*() const& { return this->get(); }
+    BOOST_CXX14_CONSTEXPR reference_type       operator*() &      { return this->get(); }
+    BOOST_CXX14_CONSTEXPR reference_type_of_temporary_wrapper operator*() && { return optional_detail::move_(this->get()); }
 
-    constexpr pointer_const_type operator->() const { BOOST_ASSERT(this->is_initialized()) ; return this->dataptr(); }
-    constexpr pointer_type       operator->()       { BOOST_ASSERT(this->is_initialized()) ; return this->dataptr(); }
+    constexpr             pointer_const_type operator->() const { return BOOST_OPTIONAL_ASSERTED_EXPRESSION(this->is_initialized(), this->dataptr()); }
+    BOOST_CXX14_CONSTEXPR pointer_type       operator->()       { BOOST_ASSERT(this->is_initialized()) ; return this->dataptr(); }
 
     constexpr reference_const_type value() const&
     {
-      if (this->is_initialized())
-        return this->get();
-      else
-        boost::throw_exception(boost::bad_optional_access());
+      return this->is_initialized() ? this->get() : (boost::throw_exception(boost::bad_optional_access()), this->get());
     }
 
-    constexpr reference_type value() &
+    BOOST_CXX14_CONSTEXPR reference_type value() &
     {
       if (this->is_initialized())
         return this->get();
@@ -463,7 +525,7 @@ namespace boost {
         boost::throw_exception(boost::bad_optional_access());
     }
 
-    constexpr reference_type_of_temporary_wrapper value() &&
+    BOOST_CXX14_CONSTEXPR reference_type_of_temporary_wrapper value() &&
     {
       if (this->is_initialized())
         return optional_detail::move_(this->get());
@@ -471,17 +533,15 @@ namespace boost {
         boost::throw_exception(boost::bad_optional_access());
     }
 
-    template <class U = T>
+    template <class U = typename ::std::remove_cv<T>::type,
+              typename fail_hard_on_nonconvertible<T, U>::type = true>
     constexpr value_type value_or(U&& v) const&
     {
-      if (this->is_initialized())
-        return get();
-      else
-        return optional_detail::forward_<U>(v);
+      return this->is_initialized() ? get() : T(optional_detail::forward_<U>(v));
     }
 
-    template <class U>
-    constexpr value_type value_or(U&& v) &&
+    template <class U = typename ::std::remove_cv<T>::type>
+    BOOST_CXX14_CONSTEXPR value_type value_or(U&& v) &&
     {
       if (this->is_initialized())
         return optional_detail::move_(get());
@@ -489,17 +549,15 @@ namespace boost {
         return optional_detail::forward_<U>(v);
     }
 
-    template <typename F>
+    template <typename F,
+              typename fail_hard_on_nonconvertible<T, decltype(optional_detail::declval_<F>()())>::type = true>
     constexpr value_type value_or_eval(F f) const&
     {
-      if (this->is_initialized())
-        return get();
-      else
-        return f();
+      return this->is_initialized() ? get() : value_type(f());
     }
 
     template <typename F>
-    constexpr value_type value_or_eval ( F f ) &&
+    BOOST_CXX14_CONSTEXPR value_type value_or_eval ( F f ) &&
     {
       if (this->is_initialized())
         return optional_detail::move_(get());
@@ -508,7 +566,8 @@ namespace boost {
     }
 
     template <typename F>
-    constexpr optional<typename optional_detail::result_of<F, reference_type>::type> map(F f) &
+    BOOST_CXX14_CONSTEXPR optional<typename optional_detail::result_of<F, reference_type>::type>
+    map(F f) &
     {
       if (this->has_value())
         return f(get());
@@ -517,16 +576,17 @@ namespace boost {
     }
 
     template <typename F>
-    constexpr optional<typename optional_detail::result_of<F, reference_const_type>::type> map(F f) const&
+    constexpr optional<typename optional_detail::result_of<F, reference_const_type>::type>
+    map(F f) const&
     {
-      if (this->has_value())
-        return f(get());
-      else
-        return none;
+      return this->has_value() ?
+             f(get()) :
+             optional<typename optional_detail::result_of<F, reference_const_type>::type>();
     }
 
     template <typename F>
-    constexpr optional<typename optional_detail::result_of<F, reference_type_of_temporary_wrapper>::type> map(F f) &&
+    BOOST_CXX14_CONSTEXPR optional<typename optional_detail::result_of<F, reference_type_of_temporary_wrapper>::type>
+    map(F f) &&
     {
       if (this->has_value())
         return f(optional_detail::move_(this->get()));
@@ -535,7 +595,7 @@ namespace boost {
     }
 
     template <typename F>
-    constexpr optional<typename optional_detail::result_value_type<F, reference_type>::type>
+    BOOST_CXX14_CONSTEXPR optional<typename optional_detail::result_value_type<F, reference_type>::type>
     flat_map(F f) &
     {
       if (this->has_value())
@@ -548,14 +608,13 @@ namespace boost {
     constexpr optional<typename optional_detail::result_value_type<F, reference_const_type>::type>
     flat_map(F f) const&
     {
-      if (this->has_value())
-        return f(get());
-      else
-        return none;
+      return this->has_value() ?
+             f(get()) :
+             optional<typename optional_detail::result_value_type<F, reference_const_type>::type>();
     }
 
     template <typename F>
-    constexpr optional<typename optional_detail::result_value_type<F, reference_type_of_temporary_wrapper>::type>
+    BOOST_CXX14_CONSTEXPR optional<typename optional_detail::result_value_type<F, reference_type_of_temporary_wrapper>::type>
     flat_map(F f) &&
     {
       if (this->has_value())
@@ -577,6 +636,4 @@ namespace boost {
 }
 
 
-// https://godbolt.org/z/ov1ahMsv6
-
-#endif // BOOST_OPTIONAL_DETAIL_CONSTEXPR_OPTIONAL_01FEB2026_HPP
+#endif // BOOST_OPTIONAL_DETAIL_UNION_OPTIONAL_01FEB2026_HPP

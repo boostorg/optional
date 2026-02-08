@@ -23,13 +23,20 @@
 #include <boost/core/addressof.hpp>
 #include <type_traits>
 
-#ifndef BOOST_OPTIONAL_USES_CONSTEXPR_IMPLEMENTATION
+#ifndef BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
 #include <boost/type_traits/decay.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 #endif
 
+// This is needed for C++11, where constexpr functions must contain a single expression.
+// We want to assert and then return.
+#if defined NDEBUG
+# define BOOST_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) (EXPR)
+#else
+# define BOOST_OPTIONAL_ASSERTED_EXPRESSION(CHECK, EXPR) ((CHECK) ? (EXPR) : ([]{BOOST_ASSERT(!(#CHECK));}(), (EXPR)))
+#endif
 
-#ifndef BOOST_NO_CXX14_CONSTEXPR
+#ifdef BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
 # define BOOST_OPTIONAL_DECAY(T) typename ::std::decay<T>::type
 # define BOOST_OPTIONAL_IS_TAGGED(TAG, U) ::std::is_base_of<TAG, BOOST_OPTIONAL_DECAY(U)>
 #else
