@@ -23,15 +23,7 @@
 #define BOOST_OPTIONAL_OPTIONAL_FLC_19NOV2002_HPP
 
 
-#if !defined(BOOST_NO_CXX14_CONSTEXPR) &&             \
-    !defined(BOOST_NO_CXX11_REF_QUALIFIERS) &&        \
-    !defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) && \
-    !defined(BOOST_NO_CXX11_UNRESTRICTED_UNION)
-# ifdef BOOST_OPTIONAL_CONFIG_ENABLE_CONSTEXPR_IMPLEMENTATION // for now, only per manual request
-#  define BOOST_OPTIONAL_USES_CONSTEXPR_IMPLEMENTATION
-# endif
-#endif
-
+#include <boost/optional/detail/optional_select_implementation.hpp>
 #include <boost/optional/detail/optional_common_defs.hpp>
 
 
@@ -56,8 +48,8 @@ operator<<(std::basic_ostream<CharType, CharTrait>& os, optional_detail::optiona
 #include <boost/none.hpp>
 
 
-#if defined BOOST_OPTIONAL_USES_CONSTEXPR_IMPLEMENTATION
-#include <boost/optional/detail/constexpr_optional.hpp>
+#if defined BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
+#include <boost/optional/detail/union_optional.hpp>
 #else
 
 
@@ -92,10 +84,8 @@ operator<<(std::basic_ostream<CharType, CharTrait>& os, optional_detail::optiona
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_scalar.hpp>
 
-
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/optional/detail/optional_config.hpp>
-#include <boost/optional/detail/optional_factory_support.hpp>
 #include <boost/optional/detail/optional_aligned_storage.hpp>
 
 

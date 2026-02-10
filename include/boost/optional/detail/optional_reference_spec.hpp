@@ -13,13 +13,13 @@
 #define BOOST_OPTIONAL_DETAIL_OPTIONAL_REFERENCE_SPEC_AJK_03OCT2015_HPP
 
 #ifdef BOOST_OPTIONAL_CONFIG_NO_PROPER_ASSIGN_FROM_CONST_INT
-#ifndef BOOST_OPTIONAL_USES_CONSTEXPR_IMPLEMENTATION
+#ifndef BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_const.hpp>
 #endif
 #endif
 
-#ifdef BOOST_OPTIONAL_USES_CONSTEXPR_IMPLEMENTATION
+#ifdef BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
 # define BOOST_OPTIONAL_TT_PREFIX ::std
 #else
 # define BOOST_OPTIONAL_TT_PREFIX boost
@@ -135,27 +135,27 @@ public:
     typedef T* pointer_type;
     typedef T* pointer_const_type;
 
-    BOOST_CXX14_CONSTEXPR optional() BOOST_NOEXCEPT : ptr_() {}
-    BOOST_CXX14_CONSTEXPR optional(none_t) BOOST_NOEXCEPT : ptr_() {}
+    BOOST_CONSTEXPR optional() BOOST_NOEXCEPT : ptr_() {}
+    BOOST_CONSTEXPR optional(none_t) BOOST_NOEXCEPT : ptr_() {}
 
     template <class U>
-    BOOST_CXX14_CONSTEXPR explicit optional(const optional<U&>& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
-    BOOST_CXX14_CONSTEXPR optional(const optional& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
+    BOOST_CONSTEXPR explicit optional(const optional<U&>& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
+    BOOST_CONSTEXPR optional(const optional& rhs) BOOST_NOEXCEPT : ptr_(rhs.get_ptr()) {}
 
     // the following two implement a 'conditionally explicit' constructor: condition is a hack for buggy compilers with screwed conversion construction from const int
     template <class U,
               BOOST_OPTIONAL_REQUIRES(detail::is_same_decayed<T, U>),
               BOOST_OPTIONAL_REQUIRES(detail::is_const_integral_bad_for_conversion<U>)>
-      BOOST_CXX14_CONSTEXPR explicit
-      optional(U& rhs) BOOST_NOEXCEPT
-      : ptr_(boost::addressof(rhs)) {}
+    BOOST_CONSTEXPR explicit
+    optional(U& rhs) BOOST_NOEXCEPT
+    : ptr_(boost::addressof(rhs)) {}
 
     template <class U,
               BOOST_OPTIONAL_REQUIRES(detail::is_same_decayed<T, U>),
               BOOST_OPTIONAL_REQUIRES(!detail::is_const_integral_bad_for_conversion<U>)>
-      BOOST_CXX14_CONSTEXPR
-      optional(U& rhs) BOOST_NOEXCEPT
-      : ptr_(boost::addressof(rhs)) {}
+    BOOST_CONSTEXPR
+    optional(U& rhs) BOOST_NOEXCEPT
+    : ptr_(boost::addressof(rhs)) {}
 
     BOOST_CXX14_CONSTEXPR optional& operator=(const optional& rhs) BOOST_NOEXCEPT { ptr_ = rhs.get_ptr(); return *this; }
     template <class U>
@@ -164,50 +164,47 @@ public:
 
 
     BOOST_CXX14_CONSTEXPR void swap(optional& rhs) BOOST_NOEXCEPT { ::std::swap(ptr_, rhs.ptr_); }
-    BOOST_CXX14_CONSTEXPR T& get() const { BOOST_ASSERT(ptr_); return   *ptr_; }
+    constexpr T& get() const { return BOOST_OPTIONAL_ASSERTED_EXPRESSION(ptr_, *ptr_); }
 
-    BOOST_CXX14_CONSTEXPR T* get_ptr() const BOOST_NOEXCEPT { return ptr_; }
-    BOOST_CXX14_CONSTEXPR T* operator->() const { BOOST_ASSERT(ptr_); return ptr_; }
-    BOOST_CXX14_CONSTEXPR T& operator*() const { BOOST_ASSERT(ptr_); return *ptr_; }
+    constexpr T* get_ptr() const BOOST_NOEXCEPT { return ptr_; }
+    constexpr T* operator->() const { return BOOST_OPTIONAL_ASSERTED_EXPRESSION(ptr_, ptr_); }
+    constexpr T& operator*() const { return BOOST_OPTIONAL_ASSERTED_EXPRESSION(ptr_, *ptr_); }
 
-    BOOST_CXX14_CONSTEXPR T& value() const
+    constexpr T& value() const
     {
-      if (this->is_initialized())
-        return this->get();
-      else
-        boost::throw_exception(boost::bad_optional_access());
+      return this->is_initialized() ?
+             this->get() :
+             (boost::throw_exception(boost::bad_optional_access()), this->get());
     }
 
-    BOOST_CXX14_CONSTEXPR explicit operator bool() const BOOST_NOEXCEPT { return ptr_ != 0; }
+    constexpr explicit operator bool() const BOOST_NOEXCEPT { return ptr_ != 0; }
 
     BOOST_CXX14_CONSTEXPR void reset() BOOST_NOEXCEPT { ptr_ = 0; }
 
-    BOOST_CXX14_CONSTEXPR bool is_initialized() const BOOST_NOEXCEPT { return ptr_ != 0; }
-    BOOST_CXX14_CONSTEXPR bool has_value() const BOOST_NOEXCEPT { return ptr_ != 0; }
+    constexpr bool is_initialized() const BOOST_NOEXCEPT { return ptr_ != 0; }
+    constexpr bool has_value() const BOOST_NOEXCEPT { return ptr_ != 0; }
 
     template <typename F>
-    BOOST_CXX14_CONSTEXPR optional<typename optional_detail::result_of<F, reference_const_type>::type>
+    constexpr optional<typename optional_detail::result_of<F, reference_const_type>::type>
     map(F f) const
     {
-      if (this->has_value())
-        return f(this->get());
-      else
-        return none;
+      return this->has_value() ?
+             f(get()) :
+             optional<typename optional_detail::result_of<F, reference_const_type>::type>();
     }
 
     template <typename F>
-    BOOST_CXX14_CONSTEXPR optional<typename optional_detail::result_value_type<F, reference_const_type>::type>
+    constexpr optional<typename optional_detail::result_value_type<F, reference_const_type>::type>
     flat_map(F f) const
       {
-        if (this->has_value())
-          return f(get());
-        else
-          return none;
+        return this->has_value() ?
+               f(get()) :
+               optional<typename optional_detail::result_value_type<F, reference_const_type>::type>();
       }
 
 #ifndef BOOST_OPTIONAL_DETAIL_NO_RVALUE_REFERENCES
 
-    BOOST_CXX14_CONSTEXPR optional(T&& /* rhs */) BOOST_NOEXCEPT { detail::prevent_binding_rvalue<T&&>(); }
+    optional(T&& /* rhs */) BOOST_NOEXCEPT { detail::prevent_binding_rvalue<T&&>(); }
 
     template <class R, BOOST_OPTIONAL_REQUIRES(detail::no_unboxing_cond<T, R>)>
         BOOST_CXX14_CONSTEXPR optional(R&& r) BOOST_NOEXCEPT

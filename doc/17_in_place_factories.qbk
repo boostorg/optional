@@ -1,5 +1,5 @@
 ﻿
-[section In-Place Factories]
+[section:in_place_factories In-Place Factories][#boost_optional_factories]
 
 One of the typical problems with wrappers and containers is that their
 interfaces usually provide an operation to initialize or assign the
@@ -138,4 +138,4 @@ The factories are implemented in the headers: __IN_PLACE_FACTORY_HPP__ and __TYP
 
 [caution The support for in-place factories is deprecated. Use constructor taking `in_place_init` tag and function `.emplace()` instead.]
 
-[endsect]
+[endsect:in_place_factories]
