@@ -349,7 +349,9 @@ namespace boost {
     }
 
     template <typename U,
-              BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U&&>)>
+              BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U&&>),
+              BOOST_OPTIONAL_REQUIRES(!optional_detail::is_typed_in_place_factory<U>),
+              BOOST_OPTIONAL_REQUIRES(!optional_detail::is_in_place_factory<U>)>
     constexpr explicit optional(U&& v)
     : storage(optional_ns::in_place_init, optional_detail::forward_<U>(v))
     {}
@@ -463,7 +465,9 @@ namespace boost {
               BOOST_OPTIONAL_REQUIRES(!::std::is_same<typename ::std::decay<U>::type, optional>),
               BOOST_OPTIONAL_REQUIRES(!optional_detail::conjunction<::std::is_scalar<T>, ::std::is_same<T, BOOST_OPTIONAL_DECAY(U)>>),
               BOOST_OPTIONAL_REQUIRES(::std::is_constructible<T, U>),
-              BOOST_OPTIONAL_REQUIRES(::std::is_assignable<T&, U>)
+              BOOST_OPTIONAL_REQUIRES(::std::is_assignable<T&, U>),
+              BOOST_OPTIONAL_REQUIRES(!optional_detail::is_typed_in_place_factory<U>),
+              BOOST_OPTIONAL_REQUIRES(!optional_detail::is_in_place_factory<U>)
              >
     BOOST_OPTIONAL_CXX20_CONSTEXPR optional& operator=(U&& v)
     {
