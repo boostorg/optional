@@ -36,9 +36,19 @@ void test_that_you_can_find_none_in_a_range_of_optional(T x, T y)
   auto it = std::ranges::find(arr, boost::none);
   BOOST_TEST_EQ(std::distance(arr.begin(), it), 1);
 }
+#endif // BOOST_NO_CXX20_HDR_RANGES
+
+
+# if (defined __GNUC__) && (!defined BOOST_INTEL_CXX_VERSION) && (!defined __clang__)
+#  if (__GNUC__ <= 4)
+#   define BOOST_OPTIONAL_TEST_INSUFFICIENT_TYPE_TRAIT_SUPPORT
+#  endif
+# endif
+
+#ifndef BOOST_OPTIONAL_TEST_INSUFFICIENT_TYPE_TRAIT_SUPPORT
+static_assert(std::is_trivially_copyable<boost::none_t>::value, "boost::none shall be trivially copyable");
 #endif
 
-static_assert(std::is_trivially_copyable<boost::none_t>::value, "boost::none shall be trivially copyable");
 
 void test_that_none_is_equal_to_none()
 {
