@@ -39,7 +39,7 @@ the contained value is a core constant expression. This includes constructors:
 
 Other constructors, including the copy and move constructos, are ['not] core constant expressions.
 
-Member functions `.has_value`, `operator*` and (non)equality comparisons with `none` are core-constant expressions for trivially-destructible `T`s.
+Member functions `.has_value`, `operator bool` and (non)equality comparisons with `none` are core-constant expressions for trivially-destructible `T`s.
 
 Also all `const`-qualified non-static member functions and comparison operators are core constant expressions, if the corresponding operations on `T`
 are core constant expressions.
