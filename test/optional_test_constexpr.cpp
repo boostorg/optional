@@ -20,6 +20,16 @@ struct Record
   constexpr int operator()() const { return i; }
 };
 
+struct Guard
+{
+  int i;
+  constexpr explicit Guard(int i) : i(i) {}
+  Guard(Guard&&) = delete;
+};
+
+static_assert(boost::none == boost::none, "");
+static_assert(!(boost::none != boost::none), "");
+
 namespace test_int
 {
   constexpr boost::optional<int> oN;
@@ -86,6 +96,29 @@ namespace test_record
   static_assert(rN.value_or(Record(9)).i == 9, "");
   static_assert(r1->i == 1, "");
   static_assert(r2.value().i == 2, "");
+}
+
+namespace test_guard
+{
+  constexpr boost::optional<Guard> g1 {boost::in_place_init, 1};
+  constexpr boost::optional<Guard> gNa {boost::none};
+  constexpr boost::optional<Guard> gNb;
+
+  static_assert(g1, "");
+  static_assert(!!g1, "");
+  static_assert(g1 != boost::none, "");
+  static_assert(!(g1 == boost::none), "");
+  static_assert(g1.has_value(), "");
+
+  static_assert(!gNa, "");
+  static_assert(!gNa.has_value(), "");
+  static_assert(gNa == boost::none, "");
+  static_assert(!(gNa != boost::none), "");
+
+  static_assert(!gNb, "");
+  static_assert(!gNb.has_value(), "");
+  static_assert(gNb == boost::none, "");
+  static_assert(!(gNb != boost::none), "");
 }
 
 namespace test_optional_ref

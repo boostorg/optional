@@ -281,7 +281,7 @@ factory.
 * [*Postconditions: ] `*this` is [_initialized] and its value is ['directly given]
 from the factory `f` (i.e., the value [_is not copied]).
 * [*Throws:] Whatever the `T` constructor called by the factory throws.
-* [*Notes:] See [link boost_optional.design.in_place_factories In-Place Factories]
+* [*Notes:] See [link boost_optional_factories In-Place Factories]
 * [*Exception Safety:] Exceptions can only be thrown during the call to
 the `T` constructor used by the factory; in that case, this constructor has
 no effect.
@@ -524,7 +524,7 @@ factory.
 * [*Postconditions: ] `*this` is [_initialized] and its value is ['directly given]
 from the factory `f` (i.e., the value [_is not copied]).
 * [*Throws:] Whatever the `T` constructor called by the factory throws.
-* [*Notes:] See [link boost_optional.design.in_place_factories In-Place Factories]
+* [*Notes:] See [link boost_optional_factories In-Place Factories]
 * [*Exception Safety:] Exceptions can only be thrown during the call to
 the `T` constructor used by the factory; in that case, the `optional` object
 will be reset to be ['uninitialized].
@@ -956,7 +956,7 @@ __SPACE__
 
 * [*Postconditions:] `bool(*this) == bool(rhs)`.
 
-* [*Notes:] This behaviour is called ['rebinding semantics]. See [link boost_optional.design.optional_references.rebinding_semantics_for_assignment_of_optional_references here] for details.
+* [*Notes:] This behaviour is called ['rebinding semantics]. See [link optional_ref_rebinding_semantics here] for details.
 
 * [*Example:]
 ``
