@@ -10,6 +10,7 @@
 //  akrzemi1@gmail.com
 
 #include "boost/optional.hpp"
+#include <string>
 
 #ifdef BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
 
@@ -127,6 +128,26 @@ namespace test_optional_ref
   constexpr boost::optional<const int&> iref = gi;
   static_assert(iref, "");
   static_assert(*iref == 9, "");
+}
+
+namespace test_msvc_14_1
+{
+  struct Aggr
+  {
+    boost::optional<std::string> os;
+  };
+
+  void test()
+  {
+    Aggr a;
+    Aggr b = a;
+    b = a;
+    Aggr c = Aggr();
+    b = Aggr();
+    (void)a;
+    (void)b;
+    (void)c;
+  }
 }
 
 #endif // BOOST_OPTIONAL_USES_UNION_IMPLEMENTATION
