@@ -144,6 +144,7 @@ jobs:
             cxxstd: "03,11,14,17,20,2b"
             os: ubuntu-24.04
             install: clang-16
+            container: ubuntu:24.04
           - toolset: clang
             compiler: clang++-17
             cxxstd: "03,11,14,17,20,2b"
@@ -222,6 +223,10 @@ jobs:
         include:
           - toolset: msvc-14.0
             cxxstd: 14,latest
+            addrmd: 32,64
+            os: windows-2019
+          - toolset: msvc-14.1
+            cxxstd: "14,17,20,latest"
             addrmd: 32,64
             os: windows-2019
           - toolset: msvc-14.2
