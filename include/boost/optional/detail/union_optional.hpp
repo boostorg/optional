@@ -124,7 +124,6 @@ struct constexpr_guarded_storage
     //~constexpr_guarded_storage() = default;
 
 #if (defined(_MSC_VER) && 1910 <= _MSC_VER && _MSC_VER <= 1916)
-private:
   // Workaround for MSVC 14.1x bug where it eagerly tries to define the copy/move operations
   // these are declared but never defined
     constexpr_guarded_storage(const constexpr_guarded_storage&);
@@ -169,7 +168,6 @@ struct fallback_guarded_storage
 #if (defined(_MSC_VER) && 1910 <= _MSC_VER && _MSC_VER <= 1916)
 // Workaround for MSVC 14.1x bug where it eagerly tries to define the copy/move operations
 // These are declared but never defined
-private:
   fallback_guarded_storage(const fallback_guarded_storage&);
   fallback_guarded_storage(fallback_guarded_storage&&);
   fallback_guarded_storage& operator=(const fallback_guarded_storage&);
