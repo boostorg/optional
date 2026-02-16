@@ -122,6 +122,14 @@ struct constexpr_guarded_storage
     BOOST_CXX14_CONSTEXPR void reset () noexcept { init_ = false; }
 
     //~constexpr_guarded_storage() = default;
+
+#if (defined(_MSC_VER) && 1910 <= _MSC_VER && _MSC_VER <= 1916)
+  // Workaround for MSVC 14.1x bug where it eagerly tries to define the copy/move operations
+    constexpr_guarded_storage(const constexpr_guarded_storage&) = delete;
+    constexpr_guarded_storage(constexpr_guarded_storage&&) = delete;
+    constexpr_guarded_storage& operator=(const constexpr_guarded_storage&) = delete;
+    constexpr_guarded_storage& operator=(constexpr_guarded_storage&&) = delete;
+#endif
 };
 
 
@@ -155,6 +163,14 @@ struct fallback_guarded_storage
     }
 
     ~fallback_guarded_storage() { if (init_) storage_.value_.T::~T(); }
+
+#if (defined(_MSC_VER) && 1910 <= _MSC_VER && _MSC_VER <= 1916)
+// Workaround for MSVC 14.1x bug where it eagerly tries to define the copy/move operations
+  fallback_guarded_storage(const fallback_guarded_storage&) = delete;
+  fallback_guarded_storage(fallback_guarded_storage&&) = delete;
+  fallback_guarded_storage& operator=(const fallback_guarded_storage&) = delete;
+  fallback_guarded_storage& operator=(fallback_guarded_storage&&) = delete;
+#endif
 };
 
 
