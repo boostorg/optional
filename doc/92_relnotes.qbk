@@ -18,7 +18,7 @@
   `constexpr` support:
 
     * In C++11, some constructors and `const`-qualified accessors become usable
-      in compile-time contexts (are ['core constant expressions] for types
+      in compile-time contexts (are ['core constant expressions]) for types
       satisfying certain constraints.
     * In C++14 even some mutating operations become core constant expressions (those
       that do not require changing the state of `optional` from not having a value to

@@ -2,6 +2,7 @@
     Boost.Optional
 
     Copyright (c) 2003-2007 Fernando Luis Cacciola Carballal
+    Copyright (C) 2014 - 2026 Andrzej Krzemieński.
 
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -25,24 +26,22 @@ __SPACE__
 
 [: `constexpr optional<T>::optional() noexcept;`]
 
-* [*Effect:] Default-Constructs an `optional`.
-* [*Postconditions:] `*this` is [_uninitialized].
-* [*Notes:] T's default constructor [_is not] called.
+* [*Postconditions:] `*this` does ['not] contain a value (is "uninitialized").
+* [*Remarks:] No contained value is initialized. For every object type `T` these constructors are core constant expressions.
 * [*Example:]
 ``
-optional<T> def ;
-assert ( !def ) ;
+optional<T> oN ;
+assert ( !oN ) ;
 ``
 
 __SPACE__
 
-[#reference_optional_constructor_none_t]
 
+[#reference_optional_constructor_none_t]
 [: `constexpr optional<T>::optional( none_t ) noexcept;`]
 
-* [*Effect:] Constructs an `optional` uninitialized.
-* [*Postconditions:] `*this` is [_uninitialized].
-* [*Notes:] `T`'s default constructor [_is not] called. The expression
+* [*Postconditions:] `*this` does ['not] contain a value (is "uninitialized").
+* [*Remarks:] No contained value is initialized. For every object type `T` these constructors are core constant expressions. The expression
 `boost::none` denotes an instance of `boost::none_t` that can be used as
 the parameter.
 * [*Example:]

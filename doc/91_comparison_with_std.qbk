@@ -47,6 +47,17 @@
   `std::ranges::find(rng, boost::none)`] [`std::vector<optional<int>> rng;`
 
   `std::ranges::find(rng, boost::optional<int>{})`] [optional<T> is never [@https://en.cppreference.com/w/cpp/concepts/equality_comparable `std::equality_comparable_with`] `nullopt_t` in `std`. ] ]
+
+  [ [```
+  void test(vector<optional<T>> rng, T val) {
+    std::ranges::find(rng, val);
+  }
+  ```] [```
+  void test(vector<optional<T>> rng, T val) {
+    std::ranges::find(rng, make_optional(val));
+  }
+  ```] [The same code for `std::optional` compiles but is ['undefined behavior] when `T` is itself an `optional`. ] ]
+
 ]
 
 
