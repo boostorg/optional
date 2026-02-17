@@ -1,4 +1,4 @@
-// Copyright (C) 2014, Andrzej Krzemienski.
+// Copyright (C) 2026 Andrzej Krzemienski.
 //
 // Use, modification, and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -8,24 +8,16 @@
 //
 // You are welcome to contact the author at:
 //  akrzemi1@gmail.com
-//
-#include "boost/optional.hpp"
 
-//
-// THIS TEST SHOULD FAIL TO COMPILE
-//
+#include "boost/optional/optional_fwd.hpp"
+#include "boost/optional/optional.hpp"
 
-struct U
-{};
-
-struct T
+void statically_test_basic_instantiations()
 {
-  explicit T(U const&) {}
-};
+  boost::optional<int> oN, o1(1);
+  swap(oN, o1);
 
-
-void test_implicit_conversion_to_bool()
-{
-  boost::optional<T> opt;
-  opt.value_or(U());
+  int i = 1;
+  boost::optional<int> rN, ri(i);
+  swap(rN, ri);
 }
