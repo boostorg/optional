@@ -37,6 +37,8 @@
   * Construct `o = u`, where `o` is of type `optional<T>` and `u` is of type `U` convertible to `T`,
     does not create a temporary `T`.
 
+* In the said implementation, added a conversion from `optional<T>&` to `optional<T&>`.
+
 * `none_t` is now `std::equality_comparable`, which means that `none_t` and `optional<T>`
   model concept `std::equality_comparable_with` (for `std::equality_comparable` `T`s),
   which means that you can `std::ranges::find(rng, boost::none)` for a range of optional objects.

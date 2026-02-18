@@ -751,6 +751,26 @@ __SPACE__
 
 __SPACE__
 
+
+[#reference_optional_conversion_to_ref]
+
+[: `constexpr optional<T>::operator optional<T&>() & noexcept ;`]
+
+* [*Returns:] If `*this` contains a value `optional<T&>(**this)`, otherwise `optional<T&>()`.
+
+[: `constexpr optional<T>::operator optional<T const&>() const& noexcept ;`]
+
+* [*Returns:] If `*this` contains a value `optional<T const&>(**this)`, otherwise `optional<T&>()`.
+
+* [*Example:]
+``
+const optional<int> oi = 1;
+optional<const int&> ri = oi;
+``
+
+__SPACE__
+
+
 [#reference_optional_get_value_or_value]
 
 [: `T const& optional<T>::get_value_or( T const& default) const ;`]
