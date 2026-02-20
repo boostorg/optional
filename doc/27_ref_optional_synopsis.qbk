@@ -198,7 +198,7 @@ They are empty, trivially copyable classes with disabled default constructor.
         template<class F> constexpr auto flat_map( F f ) && -> ``['see below]``; ``[link reference_optional_flat_map_move __GO_TO__]``
 
         constexpr operator optional<T&>() & noexcept; ``[link reference_optional_conversion_to_ref __GO_TO__]``
-        constexpr operator optional<T const&&>() const& noexcept; ``[link reference_optional_conversion_to_ref __GO_TO__]``
+        constexpr operator optional<T const&>() const& noexcept; ``[link reference_optional_conversion_to_ref __GO_TO__]``
 
         T const* get_ptr() const ; ``[link reference_optional_get_ptr __GO_TO__]``
         T*       get_ptr() ; ``[link reference_optional_get_ptr __GO_TO__]``

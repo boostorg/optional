@@ -47,8 +47,10 @@ the parameter.
 * [*Example:]
 ``
 #include <boost/none.hpp>
+
 optional<T> n(none) ;
 assert ( !n ) ;
+assert ( n == none ) ;
 ``
 
 __SPACE__

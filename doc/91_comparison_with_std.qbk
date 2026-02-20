@@ -56,9 +56,8 @@
   void test(vector<optional<T>> rng, T val) {
     std::ranges::find(rng, make_optional(val));
   }
-  ```] [The same code for `std::optional` compiles but is ['undefined behavior] when `T` is itself an `optional`. ] ]
+  ```] [For `std::optional`, code without `make_optional()` compiles but is ['undefined behavior] when `T` is itself an `optional`. ] ]
 
 ]
-
 
 [endsect][/ std_comp]
