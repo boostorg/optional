@@ -379,6 +379,20 @@ namespace boost {
     : storage(in_place_init, optional_detail::forward_<Args>(args)...)
     {}
 
+    BOOST_CXX14_CONSTEXPR operator optional<T&>() & noexcept
+    {
+      return this->has_value() ? optional<T&>(**this) : optional<T&>();
+    }
+
+    BOOST_CONSTEXPR operator optional<const T&>() const& noexcept
+    {
+      return this->has_value() ? optional<const T&>(**this) : optional<const T&>();
+    }
+
+    BOOST_CXX14_CONSTEXPR operator optional<T&>() && noexcept = delete;
+    BOOST_CONSTEXPR operator optional<const T&>() const&& noexcept = delete;
+
+
     BOOST_CXX14_CONSTEXPR void reset() noexcept
     {
       storage.reset();
