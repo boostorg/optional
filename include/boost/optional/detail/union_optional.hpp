@@ -74,8 +74,19 @@ union constexpr_union_storage_t
 
     constexpr constexpr_union_storage_t( trivial_init_t ) noexcept : dummy_() {};
 
+#if defined(BOOST_GCC) && (__GNUC__ >= 7)
+// false positive, see https://github.com/boostorg/variant2/issues/55,
+//   https://github.com/boostorg/url/issues/979
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+
     template <class... Args>
     constexpr constexpr_union_storage_t( Args&&... args ) : value_(forward_<Args>(args)...) {}
+
+#if defined(BOOST_GCC) && (__GNUC__ >= 7)
+# pragma GCC diagnostic pop
+#endif
 
     //~constexpr_union_storage_t() = default; // No need to destroy a trivially-destructible type
 };
@@ -88,8 +99,19 @@ union fallback_union_storage_t
 
   constexpr fallback_union_storage_t( trivial_init_t ) noexcept : dummy_() {};
 
+#if defined(BOOST_GCC) && (__GNUC__ >= 7)
+// false positive, see https://github.com/boostorg/variant2/issues/55,
+//   https://github.com/boostorg/url/issues/979
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+
   template <class... Args>
   constexpr fallback_union_storage_t( Args&&... args ) : value_(forward_<Args>(args)...) {}
+
+#if defined(BOOST_GCC) && (__GNUC__ >= 7)
+# pragma GCC diagnostic pop
+#endif
 
   ~fallback_union_storage_t(){} // My owner will destroy the `T` if needed.
                                 // Cannot default in a union with nontrivial `T`.
