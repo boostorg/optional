@@ -111,10 +111,10 @@ template <typename CharT>
 struct basic_formatter
 {
   template< typename FunT >
-  basic_formatter(FunT&& fun) {}
+  basic_formatter(FunT&&) {}
 
   template< typename FunT >
-  basic_formatter& operator= (FunT&& fun)
+  basic_formatter& operator= (FunT&&)
   {
       return *this;
   }
