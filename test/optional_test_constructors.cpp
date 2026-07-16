@@ -27,7 +27,7 @@ struct MyBool
 struct MyExplicitBool
 {
   bool b;
-  MyExplicitBool (bool b) : b(b) {}
+  explicit MyExplicitBool (bool b) : b(b) {}
   operator bool() const { return b; };
 };
 
