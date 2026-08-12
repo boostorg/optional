@@ -599,7 +599,10 @@ namespace boost {
 
     constexpr reference_const_type value() const&
     {
-      return this->is_initialized() ? this->get() : (boost::throw_exception(boost::bad_optional_access()), this->get());
+      if (this->is_initialized())
+        return this->get();
+      else
+        boost::throw_exception(boost::bad_optional_access());
     }
 
     BOOST_CXX14_CONSTEXPR reference_type value() &
