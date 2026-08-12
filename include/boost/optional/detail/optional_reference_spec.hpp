@@ -172,9 +172,10 @@ public:
 
     constexpr T& value() const
     {
-      return this->is_initialized() ?
-             this->get() :
-             (boost::throw_exception(boost::bad_optional_access()), this->get());
+      if (!this->is_initialized()) {
+        boost::throw_exception(boost::bad_optional_access());
+      }
+      return this->get();
     }
 
     constexpr explicit operator bool() const BOOST_NOEXCEPT { return ptr_ != 0; }
